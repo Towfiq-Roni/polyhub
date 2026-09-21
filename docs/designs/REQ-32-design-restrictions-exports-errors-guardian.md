@@ -57,7 +57,7 @@ Envelope `{statusCode, error:{code, message, nextStep?, fieldErrors?}, requestId
 Auto-invoke on machine-checkable thresholds: identical failed attempt signature ×2 · fix-revert cycle ×2 · no PROGRESS tick across 3 consecutive attempts · gate FAIL loop exceeding cycle max. Semantics (stakeholder answer): detect → checkpoint notes (attempted/failed/remains; uncommitted work stashed+described) → clean stop → ONE automatic resume with notes injected → success continues; failure ⇒ permanent halt w/ notes. Verdict `STALLED-RECOVERED`/`STALLED-HALTED` + cause appended to Session Log. **Agent leash (architect F1):** amend `.opencode/agent/loop-guardian.md` to diagnostics-only — verdicts GUIDED/NO_LOOP, delete TOOK_OVER takeover mode; explicit "never edits files, never approves gates, never commits". Guardian cannot bypass the B–E quality chain.
 
 **D5 Motion & Responsiveness** (simple, lightweight, zero-JS where possible):
-1. **Loading screen:** DEA wordmark animates character-by-character on first paint (CSS `@keyframes` letter-reveal, ~800ms total, `prefers-reduced-motion` disables entirely). No JS, no extra fonts.
+1. **Loading screen:** Polygon wordmark animates character-by-character on first paint (CSS `@keyframes` letter-reveal, ~800ms total, `prefers-reduced-motion` disables entirely). No JS, no extra fonts.
 2. **Transitions:** shared `--duration-fast: 120ms` / `--duration-normal: 200ms` / `--duration-slow: 300ms` tokens; only `opacity`, `transform`, `color`, `background-color`, `border-color` animated (compositor-friendly, no layout thrash).
 3. **Loaders:** inline spinner (CSS-only, 1.5rem, brand slate `--accent`); skeleton cards for lists (CSS gradient shimmer, 1.5s loop, reduced-motion pauses).
 4. **Page transitions:** none in Phase 0 static HTML (each screen standalone). Phase 1 Next.js App Router handles route transitions natively; any custom transitions opt-in via `view-transition-name` on shared shell elements only.
@@ -89,11 +89,11 @@ All remaining Phase 0 screens governed by D1 rules. **D5 motion/responsive token
 analysis/task-breakdown.md:
 - Phase 0 foundations — insert after styles.css line: `- [ ] DESIGN.md anti-congestion addendum (REQ-32 D1) + congestion gate added to AC`
 - Phase 0 foundations — replace tokens.css line with: `- [ ] tokens.css: add --dur-fast:120ms, --dur-normal:200ms, --dur-slow:300ms; move global @media (prefers-reduced-motion: reduce) kill-switch from styles.css; deprecate --dur-base→--dur-normal mapping`
-- Phase 0 foundations — replace styles.css line with: `- [ ] styles.css: add @keyframes letter-reveal (DEA char-by-char ~800ms stagger); .spinner 24px var(--accent); .skeleton 1.5s shimmer; add @media (max-width:768px) table horizontal-scroll with sticky first column; remove prefers-reduced-motion rule (now in tokens.css); ensure sidebar drawer at ≤900px remains`
+- Phase 0 foundations — replace styles.css line with: `- [ ] styles.css: add @keyframes letter-reveal (Polygon char-by-char ~800ms stagger); .spinner 24px var(--accent); .skeleton 1.5s shimmer; add @media (max-width:768px) table horizontal-scroll with sticky first column; remove prefers-reduced-motion rule (now in tokens.css); ensure sidebar drawer at ≤900px remains`
 - Phase 0 foundations — insert: `- [ ] Motion tokens + global reduced-motion rule (REQ-32 D5) added to tokens.css; loading character-reveal, duration tokens, spinner/skeleton loaders`
 - Phase 0 foundations — insert: `- [ ] Responsive breakpoints + table scroll/sticky + sidebar drawer patterns (REQ-32 D5) added to styles.css`
 - Phase 0 screens — insert before critique line: `- [ ] Export affordance pattern (Excel/CSV/PDF picker + period presets) on every list-screen mockup; reports.html suite/format matrix`
-- Phase 0 screens — insert: `- [ ] Loading screen DEA character-reveal + skeleton/spinner states shown on every mockup`
+- Phase 0 screens — insert: `- [ ] Loading screen Polygon character-reveal + skeleton/spinner states shown on every mockup`
 - Phase 0 AC line — append: `; congestion gate passes on every screen (≤7 primary columns or disclosed, zero data loss); D5 motion/responsive compliance verified on 390/768/900/1440px viewports`
 - Phase 1 shared-package line — append `, error catalog (codes↔copy), export column contracts, RFC-4180 helper, motion duration tokens`
 - Phase 1 apps/api bootstrap line — append `incl. global exception filter skeleton + error envelope + requestId provenance`

@@ -60,7 +60,7 @@ const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)',
 const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', danger:'#B23A2E' };
 const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 class Component extends DCLogic {
-  state={theme:'dark',editing:false,name:'Rahim Uddin',email:'rahim@dea.bd',role:'Finance Manager',savedFlash:false,curPassword:'',newPassword:'',pwError:false,pwSaved:false};
+  state={theme:'dark',editing:false,name:'Rahim Uddin',email:'rahim@polygon.bd',role:'Finance Manager',savedFlash:false,curPassword:'',newPassword:'',pwError:false,pwSaved:false};
   componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
   toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
   toggleEdit=()=>this.setState(s=>({editing:!s.editing}));

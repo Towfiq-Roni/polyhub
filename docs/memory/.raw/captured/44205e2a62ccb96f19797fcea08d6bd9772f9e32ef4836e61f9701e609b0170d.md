@@ -5,7 +5,7 @@ description: >-
   Dark-first Swiss-minimal design language for hub, an internal management
   system connecting CRM, projects, milestones, and ledger-driven finance for a
   small Bangladeshi software house. Palette, surfaces, and slate accent derive
-  from the DEA brand mark.
+  from the Polygon brand mark.
 colors:
   canvas: "#010101"
   surface: "#080808"
@@ -125,7 +125,7 @@ components:
 
 ## Overview
 
-Hub is an internal management system for a Bangladeshi software house, carrying CRM, project and milestone delivery, and ledger-driven finance in one dense, scannable workspace. The visual language is dark-first Swiss minimalism built directly from the DEA brand mark: a near-black canvas, off-white ink tiers, and a slate family lifted from the circuit-line strokes of the logo. The design spends its personality in exactly one place — a dual-anatomy status chip system that makes work state and payment state distinguishable at a glance — and keeps every table, form, and card quiet around it.
+Hub is an internal management system for a Bangladeshi software house, carrying CRM, project and milestone delivery, and ledger-driven finance in one dense, scannable workspace. The visual language is dark-first Swiss minimalism built directly from the Polygon brand mark: a near-black canvas, off-white ink tiers, and a slate family lifted from the circuit-line strokes of the logo. The design spends its personality in exactly one place — a dual-anatomy status chip system that makes work state and payment state distinguishable at a glance — and keeps every table, form, and card quiet around it.
 
 ## Colors
 
@@ -191,7 +191,7 @@ Four responsive thresholds structure layout shifts:
 - **1440 px** — content max-width caps at 1280 px, centering the workspace on ultra-wide viewports.
 
 ### Loading Animations
-The DEA letter-reveal loader splits the wordmark into individual characters, each staggered by roughly 100 ms (spanning ~800 ms total) using the `letter-reveal` keyframe: opacity and a subtle vertical translate resolve with `--ease-out`. The spinner is a 24 px ring using `--accent` for the leading edge, rotating once per 0.8 s linear loop. Skeletons use a 1.5 s shimmer sweep — a gradient moving from `--accent-soft` through `--surface-hover` and back — applied to any block awaiting data.
+The Polygon letter-reveal loader splits the wordmark into individual characters, each staggered by roughly 100 ms (spanning ~800 ms total) using the `letter-reveal` keyframe: opacity and a subtle vertical translate resolve with `--ease-out`. The spinner is a 24 px ring using `--accent` for the leading edge, rotating once per 0.8 s linear loop. Skeletons use a 1.5 s shimmer sweep — a gradient moving from `--accent-soft` through `--surface-hover` and back — applied to any block awaiting data.
 
 ### Table & Sidebar Adaptations
 At or below 768 px, `.table-wrap` enables touch-friendly horizontal overflow; the first header and cell in each row become sticky with a `--surface` background so they never disappear during scroll. At or below 900 px, the sidebar auto-collapses in place to a 64px icon rail (labels hidden, icons and tooltips remain) — it stays part of the fixed layout rather than sliding in as a drawer, and there is no `.shell.nav-open` class or backdrop scrim; the collapse transition animates with the shared duration and easing tokens.

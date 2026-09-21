@@ -26,7 +26,7 @@
 
   /* ---- splash letter-split (app-shell demo only) ---- */
   function splitLetters() {
-    document.querySelectorAll('body > .dea-loading').forEach(function (loader) {
+    document.querySelectorAll('body > .polygon-loading').forEach(function (loader) {
       if (loader.dataset.split) return;
       loader.dataset.split = '1';
       var text = loader.textContent.trim();

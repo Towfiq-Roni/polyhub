@@ -8,13 +8,13 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="dea-loading">DEA</div>
+<div class="polygon-loading">Polygon</div>
 
 <div class="app-shell">
   <aside class="sidebar" role="navigation" aria-label="Main navigation">
     <div class="sidebar-header-row">
       <div class="sidebar-brand" title="Hub">
-        <span class="brand-mark">DEA</span>
+        <span class="brand-mark">Polygon</span>
         <span class="brand-name">Hub</span>
       </div>
       <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
@@ -250,7 +250,7 @@
               </div>
               <div class="field">
                 <label for="newMemberEmail">Email</label>
-                <input type="email" class="input" id="newMemberEmail" placeholder="name@dea.bd">
+                <input type="email" class="input" id="newMemberEmail" placeholder="name@polygon.bd">
               </div>
               <div class="field">
                 <label for="newMemberRate">Hourly rate (৳)</label>
@@ -265,7 +265,7 @@
         </div>
       </main>
 
-      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+      <footer class="footer">Powered by Polygon Technology (Polygon)</footer>
     </div>
   </div>
 </div>
@@ -290,14 +290,14 @@
     function initials(n) { return n.split(' ').map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase(); }
 
     var members = [
-      { id: 1, name: 'Rahim Uddin', team: 'Engineering', role: 'Project Manager', email: 'rahim@dea.bd', rate: 2500, joined: '2024-01-15', status: 'Active' },
-      { id: 2, name: 'Karim Ali', team: 'Engineering', role: 'Senior Developer', email: 'karim@dea.bd', rate: 1800, joined: '2024-03-01', status: 'Active' },
-      { id: 3, name: 'Farida Akter', team: 'Design', role: 'Senior Developer', email: 'farida@dea.bd', rate: 1800, joined: '2024-05-10', status: 'Active' },
-      { id: 4, name: 'Nadia Rahman', team: 'QA & Testing', role: 'QA Engineer', email: 'nadia@dea.bd', rate: 1200, joined: '2025-02-01', status: 'Active' },
-      { id: 5, name: 'Mahmudul Islam', team: 'DevOps', role: 'DevOps Engineer', email: 'mahmud@dea.bd', rate: 2000, joined: '2025-06-15', status: 'Active' },
-      { id: 6, name: 'Tasnim Ahmed', team: 'Sales', role: 'Account Executive', email: 'tasnim@dea.bd', rate: 1500, joined: '2025-09-01', status: 'Active' },
-      { id: 7, name: 'Rahima Khatun', team: 'Sales', role: 'Business Developer', email: 'rahima@dea.bd', rate: 1500, joined: '2025-11-15', status: 'Active' },
-      { id: 8, name: 'Kamal Hossain', team: 'Engineering', role: 'Developer', email: 'kamal@dea.bd', rate: 1500, joined: '2026-01-20', status: 'Active' }
+      { id: 1, name: 'Rahim Uddin', team: 'Engineering', role: 'Project Manager', email: 'rahim@polygon.bd', rate: 2500, joined: '2024-01-15', status: 'Active' },
+      { id: 2, name: 'Karim Ali', team: 'Engineering', role: 'Senior Developer', email: 'karim@polygon.bd', rate: 1800, joined: '2024-03-01', status: 'Active' },
+      { id: 3, name: 'Farida Akter', team: 'Design', role: 'Senior Developer', email: 'farida@polygon.bd', rate: 1800, joined: '2024-05-10', status: 'Active' },
+      { id: 4, name: 'Nadia Rahman', team: 'QA & Testing', role: 'QA Engineer', email: 'nadia@polygon.bd', rate: 1200, joined: '2025-02-01', status: 'Active' },
+      { id: 5, name: 'Mahmudul Islam', team: 'DevOps', role: 'DevOps Engineer', email: 'mahmud@polygon.bd', rate: 2000, joined: '2025-06-15', status: 'Active' },
+      { id: 6, name: 'Tasnim Ahmed', team: 'Sales', role: 'Account Executive', email: 'tasnim@polygon.bd', rate: 1500, joined: '2025-09-01', status: 'Active' },
+      { id: 7, name: 'Rahima Khatun', team: 'Sales', role: 'Business Developer', email: 'rahima@polygon.bd', rate: 1500, joined: '2025-11-15', status: 'Active' },
+      { id: 8, name: 'Kamal Hossain', team: 'Engineering', role: 'Developer', email: 'kamal@polygon.bd', rate: 1500, joined: '2026-01-20', status: 'Active' }
     ];
 
     /* §4: new hub-team-members key; TeamMemberDetail hydrates via ?id= from this list */

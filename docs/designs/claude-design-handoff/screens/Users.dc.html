@@ -101,7 +101,7 @@
             <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Jamil Hossain"></input>
             <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Name is required.</div></sc-if>
             <label style="{{ labelStyle }}">Email</label>
-            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@dea.bd"></input>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@polygon.bd"></input>
             <sc-if value="{{ emailError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter a valid email address.</div></sc-if>
             <label style="{{ labelStyle }}">Role</label>
             <select style="{{ modalInputStyle }}" value="{{ newRole }}" onChange="{{ onNewRole }}">
@@ -137,13 +137,13 @@ function chip(color) { return { display: 'inline-flex', alignItems: 'center', ga
 function initials(name) { return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(); }
 
 const SEED = [
-  { id: 1, name: 'Rahim Uddin', email: 'rahim@dea.bd', role: 'Super Admin', teams: 'Engineering', lastLogin: '2026-08-22 09:30', status: 'Active' },
-  { id: 2, name: 'Karim Ali', email: 'karim@dea.bd', role: 'Admin', teams: 'Engineering, DevOps', lastLogin: '2026-08-21 14:15', status: 'Active' },
-  { id: 3, name: 'Farida Akter', email: 'farida@dea.bd', role: 'Manager', teams: 'Design', lastLogin: '2026-08-22 08:45', status: 'Active' },
-  { id: 4, name: 'Nadia Rahman', email: 'nadia@dea.bd', role: 'Member', teams: 'QA & Testing', lastLogin: '2026-08-20 16:30', status: 'Active' },
-  { id: 5, name: 'Mahmudul Islam', email: 'mahmud@dea.bd', role: 'Member', teams: 'DevOps', lastLogin: '2026-08-19 11:20', status: 'Active' },
-  { id: 6, name: 'Tasnim Ahmed', email: 'tasnim@dea.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-18 10:45', status: 'Active' },
-  { id: 7, name: 'Rahima Khatun', email: 'rahima@dea.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-15 09:15', status: 'Inactive' }
+  { id: 1, name: 'Rahim Uddin', email: 'rahim@polygon.bd', role: 'Super Admin', teams: 'Engineering', lastLogin: '2026-08-22 09:30', status: 'Active' },
+  { id: 2, name: 'Karim Ali', email: 'karim@polygon.bd', role: 'Admin', teams: 'Engineering, DevOps', lastLogin: '2026-08-21 14:15', status: 'Active' },
+  { id: 3, name: 'Farida Akter', email: 'farida@polygon.bd', role: 'Manager', teams: 'Design', lastLogin: '2026-08-22 08:45', status: 'Active' },
+  { id: 4, name: 'Nadia Rahman', email: 'nadia@polygon.bd', role: 'Member', teams: 'QA & Testing', lastLogin: '2026-08-20 16:30', status: 'Active' },
+  { id: 5, name: 'Mahmudul Islam', email: 'mahmud@polygon.bd', role: 'Member', teams: 'DevOps', lastLogin: '2026-08-19 11:20', status: 'Active' },
+  { id: 6, name: 'Tasnim Ahmed', email: 'tasnim@polygon.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-18 10:45', status: 'Active' },
+  { id: 7, name: 'Rahima Khatun', email: 'rahima@polygon.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-15 09:15', status: 'Inactive' }
 ];
 
 class Component extends DCLogic {

@@ -16,14 +16,14 @@ status colors, both themes). **No color changes to `tokens.css`.**
 
 **Wordmark finding (corrects the task brief):** there is no `logo.svg` file referenced anywhere in
 `design/*.html` or `styles.css` today — grepped, zero hits. The current "brand mark" is a
-hardcoded 3-span letter animation (`<span class="dea-loading"><span>D</span><span>E</span><span>A</span></span>`)
+hardcoded 3-span letter animation (`<span class="polygon-loading"><span>D</span><span>E</span><span>A</span></span>`)
 used in the sidebar brand row, **and** the same class name is reused, unrelated, for the full-page
-splash loader (`body > .dea-loading`, animated via `shell.js`'s `splitLetters()`, which only
+splash loader (`body > .polygon-loading`, animated via `shell.js`'s `splitLetters()`, which only
 targets *direct children of `body`* — the sidebar's nested span is untouched by that JS; its
 letter styling is pure hardcoded markup). DESIGN.md documents the splash loader's letter-reveal as
 a deliberate motion signature — **that stays untouched.** The user-approved change is narrower:
 replace the sidebar-brand's 3 letter-spans + separate "Hub" span with plain static text matching
-`Sidebar.dc.html`'s actual markup (`<span>DEA</span><span>Hub</span>`, no animation, no per-letter
+`Sidebar.dc.html`'s actual markup (`<span>Polygon</span><span>Hub</span>`, no animation, no per-letter
 markup). This is a per-screen markup edit (every screen duplicates the shell inline — there is no
 include mechanism), not a token or asset change.
 
@@ -84,11 +84,11 @@ merged not duplicated; +3 new screens) + 3 shared files touched (`shell.js`, `st
 
 ### 2.2 Wordmark (all screens' inline shell markup)
 Replace the 3-span letter markup + separate `.brand-name` span in `.sidebar-brand` with plain
-static text matching `Sidebar.dc.html`: two plain spans, `DEA` + `Hub`, no per-letter markup, no
-entrance animation. Leave `body > .dea-loading` (the full-page splash loader) and its
+static text matching `Sidebar.dc.html`: two plain spans, `Polygon` + `Hub`, no per-letter markup, no
+entrance animation. Leave `body > .polygon-loading` (the full-page splash loader) and its
 `shell.js` `splitLetters()` / DESIGN.md-documented letter-reveal keyframe completely untouched —
 they are a different element and a deliberate motion signature. Update the two CSS rules that key
-off `.sidebar-brand .dea-loading` (`app-shell.collapsed .sidebar-brand .dea-loading` sizing rule) to
+off `.sidebar-brand .polygon-loading` (`app-shell.collapsed .sidebar-brand .polygon-loading` sizing rule) to
 target the new plain-text class instead.
 
 ### 2.3 Sidebar — responsive pattern change (significant)
@@ -125,7 +125,7 @@ markup structurally has nowhere to put a hamburger). This means:
 
 ### 2.5 Footer — new shared pattern
 No shared `.footer` component exists today (`padding:16px 24px`, top border, centered muted
-12px text, "Powered by Deus Ex Automata (DEA)"). Must sit at the bottom of the **scroll area**, not
+12px text, "Powered by Polygon Technology (Polygon)"). Must sit at the bottom of the **scroll area**, not
 the viewport, per the README's page-skeleton pattern. This requires restructuring the page shell
 CSS: current `.app-shell` is a CSS Grid (`grid-template-columns: sidebar minmax(0,1fr)`) with the
 topbar and content as normal document flow. The new pattern is nested flex:
@@ -375,7 +375,7 @@ before/while building and is repeated in §7.
 - **CLAUDE.md #9**: `users.html` visually preserves a last-active-SUPER_ADMIN deactivate guard.
 - **DESIGN.md**: dark-first Swiss minimalism intact; dual-anatomy status chip system unchanged
   (already conformant — no delta needed, confirmed by reading `styles.css`'s existing `.chip`/
-  `.chip-pay` rules against the README's stated chip spec); the DEA letter-reveal splash loader is
+  `.chip-pay` rules against the README's stated chip spec); the Polygon letter-reveal splash loader is
   untouched; only the sidebar-brand wordmark is simplified per §2.2.
 - **`docs/designs/hub-design-system.md`**: superseded pointer honored — zero new color literals
   introduced outside `tokens.css`.

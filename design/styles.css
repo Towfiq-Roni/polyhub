@@ -698,18 +698,18 @@ tr.row-detail dt { align-self: center; color: var(--muted); font-size: var(--tex
 .forgot-link { color: var(--accent); text-decoration: none; font-size: var(--text-caption); }
 
 /* ==========================================================================
-   Full-page splash loader (DEA character-reveal) — a different element from
+   Full-page splash loader (Polygon character-reveal) — a different element from
    the sidebar wordmark above; deliberately retained per DESIGN.md's Motion
-   section. `body > .dea-loading` only, so nested markup is unaffected.
+   section. `body > .polygon-loading` only, so nested markup is unaffected.
    ========================================================================== */
-body > .dea-loading {
+body > .polygon-loading {
   position: fixed; inset: 0; z-index: 100; pointer-events: none;
   display: flex; align-items: center; justify-content: center; gap: var(--space-2xs);
   background: var(--bg); color: var(--ink-hi);
   font: var(--weight-semibold) var(--text-display)/var(--lh-display) var(--font-sans);
   animation: loader-out 0.4s var(--ease-out) 0.9s forwards;
 }
-body > .dea-loading span {
+body > .polygon-loading span {
   display: inline-block;
   opacity: 0;
   transform: translateY(6px);

@@ -53,7 +53,7 @@ const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Ari
 function switchStyle(on,C){ return {width:36,height:20,borderRadius:10,border:`1px solid ${C.border}`,background:on?C.accent:'transparent',position:'relative',cursor:'pointer',padding:0}; }
 function thumbStyle(on,C){ return {position:'absolute',top:1,left:on?17:1,width:16,height:16,borderRadius:'50%',background:on?C.accentInk:C.muted,transition:'left 120ms'}; }
 class Component extends DCLogic {
-  state={theme:'dark',companyName:'DEA Ltd.',currency:'BDT',leadNotif:true,invoiceNotif:true,saved:false};
+  state={theme:'dark',companyName:'Polygon Ltd.',currency:'BDT',leadNotif:true,invoiceNotif:true,saved:false};
   componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
   toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
   onCompanyName=(e)=>this.setState({companyName:e.target.value}); onCurrency=(e)=>this.setState({currency:e.target.value});

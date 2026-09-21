@@ -62,7 +62,7 @@
             <label style="{{ labelStyle }}">Role</label>
             <input type="text" style="{{ modalInputStyle }}" value="{{ newRole }}" onInput="{{ onNewRole }}" placeholder="e.g. Developer"></input>
             <label style="{{ labelStyle }}">Email</label>
-            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@dea.bd"></input>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@polygon.bd"></input>
             <label style="{{ labelStyle }}">Hourly rate (৳)</label>
             <input type="number" style="{{ modalInputStyle }}" value="{{ newRate }}" onInput="{{ onNewRate }}" placeholder="0"></input>
           </div>
@@ -85,14 +85,14 @@ const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)'
 const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 function initials(n){ return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
 const SEED = [
-  { id:1, name:'Rahim Uddin', team:'Engineering', role:'Project Manager', email:'rahim@dea.bd', rate:'৳2,500.00/hr', joined:'2024-01-15', status:'Active' },
-  { id:2, name:'Karim Ali', team:'Engineering', role:'Senior Developer', email:'karim@dea.bd', rate:'৳1,800.00/hr', joined:'2024-03-01', status:'Active' },
-  { id:3, name:'Farida Akter', team:'Design', role:'Senior Developer', email:'farida@dea.bd', rate:'৳1,800.00/hr', joined:'2024-05-10', status:'Active' },
-  { id:4, name:'Nadia Rahman', team:'QA & Testing', role:'QA Engineer', email:'nadia@dea.bd', rate:'৳1,200.00/hr', joined:'2025-02-01', status:'Active' },
-  { id:5, name:'Mahmudul Islam', team:'DevOps', role:'DevOps Engineer', email:'mahmud@dea.bd', rate:'৳2,000.00/hr', joined:'2025-06-15', status:'Active' },
-  { id:6, name:'Tasnim Ahmed', team:'Sales', role:'Account Executive', email:'tasnim@dea.bd', rate:'৳1,500.00/hr', joined:'2025-09-01', status:'Active' },
-  { id:7, name:'Rahima Khatun', team:'Sales', role:'Business Developer', email:'rahima@dea.bd', rate:'৳1,500.00/hr', joined:'2025-11-15', status:'Active' },
-  { id:8, name:'Kamal Hossain', team:'Engineering', role:'Developer', email:'kamal@dea.bd', rate:'৳1,500.00/hr', joined:'2026-01-20', status:'Active' }
+  { id:1, name:'Rahim Uddin', team:'Engineering', role:'Project Manager', email:'rahim@polygon.bd', rate:'৳2,500.00/hr', joined:'2024-01-15', status:'Active' },
+  { id:2, name:'Karim Ali', team:'Engineering', role:'Senior Developer', email:'karim@polygon.bd', rate:'৳1,800.00/hr', joined:'2024-03-01', status:'Active' },
+  { id:3, name:'Farida Akter', team:'Design', role:'Senior Developer', email:'farida@polygon.bd', rate:'৳1,800.00/hr', joined:'2024-05-10', status:'Active' },
+  { id:4, name:'Nadia Rahman', team:'QA & Testing', role:'QA Engineer', email:'nadia@polygon.bd', rate:'৳1,200.00/hr', joined:'2025-02-01', status:'Active' },
+  { id:5, name:'Mahmudul Islam', team:'DevOps', role:'DevOps Engineer', email:'mahmud@polygon.bd', rate:'৳2,000.00/hr', joined:'2025-06-15', status:'Active' },
+  { id:6, name:'Tasnim Ahmed', team:'Sales', role:'Account Executive', email:'tasnim@polygon.bd', rate:'৳1,500.00/hr', joined:'2025-09-01', status:'Active' },
+  { id:7, name:'Rahima Khatun', team:'Sales', role:'Business Developer', email:'rahima@polygon.bd', rate:'৳1,500.00/hr', joined:'2025-11-15', status:'Active' },
+  { id:8, name:'Kamal Hossain', team:'Engineering', role:'Developer', email:'kamal@polygon.bd', rate:'৳1,500.00/hr', joined:'2026-01-20', status:'Active' }
 ];
 class Component extends DCLogic {
   state = { theme:'dark', search:'', teamFilter:'', members: SEED, createOpen:false, newName:'', newTeam:'Engineering', newRole:'', newEmail:'', newRate:'', nameError:false };

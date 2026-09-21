@@ -1,7 +1,7 @@
-# Handoff: DEA Hub — Company Management System
+# Handoff: Polyhub — Company Management System
 
 ## Overview
-DEA Hub is an internal company management system for Deus Ex Automata: CRM (leads → opportunities → clients), project/milestone tracking, team management, and finance (accounts, payment entry, receivables/payables, double-entry accounting, reports). This package documents a complete high-fidelity design prototype covering ~30 screens with a shared shell, ready to be rebuilt in a real app.
+Polyhub is an internal company management system for Polygon Technology: CRM (leads → opportunities → clients), project/milestone tracking, team management, and finance (accounts, payment entry, receivables/payables, double-entry accounting, reports). This package documents a complete high-fidelity design prototype covering ~30 screens with a shared shell, ready to be rebuilt in a real app.
 
 ## About the Design Files
 The files in `screens/` are **design references built as HTML prototypes** — not production code to copy directly. They demonstrate exact layout, color, typography, and interaction behavior using an in-memory mock-data pattern (no real backend/auth/DB). The task is to **recreate these designs in your target stack** (React/Next, Vue, etc. — choose what fits your team) using real data, auth, and persistence, following the structure and behavior documented below.
@@ -12,9 +12,9 @@ The files in `screens/` are **design references built as HTML prototypes** — n
 ## Shared Shell
 Every page composes three shared pieces (see `screens/Sidebar.dc.html`, `Topbar.dc.html`, `Footer.dc.html`):
 
-- **Sidebar** (`Sidebar.dc.html`): fixed-height left nav, 240px expanded / 64px collapsed. Collapses automatically under 900px viewport width; manual toggle button sits beside the "DEA Hub" wordmark (click the wordmark while collapsed to re-expand). Persists collapsed state in localStorage (`hub-sidebar`). Nav sections: Overview (Dashboard), CRM (Leads, Opportunities, Clients, BDS Partners), Projects (Projects, Milestones), Team (Teams, Team Members, Users, Roles, Audit Logs), Finance (Finance Dashboard, Accounts, Transactions, Payment Entry, Receivables, Payables, Accounting, Reports), Settings. Active item highlighted via `data-active`.
+- **Sidebar** (`Sidebar.dc.html`): fixed-height left nav, 240px expanded / 64px collapsed. Collapses automatically under 900px viewport width; manual toggle button sits beside the "Polyhub" wordmark (click the wordmark while collapsed to re-expand). Persists collapsed state in localStorage (`hub-sidebar`). Nav sections: Overview (Dashboard), CRM (Leads, Opportunities, Clients, BDS Partners), Projects (Projects, Milestones), Team (Teams, Team Members, Users, Roles, Audit Logs), Finance (Finance Dashboard, Accounts, Transactions, Payment Entry, Receivables, Payables, Accounting, Reports), Settings. Active item highlighted via `data-active`.
 - **Topbar** (`Topbar.dc.html`): sticky top bar, 56px tall, page title, global search (live-filtered dropdown over a static index of projects/clients/team members/pages — Enter navigates to first match), notification bell, theme toggle (persisted to localStorage `hub-theme`, dark/light), user menu with Logout. Search box and username hide progressively below 700px/480px viewport width.
-- **Footer** (`Footer.dc.html`): "Powered by Deus Ex Automata (DEA)", pinned to the bottom of the scroll area (not the viewport) so it sits under short content and scrolls with long content — never overlapping.
+- **Footer** (`Footer.dc.html`): "Powered by Polygon Technology (Polygon)", pinned to the bottom of the scroll area (not the viewport) so it sits under short content and scrolls with long content — never overlapping.
 
 **Page skeleton pattern** used on every screen:
 ```
@@ -133,7 +133,7 @@ neutral:   #5A6675
 **Shadows**: modal card `0 8px 24px rgba(0,0,0,0.55)` (dark), same in light theme.
 
 ## Assets
-No image assets — icons are inline SVG (Feather-style, 18×18, `stroke-width:2`, `stroke:currentColor`). No logo asset; wordmark is text ("DEA" mark + "Hub" name).
+No image assets — icons are inline SVG (Feather-style, 18×18, `stroke-width:2`, `stroke:currentColor`). No logo asset; wordmark is text ("Polygon" mark + "Hub" name).
 
 ## Files
 All screens are in `screens/`. `support.js` is the design-tool runtime loader referenced by each file's `<script src="./support.js">` tag — **do not port this file**; it only exists to run these HTML prototypes in the design tool. Treat every `.dc.html` file as reference markup + inline styles + a logic section at the bottom (`<script type="text/x-dc" data-dc-script>`) describing state/handlers/computed style objects — read the logic section for exact behavior and computed values per screen.
