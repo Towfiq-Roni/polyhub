@@ -1,0 +1,47 @@
+services:
+  postgres:
+    command: ["postgres", "-c", "shared_buffers=256MB"]
+    restart: unless-stopped
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+    mem_limit: 320m
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ${API_IMAGE:-ghcr.io/example/hub-api}:${IMAGE_TAG:-latest}
+    env_file: infra/.env.prod
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hub-net
+    volumes:
+      - resources_data:/data/resources
+    mem_limit: 180m
+
+  # TODO(TASKS.md #40): web service goes here once apps/web exists
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      APP_HOSTNAME: ${APP_HOSTNAME}
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - hub-net
+    volumes:
+      - ./infra/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - resources_data:/data/resources:ro
+    mem_limit: 32m
+
+volumes:
+  pgdata_prod:
+  resources_data:

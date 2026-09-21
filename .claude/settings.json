@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(ls:*)",
+      "Bash(find .claude:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm --filter *)",
+      "Bash(npx playwright:*)",
+      "Bash(pnpm exec playwright:*)",
+      "Bash(python3 -m http.server:*)",
+      "Bash(python3 .claude/skills/senior-architect/scripts/dependency_analyzer.py:*)",
+      "Bash(python3 .claude/skills/senior-architect/scripts/project_architect.py:*)",
+      "Bash(python3 .claude/skills/ui-ux-pro-max/scripts/search.py:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(rg:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/obsidian-memory-sync.sh",
+            "statusMessage": "Checking if docs/memory vault needs a save"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f pnpm-workspace.yaml ] && { pnpm lint && pnpm typecheck && pnpm test; } > /tmp/hub-gates-$$.log 2>&1; ec=$?; if [ -f pnpm-workspace.yaml ] && [ $ec -ne 0 ]; then echo \"{\\\"decision\\\":\\\"block\\\",\\\"reason\\\":\\\"Gates failed (lint/typecheck/test) - see /tmp/hub-gates-$$.log, fix before stopping.\\\"}\"; fi",
+            "async": true,
+            "asyncRewake": true,
+            "statusMessage": "Running lint/typecheck/test gates (no-op until Phase 1 scaffolds the workspace)"
+          }
+        ]
+      }
+    ]
+  }
+}

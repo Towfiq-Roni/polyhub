@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<meta name="omelette-owns-print" content="false">
+<style>body{margin:0;}</style>
+</helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Dashboard.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Dashboard" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" style="{{ topbarMountStyle }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Dashboard</h1>
+        <p style="{{ pageSubStyle }}">Overview of projects, finances, and attention items</p>
+      </header>
+
+      <section style="{{ kpiGridStyle }}">
+        <article style="{{ kpiCardStyle }}">
+          <div style="{{ kpiLabelStyle }}">Receivables</div>
+          <div style="{{ kpiValueStyle }}">৳5,820,000.00</div>
+          <div style="{{ kpiMetaStyle }}">+12% vs last month</div>
+        </article>
+        <article style="{{ kpiCardStyle }}">
+          <div style="{{ kpiLabelStyle }}">Payables</div>
+          <div style="{{ kpiValueStyle }}">৳2,410,000.00</div>
+          <div style="{{ kpiMetaStyle }}">-3% vs last month</div>
+        </article>
+        <article style="{{ kpiCardStyle }}">
+          <div style="{{ kpiLabelStyle }}">Active Projects</div>
+          <div style="{{ kpiValueStyle }}">9</div>
+          <div style="{{ kpiMetaStyle }}">3 completing this month</div>
+        </article>
+        <article style="{{ kpiCardStyle }}">
+          <div style="{{ kpiLabelStyle }}">Overdue Milestones</div>
+          <div style="{{ kpiValueStyle }}">{{ attentionCount }}</div>
+          <div style="{{ kpiMetaStyle }}">Requires attention</div>
+        </article>
+      </section>
+
+      <section style="{{ sectionGridStyle }}">
+        <article style="{{ cardStyle }}">
+          <header style="{{ cardHeaderStyle }}">
+            <h2 style="{{ cardTitleStyle }}">My Projects</h2>
+            <div style="{{ headerActionsStyle }}">
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ exportProjects }}">Export CSV</button>
+              <a href="Projects.dc.html" style="{{ btnGhostSmLinkStyle }}">View All</a>
+            </div>
+          </header>
+          <div style="{{ tableWrapStyle }}">
+            <table style="{{ tableStyle }}">
+              <thead><tr>
+                <th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}">Next Milestone</th><th style="{{ thStyle }}">Due</th><th style="{{ thNumStyle }}">Amount</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ projects }}" as="p" hint-placeholder-count="5">
+                  <tr>
+                    <td style="{{ tdStyle }}">{{ p.name }}</td>
+                    <td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td>
+                    <td style="{{ tdStyle }}">{{ p.milestone }}</td>
+                    <td style="{{ tdStyle }}">{{ p.due }}</td>
+                    <td style="{{ tdNumStyle }}">{{ p.amount }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article style="{{ cardStyle }}">
+          <header style="{{ cardHeaderStyle }}">
+            <h2 style="{{ cardTitleStyle }}">Attention Required</h2>
+          </header>
+          <div style="{{ attentionListStyle }}">
+            <sc-for list="{{ attentionItems }}" as="a" hint-placeholder-count="3">
+              <div style="{{ attentionItemStyle }}">
+                <div style="{{ attentionTextWrapStyle }}">
+                  <div style="{{ attentionTitleStyle }}">{{ a.title }}</div>
+                  <div style="{{ attentionMetaStyle }}">{{ a.meta }}</div>
+                </div>
+                <div style="{{ attentionActionsStyle }}">
+                  <button type="button" style="{{ btnPrimarySmStyle }}" onClick="{{ a.resolve }}">{{ a.actionLabel }}</button>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noAttention }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ emptyStyle }}">Nothing needs attention right now.</div>
+            </sc-if>
+          </div>
+        </article>
+      </section>
+
+      <article style="{{ cardStyleMt }}">
+        <header style="{{ cardHeaderStyle }}">
+          <h2 style="{{ cardTitleStyle }}">Recent Activity</h2>
+          <div style="{{ headerActionsStyle }}">
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ exportActivity }}">Export CSV</button>
+            <a href="Transactions.dc.html" style="{{ btnGhostSmLinkStyle }}">View All</a>
+          </div>
+        </header>
+        <div style="{{ tableWrapStyle }}">
+          <table style="{{ tableStyle }}">
+            <thead><tr>
+              <th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Type</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Status</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ activity }}" as="row" hint-placeholder-count="5">
+                <tr>
+                  <td style="{{ tdStyle }}">{{ row.date }}</td>
+                  <td style="{{ tdStyle }}">{{ row.project }}</td>
+                  <td style="{{ tdStyle }}">{{ row.type }}</td>
+                  <td style="{{ tdNumStyle }}">{{ row.amount }}</td>
+                  <td style="{{ tdStyle }}"><span style="{{ row.chipStyle }}">{{ row.status }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)',
+  success:'#63A583', successTint:'rgba(99,165,131,0.15)', info:'#6C86AD', infoTint:'rgba(108,134,173,0.15)', warning:'#C9A24B', warningTint:'rgba(201,162,75,0.16)', danger:'#CD6A5E', dangerTint:'rgba(205,106,94,0.16)', neutral:'#6F7E8F', neutralTint:'rgba(111,126,143,0.14)' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)',
+  success:'#2E7D54', successTint:'rgba(46,125,84,0.12)', info:'#3E5C8A', infoTint:'rgba(62,92,138,0.12)', warning:'#9A6E1E', warningTint:'rgba(154,110,30,0.14)', danger:'#B23A2E', dangerTint:'rgba(178,58,46,0.12)', neutral:'#5A6675', neutralTint:'rgba(90,102,117,0.12)' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+function chip(kind, C) {
+  const map = { success: [C.success, C.successTint], info: [C.info, C.infoTint], warning: [C.warning, C.warningTint], danger: [C.danger, C.dangerTint], neutral: [C.neutral, C.neutralTint] };
+  const [color] = map[kind] || map.neutral;
+  return { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, fontFamily: FONT, color, border: `1px solid ${color}` };
+}
+
+function downloadCSV(filename, headers, rows) {
+  const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+  const csv = [headers.map(esc).join(','), ...rows.map(r => r.map(esc).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+class Component extends DCLogic {
+  state = {
+    theme: 'dark',
+    attentionItems: [
+      { id: 1, title: 'Milestone M-3 overdue 3 days', meta: 'Mobile Banking App • ৳2,200,000.00 at stake', actionLabel: 'Resolve' },
+      { id: 2, title: 'Client Bayzid contract expires in 7 days', meta: 'CRM Integration • Renewal pending', actionLabel: 'Renew' },
+      { id: 3, title: 'Team member payment due', meta: 'Rahman • ৳120,000.00 • Due 2026-08-25', actionLabel: 'Pay' },
+      { id: 4, title: 'BDS partner invoice pending', meta: 'Hasan Ali • ৳350,000.00 • Awaiting approval', actionLabel: 'Approve' }
+    ]
+  };
+
+  componentDidMount() {
+    try { this.setState({ theme: localStorage.getItem('hub-theme') || 'dark' }); } catch (e) {}
+  }
+
+  toggleTheme = () => {
+    this.setState(s => {
+      const next = s.theme === 'light' ? 'dark' : 'light';
+      try { localStorage.setItem('hub-theme', next); } catch (e) {}
+      return { theme: next };
+    });
+  };
+
+  resolveAttention = (id) => this.setState(s => ({ attentionItems: s.attentionItems.filter(a => a.id !== id) }));
+
+  exportProjects = () => downloadCSV('my-projects.csv', ['Project', 'Status', 'Next Milestone', 'Due', 'Amount'],
+    this.projectsData().map(p => [p.name, p.status, p.milestone, p.due, p.amount]));
+
+  exportActivity = () => downloadCSV('recent-activity.csv', ['Date', 'Project', 'Type', 'Amount', 'Status'],
+    this.activityData().map(r => [r.date, r.project, r.type, r.amount, r.status]));
+
+  projectsData() {
+    return [
+      { name: 'ERP Modernization', status: 'Active', kind: 'info', milestone: 'M2: API Layer', due: '2026-09-15', amount: '৳1,850,000.00' },
+      { name: 'Mobile Banking App', status: 'On Hold', kind: 'warning', milestone: 'M3: UAT Sign-off', due: '2026-08-28', amount: '৳2,200,000.00' },
+      { name: 'Dashboard Analytics', status: 'Completed', kind: 'success', milestone: 'M4: Handover', due: '2026-08-20', amount: '৳1,230,000.00' },
+      { name: 'CRM Integration', status: 'Planning', kind: 'neutral', milestone: 'M1: Kickoff', due: '2026-09-10', amount: '৳870,000.00' },
+      { name: 'Legacy Migration', status: 'Draft', kind: 'danger', milestone: 'M1: Discovery', due: '2026-10-01', amount: '৳3,500,000.00' }
+    ];
+  }
+
+  activityData() {
+    return [
+      { date: '2026-08-20', project: 'ERP Modernization', type: 'Client Payment', amount: '৳850,000.00', status: 'Paid', kind: 'success' },
+      { date: '2026-08-18', project: 'Mobile Banking App', type: 'Invoice', amount: '৳1,200,000.00', status: 'Processing', kind: 'info' },
+      { date: '2026-08-15', project: 'Dashboard Analytics', type: 'Team Payment', amount: '৳430,000.00', status: 'Paid', kind: 'success' },
+      { date: '2026-08-12', project: 'CRM Integration', type: 'Adjustment', amount: '৳210,000.00', status: 'Partial', kind: 'warning' },
+      { date: '2026-08-10', project: 'Legacy Migration', type: 'Client Payment', amount: '৳680,000.00', status: 'Overdue', kind: 'danger' },
+      { date: '2026-08-08', project: 'BDS Partner — Hasan Ali', type: 'Commission Payout', amount: '৳350,000.00', status: 'Pending', kind: 'neutral' }
+    ];
+  }
+
+  renderVals() {
+    const C = this.state.theme === 'light' ? LIGHT : DARK;
+    const attentionItems = this.state.attentionItems.map(a => ({ ...a, resolve: () => this.resolveAttention(a.id) }));
+    const projects = this.projectsData().map(p => ({ ...p, chipStyle: chip(p.kind, C) }));
+    const activity = this.activityData().map(r => ({ ...r, chipStyle: chip(r.kind, C) }));
+
+    const btnBase = { display: 'inline-flex', alignItems: 'center', gap: 4, borderRadius: 4, border: '1px solid transparent', cursor: 'pointer', fontFamily: FONT, whiteSpace: 'nowrap', textDecoration: 'none' };
+
+    return {
+      theme: this.state.theme,
+      toggleTheme: this.toggleTheme,
+      attentionItems, attentionCount: attentionItems.length, noAttention: attentionItems.length === 0,
+      projects, activity,
+      exportProjects: this.exportProjects, exportActivity: this.exportActivity,
+
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },
+      sidebarMountStyle: { flexShrink: 0 },
+      mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      topbarMountStyle: {},
+      contentStyle: { padding: '32px 24px 64px', maxWidth: 1280, width: '100%', boxSizing: 'border-box', margin: '0 auto', flex: 1 },
+      pageHeaderStyle: { marginBottom: 32 },
+      pageTitleStyle: { color: C.inkHi, fontSize: 24, lineHeight: '32px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      pageSubStyle: { color: C.muted, marginTop: 8, fontFamily: FONT, fontSize: 14 },
+
+      kpiGridStyle: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 },
+      kpiCardStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 24 },
+      kpiLabelStyle: { color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: FONT },
+      kpiValueStyle: { marginTop: 8, color: C.inkHi, fontSize: 28, lineHeight: '36px', fontWeight: 600, fontFamily: FONT, fontVariantNumeric: 'tabular-nums', wordBreak: 'break-all' },
+      kpiMetaStyle: { marginTop: 8, color: C.muted, fontSize: 12, fontFamily: FONT },
+
+      sectionGridStyle: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 24 },
+      cardStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' },
+      cardStyleMt: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', marginTop: 24 },
+      cardHeaderStyle: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 24px', borderBottom: `1px solid ${C.border}` },
+      cardTitleStyle: { color: C.inkHi, fontSize: 16, lineHeight: '24px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      headerActionsStyle: { display: 'flex', gap: 8 },
+      btnGhostSmStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border, padding: '4px 12px', fontSize: 12 },
+      btnGhostSmLinkStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border, padding: '4px 12px', fontSize: 12 },
+      btnPrimarySmStyle: { ...btnBase, background: C.accent, color: C.accentInk, padding: '4px 12px', fontSize: 12 },
+
+      tableWrapStyle: { overflowX: 'auto' },
+      tableStyle: { width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: FONT },
+      thStyle: { padding: '8px 24px', textAlign: 'left', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}` },
+      thNumStyle: { padding: '8px 24px', textAlign: 'right', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}` },
+      tdStyle: { padding: '12px 24px', color: C.inkDim, borderBottom: `1px solid ${C.border}` },
+      tdNumStyle: { padding: '12px 24px', color: C.inkHi, fontWeight: 500, textAlign: 'right', fontVariantNumeric: 'tabular-nums', borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' },
+
+      attentionListStyle: { display: 'grid', gap: 12, padding: 24 },
+      attentionItemStyle: { display: 'flex', alignItems: 'center', gap: 16, padding: 16, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4 },
+      attentionTextWrapStyle: { flex: 1, minWidth: 0 },
+      attentionTitleStyle: { color: C.inkHi, fontWeight: 500, fontFamily: FONT, fontSize: 14 },
+      attentionMetaStyle: { color: C.muted, fontSize: 12, marginTop: 4, fontFamily: FONT },
+      attentionActionsStyle: { flexShrink: 0 },
+      emptyStyle: { color: C.muted, textAlign: 'center', padding: 24, fontFamily: FONT, fontSize: 13 }
+    };
+  }
+}
+</script>
+</body>
+</html>

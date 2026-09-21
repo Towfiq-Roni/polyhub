@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Payables.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Payables" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Payables</h1></header>
+      <div style="{{ filterBarStyle }}"><input type="search" style="{{ searchInputStyle }}" placeholder="Search vendors..." value="{{ search }}" onInput="{{ onSearch }}"></input></div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Vendor</th><th style="{{ thStyle }}">Bill</th><th style="{{ thStyle }}">Due Date</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Status</th><th style="{{ thActionsStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="p" hint-placeholder-count="6">
+              <tr>
+                <td style="{{ tdStyle }}">{{ p.vendor }}</td>
+                <td style="{{ tdStyle }}">{{ p.bill }}</td>
+                <td style="{{ tdStyle }}">{{ p.due }}</td>
+                <td style="{{ tdNumStyle }}">{{ p.amount }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td>
+                <td style="{{ tdActionsStyle }}">
+                  <sc-if value="{{ p.canPay }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ p.onEdit }}">Edit</button>
+                    <button type="button" style="{{ p.payStyle }}" onClick="{{ p.onPay }}">Mark Paid</button>
+                  </sc-if>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ modalScrimStyle }}" onClick="{{ closeModal }}"></div>
+    <div style="{{ modalCardStyle }}" role="dialog" aria-label="Edit payable">
+      <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Edit — {{ modalVendor }}</h2></div>
+      <div style="{{ modalBodyStyle }}">
+        <label style="{{ labelStyle }}">Bill</label>
+        <input type="text" style="{{ modalInputStyle }}" value="{{ modalBill }}" onInput="{{ onModalBill }}"></input>
+        <label style="{{ labelStyle }}">Due date</label>
+        <input type="date" style="{{ modalInputStyle }}" value="{{ modalDue }}" onInput="{{ onModalDue }}"></input>
+        <label style="{{ labelStyle }}">Amount (৳)</label>
+        <input type="number" style="{{ modalInputStyle }}" value="{{ modalAmount }}" onInput="{{ onModalAmount }}"></input>
+        <p style="{{ hintTextStyle }}">This change won't affect any totals until the bill is marked paid.</p>
+      </div>
+      <div style="{{ modalFooterStyle }}">
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeModal }}">Cancel</button>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveModal }}">Save</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+function chip(status,C){ const map={'Paid':C.success,'Due':C.warning,'Overdue':C.danger}; const color=map[status]||C.muted; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,vendor:'Grameen Cloud Services',bill:'BILL-2026-008',due:'2026-09-01',amount:220000,status:'Due'},
+ {id:2,vendor:'City Office Supplies',bill:'BILL-2026-007',due:'2026-08-22',amount:35000,status:'Overdue'},
+ {id:3,vendor:'BD Legal Associates',bill:'BILL-2026-009',due:'2026-09-10',amount:150000,status:'Due'},
+ {id:4,vendor:'Karim Ali (BDS Commission)',bill:'BILL-2026-006',due:'2026-08-05',amount:75000,status:'Paid'},
+ {id:5,vendor:'AWS Bangladesh',bill:'BILL-2026-010',due:'2026-09-12',amount:410000,status:'Due'},
+ {id:6,vendor:'Dhaka Facilities Mgmt',bill:'BILL-2026-005',due:'2026-08-01',amount:60000,status:'Overdue'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',rows:SEED,modalOpen:false,editingId:null,modalBill:'',modalDue:'',modalAmount:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value});
+  markPaid=(id)=>()=>this.setState(s=>({rows:s.rows.map(r=>r.id===id?{...r,status:'Paid'}:r)}));
+  openModal=(p)=>()=>this.setState({modalOpen:true,editingId:p.id,modalBill:p.bill,modalDue:p.due,modalAmount:p.amount});
+  closeModal=()=>this.setState({modalOpen:false});
+  onModalBill=(e)=>this.setState({modalBill:e.target.value});
+  onModalDue=(e)=>this.setState({modalDue:e.target.value});
+  onModalAmount=(e)=>this.setState({modalAmount:e.target.value});
+  saveModal=()=>{ const s=this.state; this.setState(st=>({rows:st.rows.map(r=>r.id===s.editingId?{...r,bill:s.modalBill,due:s.modalDue,amount:parseFloat(s.modalAmount)||0}:r),modalOpen:false})); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=this.state.rows.filter(r=>!this.state.search||r.vendor.toLowerCase().includes(this.state.search.toLowerCase()));
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const pageRows=filtered.map(p=>({...p,amount:fmt(p.amount),chipStyle:chip(p.status,C),canPay:p.status!=='Paid',onPay:this.markPaid(p.id),onEdit:this.openModal(p),
+      payStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.success}`,background:'transparent',color:C.success,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer',whiteSpace:'nowrap'}}));
+    const modalVendor=(this.state.rows.find(r=>r.id===this.state.editingId)||{}).vendor||'';
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,onSearch:this.onSearch,pageRows,
+      modalOpen:this.state.modalOpen,closeModal:this.closeModal,saveModal:this.saveModal,modalVendor,
+      modalBill:this.state.modalBill,onModalBill:this.onModalBill,modalDue:this.state.modalDue,onModalDue:this.onModalDue,modalAmount:this.state.modalAmount,onModalAmount:this.onModalAmount,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thActionsStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`,minWidth:150},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdActionsStyle:{padding:'12px 16px',borderBottom:`1px solid ${C.border}`,display:'flex',gap:8,whiteSpace:'nowrap',minWidth:150},
+      btnGhostSmStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer',whiteSpace:'nowrap'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      hintTextStyle:{color:C.muted,fontSize:12,fontFamily:FONT,margin:'4px 0 0'},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(440px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'}
+    };
+  }
+}
+</script>
+</body>
+</html>

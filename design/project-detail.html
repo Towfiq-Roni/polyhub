@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Detail · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item" href="team-members.html" data-label="Team Members">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item" href="clients.html" data-label="Clients">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item active" href="projects.html" data-label="Projects" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item" href="accounts.html" data-label="Accounts">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Project Detail</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="breadcrumbs" style="margin-block-end:var(--space-md)"><a href="projects.html">← Back to Projects</a></div>
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title" id="projName">Nova ERP Rollout</h2>
+            <p class="page-subtitle"><span id="projClient">Acme Corp</span> · <span class="chip chip--info" id="projStatusChip">Active</span></p>
+          </div>
+        </div>
+
+        <div style="margin-block-end:var(--space-lg)">
+          <div class="status-row" style="justify-content:space-between;margin-block-end:var(--space-xs)">
+            <span class="meta">Overall Progress</span>
+            <span class="meta" id="progressLabel">0%</span>
+          </div>
+          <div class="progress-bar progress-lg"><span class="progress-fill" id="progressFill" style="width:0%"></span></div>
+        </div>
+
+        <div class="tab-nav" role="tablist">
+          <button type="button" class="tab-btn active" id="overview-tab" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+          <button type="button" class="tab-btn" id="milestones-tab" role="tab" aria-selected="false" data-tab="milestones">Milestones</button>
+          <button type="button" class="tab-btn" id="team-tab" role="tab" aria-selected="false" data-tab="team">Team</button>
+          <button type="button" class="tab-btn" id="resources-tab" role="tab" aria-selected="false" data-tab="resources">Resources</button>
+          <button type="button" class="tab-btn" id="finance-tab" role="tab" aria-selected="false" data-tab="finance">Finance</button>
+          <button type="button" class="tab-btn" id="activity-tab" role="tab" aria-selected="false" data-tab="activity">Activity</button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="overview-panel" role="tabpanel">
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Project Summary</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Client</label><p id="ov-client">Acme Corp</p></div>
+                  <div class="field"><label>Status</label><p><span class="chip chip--info" id="ov-status-chip">Active</span></p></div>
+                  <div class="field"><label>Contract Value</label><p id="ov-value">৳1,850,000.00</p></div>
+                  <div class="field"><label>Owner</label><p id="ov-owner">Rahim Uddin</p></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Timeline</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Project Code</label><p id="ov-code">PRJ-2026-001</p></div>
+                  <div class="field"><label>Start Date</label><p id="ov-start">2026-04-01</p></div>
+                  <div class="field"><label>Target End Date</label><p id="ov-end">2026-11-30</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="milestones-panel" role="tabpanel" hidden>
+            <div class="attention-list" id="milestoneList"></div>
+            <div class="empty-state" id="noMilestonesEmpty" hidden>
+              <h3>No milestones yet</h3>
+              <p>Break this project into milestones to track progress and billing.</p>
+            </div>
+
+            <div class="draft-trigger" id="addMilestoneTrigger">
+              <button type="button" class="btn btn-ghost btn-sm" id="openAddMilestoneBtn">+ Add Milestone</button>
+            </div>
+
+            <div class="drafts-card" id="draftsCard" hidden>
+              <div id="draftRows"></div>
+              <div class="draft-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="cancelDraftsBtn">Cancel</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="addAnotherDraftBtn">+ Add Another</button>
+                <button type="button" class="btn btn-primary" id="commitDraftsBtn">Add Milestone(s)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="team-panel" role="tabpanel" hidden>
+            <div class="chips" id="teamChips"></div>
+            <p class="meta" id="noTeamMsg" hidden>No one assigned yet.</p>
+            <div style="margin-block-start:var(--space-md)">
+              <button type="button" class="btn btn-ghost btn-sm" id="manageTeamBtn">Manage Team</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="resources-panel" role="tabpanel" hidden>
+            <div class="filter-bar">
+              <select class="select" id="resourceMilestoneFilter" aria-label="Filter by milestone">
+                <option value="">All Milestones</option>
+              </select>
+              <div class="chips" id="resourceTagChips">
+                <button type="button" class="chip chip--neutral" data-tag="" aria-pressed="true">All Tags</button>
+                <button type="button" class="chip chip--info" data-tag="PDF" aria-pressed="false">PDF</button>
+                <button type="button" class="chip chip--info" data-tag="Design" aria-pressed="false">Design</button>
+                <button type="button" class="chip chip--info" data-tag="Spec" aria-pressed="false">Spec</button>
+                <button type="button" class="chip chip--info" data-tag="Link" aria-pressed="false">Link</button>
+              </div>
+            </div>
+
+            <div class="attention-list" id="resourceList"></div>
+            <div class="empty-state" id="resourceEmpty" hidden>
+              <h3>No resources found</h3>
+              <p>Try a different filter, or add one below.</p>
+            </div>
+
+            <div id="addResourceTrigger" style="margin-block-start:var(--space-md)">
+              <button type="button" class="btn btn-ghost btn-sm" id="openAddResourceBtn">+ Add Resource</button>
+            </div>
+            <div class="card" id="addResourceCard" hidden style="margin-block-start:var(--space-md)">
+              <div class="card-body">
+                <div class="file-upload-row">
+                  <input type="file" class="file-upload-input" id="resourceFileInput">
+                  <label for="resourceFileInput" class="file-upload-btn">Choose File</label>
+                  <span class="file-upload-name" id="resourceFileName">No file chosen</span>
+                </div>
+                <div class="field">
+                  <label for="resourceUrlInput">Link URL (optional)</label>
+                  <input type="text" class="input" id="resourceUrlInput" placeholder="https://...">
+                </div>
+                <div class="field">
+                  <label for="resourceLabelInput">Link label (optional)</label>
+                  <input type="text" class="input" id="resourceLabelInput" placeholder="e.g. Design File">
+                </div>
+                <div class="field">
+                  <label for="resourceMilestoneInput">Milestone (optional)</label>
+                  <select class="select" id="resourceMilestoneInput">
+                    <option value="">None</option>
+                  </select>
+                </div>
+                <div class="error-text" id="resourceError" hidden>Upload a file or provide a link URL.</div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn-ghost btn-sm" id="cancelAddResourceBtn">Cancel</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="saveResourceBtn">Add Resource</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="finance-panel" role="tabpanel" hidden>
+            <!-- ponytail: display-only financial rollup; no editable balance/amount inputs (CLAUDE.md #1/#2); Phase 2+ wires these to real receivables/costs aggregate queries -->
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Contract Value</div>
+                <div class="kpi-value" id="fin-contract">৳1,850,000.00</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Received to Date</div>
+                <div class="kpi-value" id="fin-received">৳1,250,000.00</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Outstanding</div>
+                <div class="kpi-value" id="fin-outstanding">৳600,000.00</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Cost Rollup</div>
+                <div class="kpi-value" id="fin-cost">৳740,000.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="activity-panel" role="tabpanel" hidden>
+            <div class="attention-list" id="activityList"></div>
+          </div>
+        </div>
+
+        <div class="modal" id="assignModal" hidden>
+          <div class="modal-scrim" data-close-modal></div>
+          <div class="modal-card" role="dialog" aria-label="Manage team">
+            <div class="modal-header"><h2 class="modal-title">Manage Team</h2></div>
+            <div class="modal-body">
+              <div class="field">
+                <label for="assignTeamSelect">Quick-select a team (optional)</label>
+                <select class="select" id="assignTeamSelect">
+                  <option value="">Choose a team…</option>
+                </select>
+                <p class="meta">Picking a team checks everyone already in it below. Adjust individually as needed.</p>
+              </div>
+              <div class="field">
+                <label>Members</label>
+                <div class="checkbox-group" id="assignRoster"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-close-modal>Done</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function getQueryId() {
+      try { return new URLSearchParams(location.search).get('id'); } catch (e) { return null; }
+    }
+
+    var CHIP_CLASS = { Active: 'chip--info', Planning: 'chip--neutral', 'On Hold': 'chip--warning', Completed: 'chip--success', Draft: 'chip--neutral', Cancelled: 'chip--danger' };
+
+    var project = {
+      id: 1, code: 'PRJ-2026-001', name: 'Nova ERP Rollout', client: 'Acme Corp', status: 'Active',
+      amount: 1850000, owner: 'Rahim Uddin', start: '2026-04-01', end: '2026-11-30'
+    };
+
+    /* §2.6 query-string + localStorage-list hydration: read ?id= against projects.html's persisted list */
+    (function hydrate() {
+      var id = getQueryId();
+      if (!id) return;
+      try {
+        var list = JSON.parse(localStorage.getItem('hub-projects')) || [];
+        var found = list.filter(function (p) { return String(p.id) === String(id); })[0];
+        if (found) {
+          project.id = found.id;
+          project.code = found.code || project.code;
+          project.name = found.name || project.name;
+          project.client = found.client || project.client;
+          project.status = found.status || project.status;
+          project.amount = found.amount || project.amount;
+          project.owner = found.owner || project.owner;
+        }
+      } catch (e) {}
+    })();
+
+    function renderHeader() {
+      document.getElementById('projName').textContent = project.name;
+      document.getElementById('projClient').textContent = project.client;
+      document.title = project.name + ' · hub';
+      ['projStatusChip', 'ov-status-chip'].forEach(function (id) {
+        var chip = document.getElementById(id);
+        chip.textContent = project.status;
+        chip.className = 'chip ' + (CHIP_CLASS[project.status] || 'chip--neutral');
+      });
+      document.getElementById('ov-client').textContent = project.client;
+      document.getElementById('ov-value').textContent = fmt(project.amount);
+      document.getElementById('ov-owner').textContent = project.owner;
+      document.getElementById('ov-code').textContent = project.code;
+      document.getElementById('ov-start').textContent = project.start;
+      document.getElementById('ov-end').textContent = project.end;
+    }
+
+    /* ---- tabs ---- */
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.getAttribute('data-tab');
+        tabButtons.forEach(function (b) {
+          var active = b === btn;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(function (panel) {
+          panel.hidden = panel.id !== target + '-panel';
+          panel.classList.toggle('active', panel.id === target + '-panel');
+        });
+      });
+    });
+
+    /* ---- Milestones tab: attention-list rows + drafts-card multi-add (same mechanics as project-milestones.html) ---- */
+    var milestones = [
+      { id: 1, name: 'Discovery & Scoping', due: '2026-06-15', done: true, receivable: 0 },
+      { id: 2, name: 'Phase 1: Core Modules', due: '2026-09-01', done: true, receivable: 800000 },
+      { id: 3, name: 'Phase 2: Integrations', due: '2026-10-15', done: false, receivable: 600000 },
+      { id: 4, name: 'UAT & Go-Live', due: '2026-11-30', done: false, receivable: 450000 }
+    ];
+    var milestoneList = document.getElementById('milestoneList');
+    var noMilestonesEmpty = document.getElementById('noMilestonesEmpty');
+    var progressLabel = document.getElementById('progressLabel');
+    var progressFill = document.getElementById('progressFill');
+    var addMilestoneTrigger = document.getElementById('addMilestoneTrigger');
+    var draftsCard = document.getElementById('draftsCard');
+    var draftRows = document.getElementById('draftRows');
+    var drafts = [];
+
+    function renderMilestoneRow(m) {
+      return '<div class="attention-item" data-milestone-id="' + m.id + '">' +
+        '<button type="button" class="chip ' + (m.done ? 'chip--success' : 'chip--neutral') + '" data-toggle-milestone="' + m.id + '">' + (m.done ? 'Done' : 'Pending') + '</button>' +
+        '<div class="attention-text-wrap">' +
+          '<a class="link attention-title" href="milestone-detail.html?id=' + m.id + '">' + escapeHtml(m.name) + '</a>' +
+          '<div class="attention-meta">Due ' + escapeHtml(m.due) + ' · ' + fmt(m.receivable) + '</div>' +
+        '</div>' +
+        '<div class="attention-actions">' +
+          '<button type="button" class="btn btn-ghost btn-sm" data-remove-milestone="' + m.id + '">Remove</button>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function renderMilestonesAndProgress() {
+      var doneCount = milestones.filter(function (m) { return m.done; }).length;
+      var progress = milestones.length ? Math.round(doneCount / milestones.length * 100) : 0;
+      progressLabel.textContent = progress + '%';
+      progressFill.style.width = progress + '%';
+      milestoneList.innerHTML = milestones.map(renderMilestoneRow).join('');
+      noMilestonesEmpty.hidden = milestones.length !== 0;
+      populateMilestoneDropdowns();
+    }
+
+    milestoneList.addEventListener('click', function (e) {
+      var toggleBtn = e.target.closest('[data-toggle-milestone]');
+      if (toggleBtn) {
+        var tId = Number(toggleBtn.getAttribute('data-toggle-milestone'));
+        milestones.forEach(function (m) { if (m.id === tId) m.done = !m.done; });
+        renderMilestonesAndProgress();
+        return;
+      }
+      var removeBtn = e.target.closest('[data-remove-milestone]');
+      if (removeBtn) {
+        var rId = Number(removeBtn.getAttribute('data-remove-milestone'));
+        milestones = milestones.filter(function (m) { return m.id !== rId; });
+        renderMilestonesAndProgress();
+      }
+    });
+
+    function renderDrafts() {
+      draftRows.innerHTML = drafts.map(function (d, i) {
+        return '<div class="draft-row" data-draft-id="' + d.id + '">' +
+          '<div class="draft-row-header"><span class="draft-row-number">' + (i + 1) + '.</span>' +
+          '<button type="button" class="btn btn-ghost btn-sm" data-remove-draft="' + d.id + '">Remove</button></div>' +
+          '<div class="draft-fields">' +
+            '<div class="draft-field"><label>Name</label><input type="text" class="input" data-draft-field="name" value="' + escapeHtml(d.name) + '" placeholder="e.g. QA Sign-off"></div>' +
+            '<div class="draft-field"><label>Due date</label><input type="date" class="input" data-draft-field="due" value="' + d.due + '"></div>' +
+            '<div class="draft-field"><label>Receivable (৳)</label><input type="number" class="input" data-draft-field="receivable" value="' + d.receivable + '" placeholder="0"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function openDrafts() {
+      drafts = [{ id: Date.now(), name: '', due: '', receivable: '' }];
+      addMilestoneTrigger.hidden = true;
+      draftsCard.hidden = false;
+      renderDrafts();
+    }
+    function closeDrafts() {
+      drafts = [];
+      addMilestoneTrigger.hidden = false;
+      draftsCard.hidden = true;
+    }
+
+    document.getElementById('openAddMilestoneBtn').addEventListener('click', openDrafts);
+    document.getElementById('cancelDraftsBtn').addEventListener('click', closeDrafts);
+    document.getElementById('addAnotherDraftBtn').addEventListener('click', function () {
+      drafts.push({ id: Date.now() + Math.random(), name: '', due: '', receivable: '' });
+      renderDrafts();
+    });
+    draftRows.addEventListener('input', function (e) {
+      var field = e.target.getAttribute('data-draft-field');
+      if (!field) return;
+      var row = e.target.closest('[data-draft-id]');
+      var id = row.getAttribute('data-draft-id');
+      drafts = drafts.map(function (d) { return String(d.id) === id ? Object.assign({}, d, { [field]: e.target.value }) : d; });
+    });
+    draftRows.addEventListener('click', function (e) {
+      var removeBtn = e.target.closest('[data-remove-draft]');
+      if (!removeBtn) return;
+      var id = removeBtn.getAttribute('data-remove-draft');
+      drafts = drafts.filter(function (d) { return String(d.id) !== id; });
+      renderDrafts();
+    });
+    document.getElementById('commitDraftsBtn').addEventListener('click', function () {
+      var valid = drafts.filter(function (d) { return d.name.trim(); });
+      var newOnes = valid.map(function (d) {
+        return { id: Date.now() + Math.random(), name: d.name.trim(), due: d.due || '-', done: false, receivable: parseFloat(d.receivable) || 0 };
+      });
+      milestones = milestones.concat(newOnes);
+      closeDrafts();
+      renderMilestonesAndProgress();
+    });
+
+    /* ---- Team tab + merged Assign modal (same mechanism as projects.html) ---- */
+    var ROSTER = [
+      { id: 1, name: 'Rahim Uddin', role: 'Project Manager' }, { id: 2, name: 'Karim Ali', role: 'Senior Developer' },
+      { id: 3, name: 'Farida Akter', role: 'Senior Developer' }, { id: 4, name: 'Nadia Rahman', role: 'QA Engineer' },
+      { id: 5, name: 'Mahmudul Islam', role: 'DevOps Engineer' }, { id: 6, name: 'Tasnim Ahmed', role: 'Account Executive' },
+      { id: 7, name: 'Rahima Khatun', role: 'Business Developer' }, { id: 8, name: 'Kamal Hossain', role: 'Developer' }
+    ];
+    var TEAM_MEMBERS = { 'Engineering': [1, 2, 3, 8], 'Design': [3], 'QA & Testing': [4], 'DevOps': [5], 'Sales': [6, 7] };
+    var assignedIds = [1, 2, 4];
+
+    var teamChips = document.getElementById('teamChips');
+    var noTeamMsg = document.getElementById('noTeamMsg');
+    var manageTeamBtn = document.getElementById('manageTeamBtn');
+
+    function renderTeam() {
+      var members = ROSTER.filter(function (r) { return assignedIds.indexOf(r.id) !== -1; });
+      teamChips.innerHTML = members.map(function (m) {
+        return '<span class="chip chip--neutral">' + escapeHtml(m.name) + ' <span class="meta">· ' + escapeHtml(m.role) + '</span></span>';
+      }).join('');
+      noTeamMsg.hidden = members.length !== 0;
+      var completed = project.status === 'Completed';
+      manageTeamBtn.disabled = completed;
+      manageTeamBtn.hidden = completed;
+    }
+
+    var assignModal = document.getElementById('assignModal');
+    var assignTeamSelect = document.getElementById('assignTeamSelect');
+    var assignRoster = document.getElementById('assignRoster');
+    assignTeamSelect.innerHTML = '<option value="">Choose a team…</option>' + Object.keys(TEAM_MEMBERS).map(function (t) {
+      return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>';
+    }).join('');
+
+    function renderRoster() {
+      assignRoster.innerHTML = ROSTER.map(function (m) {
+        return '<label class="check-row"><input type="checkbox" data-member="' + m.id + '"' + (assignedIds.indexOf(m.id) !== -1 ? ' checked' : '') + '><span>' + escapeHtml(m.name) + '</span><span class="meta" style="margin-inline-start:auto">' + escapeHtml(m.role) + '</span></label>';
+      }).join('');
+    }
+
+    manageTeamBtn.addEventListener('click', function () {
+      if (project.status === 'Completed') return;
+      assignTeamSelect.value = '';
+      renderRoster();
+      assignModal.hidden = false;
+    });
+    assignModal.querySelectorAll('[data-close-modal]').forEach(function (el) {
+      el.addEventListener('click', function () { assignModal.hidden = true; renderTeam(); });
+    });
+    assignTeamSelect.addEventListener('change', function () {
+      var team = assignTeamSelect.value;
+      if (!team) return;
+      var ids = TEAM_MEMBERS[team] || [];
+      assignedIds = Array.from(new Set(assignedIds.concat(ids)));
+      renderRoster();
+    });
+    assignRoster.addEventListener('change', function (e) {
+      var box = e.target.closest('[data-member]');
+      if (!box) return;
+      var memberId = Number(box.getAttribute('data-member'));
+      assignedIds = box.checked ? assignedIds.concat([memberId]) : assignedIds.filter(function (mid) { return mid !== memberId; });
+    });
+
+    /* ---- Resources tab: tag-chip + milestone-dropdown filter (same pattern as client-detail.html) ---- */
+    var resources = [
+      { id: 1, label: 'requirements-v2.pdf', tag: 'PDF', milestoneId: 1, isLink: false, url: '#' },
+      { id: 2, label: 'integration-spec.yaml', tag: 'Spec', milestoneId: 3, isLink: false, url: '#' },
+      { id: 3, label: 'Shared Drive', tag: 'Link', milestoneId: null, isLink: true, url: 'https://drive.example.com/nova-erp' }
+    ];
+    var activeTag = '';
+    var milestoneFilterEl = document.getElementById('resourceMilestoneFilter');
+    var tagChipsEl = document.getElementById('resourceTagChips');
+    var resourceListEl = document.getElementById('resourceList');
+    var resourceEmptyEl = document.getElementById('resourceEmpty');
+    var resourceMilestoneInput = document.getElementById('resourceMilestoneInput');
+
+    function populateMilestoneDropdowns() {
+      var options = milestones.map(function (m) {
+        return '<option value="' + m.id + '">' + escapeHtml(m.name) + '</option>';
+      }).join('');
+      milestoneFilterEl.innerHTML = '<option value="">All Milestones</option>' + options;
+      resourceMilestoneInput.innerHTML = '<option value="">None</option>' + options;
+    }
+
+    function milestoneName(id) {
+      var m = milestones.filter(function (x) { return String(x.id) === String(id); })[0];
+      return m ? m.name : '-';
+    }
+
+    function renderResources() {
+      var milestoneFilter = milestoneFilterEl.value;
+      var filtered = resources.filter(function (r) {
+        if (activeTag && r.tag !== activeTag) return false;
+        if (milestoneFilter && String(r.milestoneId) !== milestoneFilter) return false;
+        return true;
+      });
+      resourceListEl.innerHTML = filtered.map(function (r) {
+        return '<div class="attention-item"><span class="chip chip--neutral">' + escapeHtml(r.tag) + '</span>' +
+          '<div class="attention-text-wrap"><a href="' + escapeHtml(r.url) + '" target="_blank" class="link">' + escapeHtml(r.label) + '</a>' +
+          '<div class="attention-meta">' + escapeHtml(r.milestoneId ? milestoneName(r.milestoneId) : '-') + '</div></div>' +
+          '<div class="attention-actions"><button type="button" class="btn btn-ghost btn-sm" data-remove-resource="' + r.id + '">Remove</button></div></div>';
+      }).join('');
+      resourceEmptyEl.hidden = filtered.length !== 0;
+    }
+
+    milestoneFilterEl.addEventListener('change', renderResources);
+    tagChipsEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-tag]');
+      if (!btn) return;
+      activeTag = btn.getAttribute('data-tag');
+      tagChipsEl.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      renderResources();
+    });
+    resourceListEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-remove-resource]');
+      if (!btn) return;
+      var id = Number(btn.getAttribute('data-remove-resource'));
+      resources = resources.filter(function (r) { return r.id !== id; });
+      renderResources();
+    });
+
+    var addResourceTrigger = document.getElementById('addResourceTrigger');
+    var addResourceCard = document.getElementById('addResourceCard');
+    var resourceFileInput = document.getElementById('resourceFileInput');
+    var resourceFileName = document.getElementById('resourceFileName');
+    var resourceError = document.getElementById('resourceError');
+
+    document.getElementById('openAddResourceBtn').addEventListener('click', function () {
+      addResourceTrigger.hidden = true;
+      addResourceCard.hidden = false;
+    });
+    function closeAddResource() {
+      addResourceTrigger.hidden = false;
+      addResourceCard.hidden = true;
+      resourceFileInput.value = '';
+      resourceFileName.textContent = 'No file chosen';
+      document.getElementById('resourceUrlInput').value = '';
+      document.getElementById('resourceLabelInput').value = '';
+      resourceError.hidden = true;
+    }
+    document.getElementById('cancelAddResourceBtn').addEventListener('click', closeAddResource);
+    resourceFileInput.addEventListener('change', function () {
+      resourceFileName.textContent = resourceFileInput.files[0] ? resourceFileInput.files[0].name : 'No file chosen';
+    });
+    document.getElementById('saveResourceBtn').addEventListener('click', function () {
+      var file = resourceFileInput.files[0];
+      var url = document.getElementById('resourceUrlInput').value.trim();
+      var label = document.getElementById('resourceLabelInput').value.trim();
+      var milestoneId = resourceMilestoneInput.value || null;
+      if (!file && !url) { resourceError.hidden = false; return; }
+      resourceError.hidden = true;
+      var r = file
+        ? { id: Date.now(), label: file.name, tag: 'File', milestoneId: milestoneId, isLink: false, url: '#' }
+        : { id: Date.now(), label: label || url, tag: 'Link', milestoneId: milestoneId, isLink: true, url: url };
+      resources.unshift(r);
+      closeAddResource();
+      renderResources();
+    });
+
+    /* ---- Activity tab: simple read-only timeline ---- */
+    var activity = [
+      { time: '2026-08-28 14:20', text: 'Milestone "Phase 1: Core Modules" marked complete.' },
+      { time: '2026-08-20 09:05', text: 'Karim Ali added to the project team.' },
+      { time: '2026-08-10 16:40', text: 'Resource "requirements-v2.pdf" attached.' },
+      { time: '2026-06-15 11:00', text: 'Project created from Opportunity "Nova ERP - Discovery".' }
+    ];
+    document.getElementById('activityList').innerHTML = activity.map(function (a) {
+      return '<div class="attention-item"><div class="attention-text-wrap"><div class="attention-title">' + escapeHtml(a.text) + '</div><div class="attention-meta">' + escapeHtml(a.time) + '</div></div></div>';
+    }).join('');
+
+    renderHeader();
+    renderMilestonesAndProgress();
+    renderTeam();
+    renderResources();
+  })();
+</script>
+</body>
+</html>

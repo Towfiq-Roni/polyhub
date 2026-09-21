@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<style>
+@font-face { font-family: 'IBM Plex Sans'; src: url('./fonts/IBMPlexSans-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Sans'; src: url('./fonts/IBMPlexSans-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Sans'; src: url('./fonts/IBMPlexSans-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+</style>
+</helmet>
+<aside style="{{ asideStyle }}" role="navigation" aria-label="Main navigation" ref="{{ asideRef }}">
+  <div style="{{ headerRowStyle }}">
+    <div style="{{ brandStyle }}" onClick="{{ expand }}" title="Hub">
+      <span style="{{ brandMarkStyle }}">DEA</span>
+      <span style="{{ brandNameStyle }}">Hub</span>
+    </div>
+    <button type="button" style="{{ collapseBtnStyle }}" style-hover="{{ collapseBtnHoverStyle }}" onClick="{{ toggleCollapse }}" aria-label="Collapse sidebar" title="{{ collapseBtnTitle }}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ collapseIconStyle }}"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+  <nav style="{{ navStyle }}">
+    <ul style="{{ ulStyle }}">
+      <li><a href="Dashboard.dc.html" style="{{ S.dashboard }}" data-active="{{ A.dashboard }}" title="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg><span style="{{ labelStyle }}">Dashboard</span></a></li>
+
+      <li style="{{ groupStyle }}">
+        <span style="{{ groupLabelStyle }}">Organization</span>
+        <ul style="{{ ulStyle }}">
+          <li><a href="Teams.dc.html" style="{{ S.teams }}" data-active="{{ A.teams }}" title="Teams"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span style="{{ labelStyle }}">Teams</span></a></li>
+          <li><a href="TeamMembers.dc.html" style="{{ S.teamMembers }}" data-active="{{ A.teamMembers }}" title="Team Members"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg><span style="{{ labelStyle }}">Team Members</span></a></li>
+        </ul>
+      </li>
+
+      <li style="{{ groupStyle }}">
+        <span style="{{ groupLabelStyle }}">CRM</span>
+        <ul style="{{ ulStyle }}">
+          <li><a href="Clients.dc.html" style="{{ S.clients }}" data-active="{{ A.clients }}" title="Clients"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span style="{{ labelStyle }}">Clients</span></a></li>
+          <li><a href="Leads.dc.html" style="{{ S.leads }}" data-active="{{ A.leads }}" title="Leads"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span style="{{ labelStyle }}">Leads</span></a></li>
+          <li><a href="Opportunities.dc.html" style="{{ S.opportunities }}" data-active="{{ A.opportunities }}" title="Opportunities"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg><span style="{{ labelStyle }}">Opportunities</span></a></li>
+          <li><a href="BdsPartners.dc.html" style="{{ S.bdsPartners }}" data-active="{{ A.bdsPartners }}" title="BDS Partners"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg><span style="{{ labelStyle }}">BDS Partners</span></a></li>
+        </ul>
+      </li>
+
+      <li style="{{ groupStyle }}">
+        <span style="{{ groupLabelStyle }}">Projects</span>
+        <ul style="{{ ulStyle }}">
+          <li><a href="Projects.dc.html" style="{{ S.projects }}" data-active="{{ A.projects }}" title="Projects"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg><span style="{{ labelStyle }}">Projects</span></a></li>
+          <li><a href="ProjectMilestones.dc.html" style="{{ S.milestones }}" data-active="{{ A.milestones }}" title="Milestones"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg><span style="{{ labelStyle }}">Milestones</span></a></li>
+        </ul>
+      </li>
+
+      <li style="{{ groupStyle }}">
+        <span style="{{ groupLabelStyle }}">Finance</span>
+        <ul style="{{ ulStyle }}">
+          <li><a href="FinanceDashboard.dc.html" style="{{ S.financeDashboard }}" data-active="{{ A.financeDashboard }}" title="Finance Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg><span style="{{ labelStyle }}">Finance Dashboard</span></a></li>
+          <li><a href="BankAccounts.dc.html" style="{{ S.bankAccounts }}" data-active="{{ A.bankAccounts }}" title="Accounts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg><span style="{{ labelStyle }}">Accounts</span></a></li>
+          <li><a href="Transactions.dc.html" style="{{ S.transactions }}" data-active="{{ A.transactions }}" title="Transactions"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg><span style="{{ labelStyle }}">Transactions</span></a></li>
+          <li><a href="Receivables.dc.html" style="{{ S.receivables }}" data-active="{{ A.receivables }}" title="Receivables"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span style="{{ labelStyle }}">Receivables</span></a></li>
+          <li><a href="Payables.dc.html" style="{{ S.payables }}" data-active="{{ A.payables }}" title="Payables"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg><span style="{{ labelStyle }}">Payables</span></a></li>
+          <li><a href="PaymentEntry.dc.html" style="{{ S.paymentEntry }}" data-active="{{ A.paymentEntry }}" title="Payment Entry"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg><span style="{{ labelStyle }}">Payment Entry</span></a></li>
+          <li><a href="ProjectCosts.dc.html" style="{{ S.projectCosts }}" data-active="{{ A.projectCosts }}" title="Project Costs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg><span style="{{ labelStyle }}">Project Costs</span></a></li>
+          <li><a href="Accounting.dc.html" style="{{ S.accounting }}" data-active="{{ A.accounting }}" title="Accounting"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M4 4h16v16H4z"></path><path d="M4 9h16M9 4v16"></path></svg><span style="{{ labelStyle }}">Accounting</span></a></li>
+        </ul>
+      </li>
+
+      <li style="{{ groupStyle }}">
+        <span style="{{ groupLabelStyle }}">Admin</span>
+        <ul style="{{ ulStyle }}">
+          <li><a href="Users.dc.html" style="{{ S.users }}" data-active="{{ A.users }}" title="Users"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span style="{{ labelStyle }}">Users</span></a></li>
+          <li><a href="Roles.dc.html" style="{{ S.roles }}" data-active="{{ A.roles }}" title="Roles"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span style="{{ labelStyle }}">Roles</span></a></li>
+          <li><a href="AuditLogs.dc.html" style="{{ S.auditLogs }}" data-active="{{ A.auditLogs }}" title="Audit Logs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg><span style="{{ labelStyle }}">Audit Logs</span></a></li>
+          <li><a href="Settings.dc.html" style="{{ S.settings }}" data-active="{{ A.settings }}" title="Settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span style="{{ labelStyle }}">Settings</span></a></li>
+        </ul>
+      </li>
+
+      <li><a href="Reports.dc.html" style="{{ S.reports }}" data-active="{{ A.reports }}" title="Reports"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ iconStyle }}"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg><span style="{{ labelStyle }}">Reports</span></a></li>
+    </ul>
+  </nav>
+</aside>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:240,&quot;height&quot;:700},&quot;active&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Dashboard.dc.html&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const DARK = { bg:'#010101', surface:'#080808', surfaceHover:'rgba(251,250,251,0.04)', inkHi:'#FBFAFB', ink:'#FAFAFA', inkDim:'#F8F8F9', muted:'#717F91', border:'rgba(111,126,143,0.32)', accent:'#717F91', accentSoft:'rgba(113,127,145,0.14)' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', surfaceHover:'rgba(1,1,1,0.04)', inkHi:'#010101', ink:'#121417', inkDim:'#3A414B', muted:'#5A6675', border:'rgba(111,126,143,0.30)', accent:'#4A5563', accentSoft:'rgba(74,85,99,0.12)' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+class Component extends DCLogic {
+  state = { collapsed: false, isNarrow: false };
+
+  componentDidMount() {
+    try {
+      if (localStorage.getItem('hub-sidebar') === 'collapsed') this.setState({ collapsed: true });
+    } catch (e) {}
+    this.checkWidth();
+    this._onResize = () => this.checkWidth();
+    window.addEventListener('resize', this._onResize);
+    requestAnimationFrame(() => {
+      const container = this.asideEl;
+      const activeEl = container && container.querySelector('a[data-active="true"]');
+      if (container && activeEl) {
+        const target = activeEl.offsetTop - container.clientHeight / 2 + activeEl.clientHeight / 2;
+        container.scrollTop = Math.max(0, target);
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+  }
+
+  checkWidth = () => {
+    const narrow = window.innerWidth < 900;
+    this.setState(s => {
+      if (narrow === s.isNarrow) return null;
+      const next = { isNarrow: narrow };
+      if (narrow && !s.collapsed) next.collapsed = true;
+      return next;
+    });
+  };
+
+  toggleCollapse = () => {
+    this.setState(s => {
+      const next = !s.collapsed;
+      try { localStorage.setItem('hub-sidebar', next ? 'collapsed' : 'expanded'); } catch (e) {}
+      return { collapsed: next };
+    });
+  };
+
+  expand = () => {
+    if (!this.state.collapsed) return;
+    try { localStorage.setItem('hub-sidebar', 'expanded'); } catch (e) {}
+    this.setState({ collapsed: false });
+  };
+
+  renderVals() {
+    const C = this.props.theme === 'light' ? LIGHT : DARK;
+    const collapsed = this.state.collapsed;
+    const active = this.props.active || '';
+
+    const link = (file) => {
+      const isActive = active === file;
+      return {
+        display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 12,
+        padding: collapsed ? '10px 0' : '8px 12px', justifyContent: collapsed ? 'center' : 'flex-start',
+        borderRadius: 4, textDecoration: 'none', fontFamily: FONT, fontSize: 14,
+        fontWeight: isActive ? 600 : 400,
+        color: isActive ? C.inkHi : C.inkDim,
+        background: isActive ? C.accentSoft : 'transparent',
+        boxShadow: isActive ? `inset 2px 0 0 ${C.accent}` : 'none'
+      };
+    };
+
+
+    const S = {
+      dashboard: link('Dashboard.dc.html'), teams: link('Teams.dc.html'),
+      teamMembers: link('TeamMembers.dc.html'),
+      clients: link('Clients.dc.html'), leads: link('Leads.dc.html'),
+      opportunities: link('Opportunities.dc.html'), bdsPartners: link('BdsPartners.dc.html'),
+      projects: link('Projects.dc.html'), milestones: link('ProjectMilestones.dc.html'), financeDashboard: link('FinanceDashboard.dc.html'),
+      bankAccounts: link('BankAccounts.dc.html'), transactions: link('Transactions.dc.html'), accounting: link('Accounting.dc.html'),
+      receivables: link('Receivables.dc.html'), payables: link('Payables.dc.html'),
+      paymentEntry: link('PaymentEntry.dc.html'), projectCosts: link('ProjectCosts.dc.html'),
+      users: link('Users.dc.html'), roles: link('Roles.dc.html'),
+      auditLogs: link('AuditLogs.dc.html'),
+      settings: link('Settings.dc.html'), reports: link('Reports.dc.html')
+    };
+    const A = {};
+    const files = { dashboard:'Dashboard.dc.html', teams:'Teams.dc.html', teamMembers:'TeamMembers.dc.html', clients:'Clients.dc.html', leads:'Leads.dc.html', opportunities:'Opportunities.dc.html', bdsPartners:'BdsPartners.dc.html', projects:'Projects.dc.html', milestones:'ProjectMilestones.dc.html', financeDashboard:'FinanceDashboard.dc.html', bankAccounts:'BankAccounts.dc.html', transactions:'Transactions.dc.html', accounting:'Accounting.dc.html', receivables:'Receivables.dc.html', payables:'Payables.dc.html', paymentEntry:'PaymentEntry.dc.html', projectCosts:'ProjectCosts.dc.html', users:'Users.dc.html', roles:'Roles.dc.html', auditLogs:'AuditLogs.dc.html', settings:'Settings.dc.html', reports:'Reports.dc.html' };
+    Object.keys(files).forEach(k => { A[k] = active === files[k] ? 'true' : undefined; });
+
+    return {
+      S, A,
+      asideRef: (el) => { this.asideEl = el; },
+      toggleCollapse: this.toggleCollapse,
+      expand: this.expand,
+      collapseBtnTitle: collapsed ? 'Expand sidebar' : 'Collapse sidebar',
+      collapseBtnHoverStyle: { background: C.accentSoft, color: C.inkHi, borderColor: C.accent },
+      asideStyle: {
+        display: 'flex', flexDirection: 'column', gap: 24, padding: 16,
+        width: collapsed ? 64 : 240, flexShrink: 0, boxSizing: 'border-box',
+        background: C.surface, borderRight: `1px solid ${C.border}`,
+        height: '100vh', position: 'sticky', top: 0,
+        overflowY: collapsed ? 'visible' : 'auto',
+        transition: this.state.isNarrow ? 'none' : 'width 200ms cubic-bezier(0.2,0,0,1)'
+      },
+      headerRowStyle: {
+        display: 'flex', alignItems: 'center', gap: 8,
+        flexDirection: collapsed ? 'column' : 'row',
+        justifyContent: collapsed ? 'center' : 'space-between'
+      },
+      brandStyle: { display: 'flex', alignItems: 'center', gap: 8, padding: 4, minWidth: 0, cursor: collapsed ? 'pointer' : 'default' },
+      brandMarkStyle: { fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', color: C.inkHi, fontFamily: FONT, flexShrink: 0 },
+      brandNameStyle: { display: collapsed ? 'none' : 'inline', fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', color: C.inkHi, fontFamily: FONT, whiteSpace: 'nowrap' },
+      collapseBtnStyle: {
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 28, height: 28, flexShrink: 0,
+        background: 'transparent', border: `1px solid ${C.border}`, borderRadius: 4,
+        color: C.muted, cursor: 'pointer',
+        transition: 'background-color 120ms, color 120ms, border-color 120ms'
+      },
+      collapseIconStyle: { transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 200ms' },
+      navStyle: { display: 'block' },
+      ulStyle: { listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 4 },
+      groupStyle: { display: 'grid', gap: 4, marginTop: 8 },
+      groupLabelStyle: { display: collapsed ? 'none' : 'block', padding: '8px 12px 0', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: FONT },
+      labelStyle: { display: collapsed ? 'none' : 'inline', whiteSpace: 'nowrap' },
+      iconStyle: { flexShrink: 0 }
+    };
+  }
+}
+</script>
+</body>
+</html>

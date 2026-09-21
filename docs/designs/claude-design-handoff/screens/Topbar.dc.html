@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet></helmet>
+<header style="{{ headerStyle }}" role="banner">
+  <h1 style="{{ titleStyle }}">{{ title }}</h1>
+  <div style="{{ searchWrapStyle }}" role="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ searchIconStyle }}"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="search" style="{{ searchInputStyle }}" placeholder="Search projects, clients, transactions…" aria-label="Global search" value="{{ searchValue }}" onInput="{{ onSearchInput }}" onKeyDown="{{ onSearchKey }}" onFocus="{{ onSearchFocus }}" onBlur="{{ onSearchBlur }}"></input>
+    <sc-if value="{{ showResults }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ searchDropdownStyle }}" role="listbox">
+        <sc-for list="{{ searchResults }}" as="r" hint-placeholder-count="3">
+          <a href="{{ r.href }}" style="{{ searchResultStyle }}" role="option"><span style="{{ searchResultTypeStyle }}">{{ r.type }}</span>{{ r.name }}</a>
+        </sc-for>
+        <sc-if value="{{ noSearchResults }}" hint-placeholder-val="{{ false }}"><div style="{{ notifEmptyStyle }}">No matches for "{{ searchValue }}"</div></sc-if>
+      </div>
+    </sc-if>
+  </div>
+  <div style="{{ actionsStyle }}">
+    <button type="button" style="{{ iconBtnStyle }}" onClick="{{ toggleTheme }}" aria-label="Toggle theme" title="Toggle light / dark theme">
+      <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+      </sc-if>
+      <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </sc-if>
+    </button>
+
+    <div style="{{ notifWrapStyle }}">
+      <button type="button" style="{{ iconBtnStyle }}" onClick="{{ toggleNotif }}" aria-label="Notifications" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}"><span style="{{ badgeDotStyle }}"></span></sc-if>
+      </button>
+      <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ dropdownStyle }}" role="menu">
+          <div style="{{ dropdownHeaderStyle }}">Notifications</div>
+          <sc-for list="{{ notifications }}" as="n" hint-placeholder-count="3">
+            <div style="{{ notifItemStyle }}">
+              <div style="{{ notifTitleStyle }}">{{ n.text }}</div>
+              <div style="{{ notifMetaStyle }}">{{ n.meta }}</div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noNotifications }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ notifEmptyStyle }}">You're all caught up</div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="{{ userWrapStyle }}">
+      <button type="button" style="{{ userTriggerStyle }}" onClick="{{ toggleUser }}" aria-haspopup="true">
+        <span style="{{ avatarStyle }}">{{ avatarInitials }}</span>
+        <span style="{{ userNameStyle }}">{{ userName }}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      <sc-if value="{{ userOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ dropdownStyle }}" role="menu">
+          <div style="{{ userInfoStyle }}">
+            <div style="{{ userInfoNameStyle }}">{{ userName }}</div>
+            <div style="{{ userInfoRoleStyle }}">{{ userRole }}</div>
+          </div>
+          <a href="Profile.dc.html" style="{{ dropdownItemStyle }}" role="menuitem">Profile</a>
+          <a href="Settings.dc.html" style="{{ dropdownItemStyle }}" role="menuitem">Settings</a>
+          <div style="{{ dividerStyle }}"></div>
+          <button type="button" style="{{ dropdownItemDangerStyle }}" onClick="{{ onLogout }}" role="menuitem">Logout</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</header>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:56},&quot;title&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;onToggleTheme&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&gt; void&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Rahim Uddin&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;userRole&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Finance Manager&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;avatarInitials&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;RU&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const DARK = { surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accentSoft:'rgba(113,127,145,0.14)', accent:'#717F91', danger:'#CD6A5E', bg:'#010101' };
+const LIGHT = { surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accentSoft:'rgba(74,85,99,0.12)', accent:'#4A5563', danger:'#B23A2E', bg:'#FBFAFB' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+const SEARCH_INDEX = [
+  { name: 'ERP Implementation', type: 'Project', href: 'ProjectDetail.dc.html' },
+  { name: 'CRM Migration', type: 'Project', href: 'ProjectDetail.dc.html' },
+  { name: 'Mobile App Development', type: 'Project', href: 'ProjectDetail.dc.html' },
+  { name: 'Legacy System Cleanup', type: 'Project', href: 'ProjectDetail.dc.html' },
+  { name: 'Website Redesign', type: 'Project', href: 'ProjectDetail.dc.html' },
+  { name: 'Acme Corp', type: 'Client', href: 'ClientDetail.dc.html' },
+  { name: 'Bayzid Group', type: 'Client', href: 'ClientDetail.dc.html' },
+  { name: 'Delta Tech', type: 'Client', href: 'ClientDetail.dc.html' },
+  { name: 'Ekushey Solutions', type: 'Client', href: 'ClientDetail.dc.html' },
+  { name: 'Futura Ltd', type: 'Client', href: 'ClientDetail.dc.html' },
+  { name: 'Rahim Uddin', type: 'Team Member', href: 'TeamMemberDetail.dc.html' },
+  { name: 'Karim Ali', type: 'Team Member', href: 'TeamMemberDetail.dc.html' },
+  { name: 'Farida Akter', type: 'Team Member', href: 'TeamMemberDetail.dc.html' },
+  { name: 'Nadia Rahman', type: 'Team Member', href: 'TeamMemberDetail.dc.html' },
+  { name: 'Transactions', type: 'Page', href: 'Transactions.dc.html' },
+  { name: 'Receivables', type: 'Page', href: 'Receivables.dc.html' },
+  { name: 'Payables', type: 'Page', href: 'Payables.dc.html' },
+  { name: 'Payment Entry', type: 'Page', href: 'PaymentEntry.dc.html' },
+  { name: 'Accounts', type: 'Page', href: 'BankAccounts.dc.html' },
+  { name: 'Accounting', type: 'Page', href: 'Accounting.dc.html' },
+  { name: 'Reports', type: 'Page', href: 'Reports.dc.html' }
+];
+
+class Component extends DCLogic {
+  state = { userOpen: false, notifOpen: false, isNarrow: false, isVeryNarrow: false, searchValue: '', searchFocused: false };
+
+  componentDidMount() {
+    this.checkWidth();
+    this._onResize = () => this.checkWidth();
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+  }
+  checkWidth = () => {
+    const isNarrow = window.innerWidth < 700;
+    const isVeryNarrow = window.innerWidth < 480;
+    this.setState(s => (s.isNarrow === isNarrow && s.isVeryNarrow === isVeryNarrow) ? null : { isNarrow, isVeryNarrow });
+  };
+
+  toggleUser = () => this.setState(s => ({ userOpen: !s.userOpen, notifOpen: false }));
+  toggleNotif = () => this.setState(s => ({ notifOpen: !s.notifOpen, userOpen: false }));
+  onSearchInput = (e) => this.setState({ searchValue: e.target.value });
+  onSearchFocus = () => this.setState({ searchFocused: true });
+  onSearchBlur = () => setTimeout(() => this.setState({ searchFocused: false }), 150);
+  onSearchKey = (e) => {
+    if (e.key === 'Enter') {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) return;
+      const match = SEARCH_INDEX.find(r => r.name.toLowerCase().includes(q));
+      if (match) window.location.href = match.href;
+    } else if (e.key === 'Escape') {
+      this.setState({ searchValue: '' });
+    }
+  };
+  onLogout = () => { if (window.confirm('Log out of Hub?')) window.location.href = 'Login.dc.html'; };
+
+  toggleTheme = () => { if (this.props.onToggleTheme) this.props.onToggleTheme(); };
+
+  renderVals() {
+    const C = this.props.theme === 'light' ? LIGHT : DARK;
+    const q = this.state.searchValue.trim().toLowerCase();
+    const searchResults = q ? SEARCH_INDEX.filter(r => r.name.toLowerCase().includes(q)).slice(0, 6) : [];
+    const notifications = this.props.notifications || [
+      { text: 'Milestone M-3 overdue 3 days', meta: 'Mobile Banking App' },
+      { text: 'Client Bayzid contract expires in 7 days', meta: 'Renewal pending' },
+      { text: 'BDS partner invoice awaiting approval', meta: '৳350,000.00' }
+    ];
+
+    return {
+      title: this.props.title || '',
+      userName: this.props.userName || 'Rahim Uddin',
+      userRole: this.props.userRole || 'Finance Manager',
+      avatarInitials: this.props.avatarInitials || 'RU',
+      isLight: this.props.theme === 'light',
+      isDark: this.props.theme !== 'light',
+      notifOpen: this.state.notifOpen,
+      userOpen: this.state.userOpen,
+      hasUnread: notifications.length > 0,
+      noNotifications: notifications.length === 0,
+      notifications,
+      toggleTheme: this.toggleTheme,
+      toggleNotif: this.toggleNotif,
+      toggleUser: this.toggleUser,
+      onSearchKey: this.onSearchKey,
+      onSearchInput: this.onSearchInput,
+      onSearchFocus: this.onSearchFocus,
+      onSearchBlur: this.onSearchBlur,
+      searchValue: this.state.searchValue,
+      showResults: this.state.searchFocused && this.state.searchValue.trim().length > 0,
+      searchResults,
+      noSearchResults: this.state.searchFocused && this.state.searchValue.trim().length > 0 && searchResults.length === 0,
+      onLogout: this.onLogout,
+
+      headerStyle: { display: 'flex', alignItems: 'center', gap: this.state.isNarrow ? 8 : 16, height: 56, padding: this.state.isNarrow ? '0 12px' : '0 24px', borderBottom: `1px solid ${C.border}`, background: C.surface, position: 'sticky', top: 0, zIndex: 10 },
+      titleStyle: { color: C.inkHi, fontSize: 16, fontWeight: 600, fontFamily: FONT, margin: 0, marginRight: 'auto', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 40, flexShrink: 1 },
+      searchWrapStyle: { display: this.state.isVeryNarrow ? 'none' : 'flex', alignItems: 'center', gap: 8, flex: this.state.isNarrow ? '0 1 140px' : '0 1 320px', maxWidth: this.state.isNarrow ? 140 : 320, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: '0 12px', position: 'relative' },
+      searchIconStyle: { color: C.muted, flexShrink: 0 },
+      searchInputStyle: { border: 0, background: 'transparent', outline: 'none', padding: '8px 0', color: C.ink, fontFamily: FONT, fontSize: 14, width: '100%' },
+      searchDropdownStyle: { position: 'absolute', top: 'calc(100% + 8px)', left: 0, zIndex: 20, minWidth: 260, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.55)', padding: 4 },
+      searchResultStyle: { display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 4, color: C.inkHi, textDecoration: 'none', fontFamily: FONT, fontSize: 13 },
+      searchResultTypeStyle: { color: C.muted, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em', flexShrink: 0 },
+      actionsStyle: { display: 'flex', alignItems: 'center', gap: 8 },
+      iconBtnStyle: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, background: 'transparent', border: 'none', borderRadius: 4, color: C.inkDim, cursor: 'pointer', position: 'relative' },
+      notifWrapStyle: { position: 'relative' },
+      badgeDotStyle: { position: 'absolute', top: 6, right: 6, width: 8, height: 8, background: C.danger, borderRadius: '50%', border: `2px solid ${C.surface}` },
+      dropdownStyle: { position: 'absolute', top: 'calc(100% + 8px)', right: 0, zIndex: 20, minWidth: 240, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.55)', padding: 4 },
+      dropdownHeaderStyle: { padding: '8px 12px', color: C.muted, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: FONT },
+      notifItemStyle: { padding: '8px 12px', borderRadius: 4 },
+      notifTitleStyle: { color: C.inkHi, fontSize: 13, fontWeight: 500, fontFamily: FONT },
+      notifMetaStyle: { color: C.muted, fontSize: 12, marginTop: 2, fontFamily: FONT },
+      notifEmptyStyle: { padding: '12px', color: C.muted, fontSize: 13, textAlign: 'center', fontFamily: FONT },
+      userWrapStyle: { position: 'relative' },
+      userTriggerStyle: { display: 'flex', alignItems: 'center', gap: 8, padding: '4px 12px', background: 'transparent', border: `1px solid ${C.border}`, borderRadius: 999, color: C.ink, cursor: 'pointer', fontFamily: FONT },
+      avatarStyle: { width: 32, height: 32, borderRadius: '50%', background: C.accentSoft, color: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 13, fontFamily: FONT },
+      userNameStyle: { fontWeight: 500, fontSize: 14, whiteSpace: 'nowrap', display: this.state.isNarrow ? 'none' : 'inline' },
+      userInfoStyle: { padding: '8px 12px', borderBottom: `1px solid ${C.border}` },
+      userInfoNameStyle: { color: C.inkHi, fontWeight: 500, fontFamily: FONT, fontSize: 14 },
+      userInfoRoleStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+      dropdownItemStyle: { display: 'block', width: '100%', boxSizing: 'border-box', padding: '8px 12px', color: C.ink, textDecoration: 'none', fontFamily: FONT, fontSize: 14, borderRadius: 4, background: 'transparent', border: 0, textAlign: 'left', cursor: 'pointer' },
+      dropdownItemDangerStyle: { display: 'block', width: '100%', boxSizing: 'border-box', padding: '8px 12px', color: C.danger, fontFamily: FONT, fontSize: 14, borderRadius: 4, background: 'transparent', border: 0, textAlign: 'left', cursor: 'pointer' },
+      dividerStyle: { height: 1, background: C.border, margin: '4px 0' }
+    };
+  }
+}
+</script>
+</body>
+</html>

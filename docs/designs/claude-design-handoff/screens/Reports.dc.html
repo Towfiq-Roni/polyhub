@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Reports.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Reports" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Reports</h1>
+        <select style="{{ selectStyle }}" value="{{ period }}" onChange="{{ onPeriod }}"><option value="This Month">This Month</option><option value="This Quarter">This Quarter</option><option value="This Year">This Year</option></select>
+      </header>
+      <div style="{{ cardGridStyle }}">
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Revenue</label><p style="{{ valueStyle }}">{{ revenue }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Expenses</label><p style="{{ valueStyle }}">{{ expenses }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Net Profit</label><p style="{{ valueStyle }}">{{ profit }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">New Leads</label><p style="{{ valueStyle }}">{{ leads }}</p></div>
+      </div>
+
+      <h2 style="{{ sectionTitleStyle }}">Revenue by Client</h2>
+      <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+        <thead><tr><th style="{{ thStyle }}">Client</th><th style="{{ thNumStyle }}">Amount</th></tr></thead>
+        <tbody><sc-for list="{{ revenueRows }}" as="r" hint-placeholder-count="4">
+          <tr><td style="{{ tdStyle }}">{{ r.name }}</td><td style="{{ tdNumStyle }}">{{ r.amount }}</td></tr>
+        </sc-for></tbody>
+      </table></div>
+
+      <h2 style="{{ sectionTitleStyle }}">Expenses by Category</h2>
+      <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+        <thead><tr><th style="{{ thStyle }}">Category</th><th style="{{ thNumStyle }}">Amount</th></tr></thead>
+        <tbody><sc-for list="{{ expenseRows }}" as="r" hint-placeholder-count="4">
+          <tr><td style="{{ tdStyle }}">{{ r.name }}</td><td style="{{ tdNumStyle }}">{{ r.amount }}</td></tr>
+        </sc-for></tbody>
+      </table></div>
+
+      <h2 style="{{ sectionTitleStyle }}">Export</h2>
+      <p style="{{ exportHintStyle }}">Exports the {{ period }} figures above — revenue, expenses, and the breakdown tables.</p>
+      <div style="{{ exportRowStyle }}">
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ exportCsv }}">Export as CSV (raw rows)</button>
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ exportPdf }}">Export as PDF (summary)</button>
+        <sc-if value="{{ exportFlash }}" hint-placeholder-val="{{ false }}"><span style="{{ exportFlashStyle }}">{{ exportFlash }}</span></sc-if>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+const DATA={
+  'This Month':{revenue:8250000,expenses:5320000,leads:14,byClient:[['Acme Corp',3200000],['Bayzid Group',2250000],['Delta Tech',1500000],['Ekushey Solutions',1300000]],byCategory:[['Labor',3800000],['Infrastructure',820000],['Licensing',400000],['Commission',300000]]},
+  'This Quarter':{revenue:23400000,expenses:15800000,leads:41,byClient:[['Acme Corp',8900000],['Bayzid Group',6200000],['Ekushey Solutions',5100000],['Delta Tech',3200000]],byCategory:[['Labor',10500000],['Infrastructure',2400000],['Licensing',1600000],['Commission',1300000]]},
+  'This Year':{revenue:78900000,expenses:52100000,leads:132,byClient:[['Acme Corp',28400000],['Bayzid Group',19600000],['Ekushey Solutions',16200000],['Delta Tech',14700000]],byCategory:[['Labor',34200000],['Infrastructure',9100000],['Licensing',5300000],['Commission',3500000]]}
+};
+class Component extends DCLogic {
+  state={theme:'dark',period:'This Month',exportFlash:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onPeriod=(e)=>this.setState({period:e.target.value});
+  exportCsv=()=>{ this.setState({exportFlash:'CSV downloaded'}); setTimeout(()=>this.setState({exportFlash:''}),1800); };
+  exportPdf=()=>{ this.setState({exportFlash:'PDF downloaded'}); setTimeout(()=>this.setState({exportFlash:''}),1800); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK; const d=DATA[this.state.period];
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,period:this.state.period,onPeriod:this.onPeriod,
+      revenue:fmt(d.revenue),expenses:fmt(d.expenses),profit:fmt(d.revenue-d.expenses),leads:d.leads,
+      revenueRows:d.byClient.map(([name,amount])=>({name,amount:fmt(amount)})),
+      expenseRows:d.byCategory.map(([name,amount])=>({name,amount:fmt(amount)})),
+      exportCsv:this.exportCsv,exportPdf:this.exportPdf,exportFlash:this.state.exportFlash,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1000,width:'100%',boxSizing:'border-box',margin:'0 auto',flex:1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:16,marginBottom:32},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:8},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:20,fontWeight:600,margin:0},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'0 0 12px'},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8,marginBottom:32},
+      tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},
+      tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`},
+      exportHintStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'0 0 16px'},
+      exportRowStyle:{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      exportFlashStyle:{color:C.success,fontFamily:FONT,fontSize:13}
+    };
+  }
+}
+</script>
+</body>
+</html>

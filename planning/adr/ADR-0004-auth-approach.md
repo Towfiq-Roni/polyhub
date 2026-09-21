@@ -1,0 +1,23 @@
+# ADR-0004: Auth approach — JWT access(1 day) + refresh(7 days), argon2id
+
+## Status
+Accepted
+
+## Context
+SRS §3.7/FR-ADMIN-02 requires authenticated access for up to 5 internal users, with admin-mediated password resets and no SMTP dependency (no external IdP, no email-based flows). F-27 (Authentication) is the foundational feature every other write-capable feature depends on.
+
+## Decision
+Stateless JWT authentication: a short-lived access token and a longer-lived refresh token, with argon2id password hashing. Access token TTL is **1 day**; refresh token TTL is 7 days; lockout after 10 failed attempts within 15 minutes.
+
+## Consequences
+- Argon2id is the current recommended password-hashing standard — resistant to GPU/ASIC cracking better than bcrypt/PBKDF2 at equivalent cost.
+- A 1-day access token trades some security margin (a stolen access token is valid up to a full day, vs. a shorter window) for fewer silent token-refresh round trips during a workday — a deliberate usability choice for a small trusted internal user base, not a security-unaware default.
+- Stateless access tokens mean no server-side session store for the common case; the refresh token still needs a persisted, revocable record (e.g. for logout-everywhere or a compromised-device response) — access-token revocation before its 1-day expiry is not otherwise possible, a real (accepted) tradeoff of the 1-day TTL.
+- **Conflict with `docs/adr/0004-jwt-argon2-auth.md`/DEC-012 resolved (2026-09-10, DEC-073):** that ADR originally specified a 15-minute access token TTL. `docs/adr/0012-jwt-access-token-ttl-1-day.md` now supersedes it on this point — 1 day is confirmed as what actually ships.
+
+## Alternatives considered
+- **Server-side session cookies:** simpler revocation (delete the session row instantly), but needs a session store and less naturally fits a decoupled API + PWA client split than bearer tokens do.
+- **OAuth-only (Google/Microsoft login):** removes password management entirely, but forces every user to hold a Google/Microsoft account and adds an external dependency — contradicts the self-hosted, $0-external-dependency posture (NFR-COST-01) the rest of the stack maintains.
+
+## Related
+FR-ADMIN-02; F-27, F-28; NFR-SEC-01; **conflicts with `docs/adr/0004-jwt-argon2-auth.md`, DEC-012 — reconciliation needed before build**

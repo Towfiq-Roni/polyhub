@@ -1,0 +1,47 @@
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: dev
+    env_file: infra/.env.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hub-net
+    volumes:
+      - .:/repo
+      - api_node_modules_root:/repo/node_modules
+      - api_node_modules_app:/repo/apps/api/node_modules
+      - shared_node_modules:/repo/packages/shared/node_modules
+      - resources_data_dev:/data/resources
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - api
+    environment:
+      APP_HOSTNAME: localhost
+    ports:
+      - "8080:80"
+      - "8443:443"
+    networks:
+      - hub-net
+    volumes:
+      - ./infra/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./infra/certs/dev:/etc/letsencrypt:ro
+      - resources_data_dev:/data/resources:ro
+
+volumes:
+  pgdata_dev:
+  resources_data_dev:
+  api_node_modules_root:
+  api_node_modules_app:
+  shared_node_modules:

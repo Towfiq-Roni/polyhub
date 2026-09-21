@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <div style="{{ cardWrapStyle }}">
+  <div style="{{ cardStyle }}">
+    <div style="{{ brandStyle }}"><span style="{{ brandMarkStyle }}">DEA</span><span style="{{ brandNameStyle }}">Hub</span></div>
+    <sc-if value="{{ !success }}" hint-placeholder-val="{{ true }}">
+      <label style="{{ labelStyle }}">Email</label>
+      <input type="email" style="{{ inputStyle }}" value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@dea.bd"></input>
+      <label style="{{ labelStyle }}">Password</label>
+      <input type="password" style="{{ inputStyle }}" value="{{ password }}" onInput="{{ onPassword }}" placeholder="••••••••"></input>
+      <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter both email and password.</div></sc-if>
+      <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submit }}">Sign In</button>
+    </sc-if>
+    <sc-if value="{{ success }}" hint-placeholder-val="{{ false }}">
+      <p style="{{ successTextStyle }}">Signed in as {{ email }}.</p>
+      <a href="Dashboard.dc.html" style="{{ btnPrimaryLinkStyle }}">Go to Dashboard</a>
+    </sc-if>
+  </div>
+  <footer style="{{ footerStyle }}">Powered by Deus Ex Automata (DEA)</footer>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', muted:'#717F91', accent:'#717F91', accentInk:'#010101', danger:'#CD6A5E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+class Component extends DCLogic {
+  state={email:'',password:'',error:false,success:false};
+  onEmail=(e)=>this.setState({email:e.target.value,error:false}); onPassword=(e)=>this.setState({password:e.target.value,error:false});
+  submit=()=>{ if(!this.state.email.trim()||!this.state.password.trim()){this.setState({error:true});return;} this.setState({success:true}); };
+  renderVals(){
+    const C=DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',justifyContent:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'10px 16px',width:'100%',boxSizing:'border-box',textDecoration:'none'};
+    return {
+      email:this.state.email,password:this.state.password,error:this.state.error,success:this.state.success,onEmail:this.onEmail,onPassword:this.onPassword,submit:this.submit,
+      rootStyle:{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',background:C.bg},
+      cardWrapStyle:{display:'flex',flexDirection:'column',alignItems:'center',gap:16},
+      footerStyle:{color:C.muted,fontFamily:FONT,fontSize:12},
+      cardStyle:{width:'min(360px,90vw)',background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:32,display:'flex',flexDirection:'column',gap:12},
+      brandStyle:{display:'flex',alignItems:'center',gap:8,justifyContent:'center',marginBottom:16},
+      brandMarkStyle:{fontSize:20,fontWeight:600,letterSpacing:'0.04em',color:C.inkHi,fontFamily:FONT},
+      brandNameStyle:{fontSize:20,fontWeight:600,letterSpacing:'0.04em',color:C.inkHi,fontFamily:FONT},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'10px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk,marginTop:8},
+      btnPrimaryLinkStyle:{...btnBase,background:C.accent,color:C.accentInk,marginTop:8},
+      successTextStyle:{color:C.ink,fontFamily:FONT,fontSize:14,textAlign:'center',margin:'0 0 8px'}
+    };
+  }
+}
+</script>
+</body>
+</html>

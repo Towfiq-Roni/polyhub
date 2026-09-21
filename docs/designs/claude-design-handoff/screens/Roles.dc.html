@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Roles.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Roles" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <sc-if value="{{ !viewingPermissions }}" hint-placeholder-val="{{ true }}">
+        <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Roles</h1><button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Role</button></header>
+        <div style="{{ cardListStyle }}">
+          <sc-for list="{{ roles }}" as="r" hint-placeholder-count="4">
+            <div style="{{ roleCardStyle }}">
+              <div><h3 style="{{ roleNameStyle }}">{{ r.name }}</h3><p style="{{ roleMetaStyle }}">{{ r.count }} members · {{ r.permCount }} permissions</p></div>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ r.onOpenPermissions }}">Edit Permissions</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+          <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add role">
+            <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Role</h2></div>
+            <div style="{{ modalBodyStyle }}">
+              <label style="{{ labelStyle }}">Role name</label>
+              <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Regional Manager"></input>
+              <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Name is required.</div></sc-if>
+            </div>
+            <div style="{{ modalFooterStyle }}">
+              <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+              <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Role</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ viewingPermissions }}" hint-placeholder-val="{{ false }}">
+        <button type="button" style="{{ backLinkStyle }}" onClick="{{ closePermissions }}">← Back to Roles</button>
+        <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Permissions — {{ permissionsRoleName }}</h1><button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ savePermissions }}">{{ saveLabel }}</button></header>
+        <div style="{{ tableWrapStyle }}">
+          <table style="{{ tableStyle }}">
+            <thead><tr><th style="{{ thStyle }}">Module</th><th style="{{ thCenterStyle }}">View</th><th style="{{ thCenterStyle }}">Edit</th><th style="{{ thCenterStyle }}">Delete</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ permRows }}" as="m" hint-placeholder-count="6">
+                <tr><td style="{{ tdStyle }}">{{ m.module }}</td>
+                  <td style="{{ tdCenterStyle }}"><input type="checkbox" checked="{{ m.view }}" onChange="{{ m.onView }}"></input></td>
+                  <td style="{{ tdCenterStyle }}"><input type="checkbox" checked="{{ m.edit }}" onChange="{{ m.onEdit }}"></input></td>
+                  <td style="{{ tdCenterStyle }}"><input type="checkbox" checked="{{ m.del }}" onChange="{{ m.onDel }}"></input></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const SEED=[{id:1,name:'Administrator',count:2,permCount:42},{id:2,name:'Project Manager',count:6,permCount:24},{id:3,name:'Finance',count:3,permCount:16},{id:4,name:'Team Member',count:18,permCount:8}];
+const MODULES=['Clients','Projects','Finance','Team Members','Leads & Opportunities','Reports'];
+const defaultPerms=(roleName)=>MODULES.map(m=>({module:m,view:true,edit:m!=='Finance',del:roleName==='Administrator'}));
+class Component extends DCLogic {
+  state={theme:'dark',roles:SEED,createOpen:false,newName:'',nameError:false,
+    viewingPermissions:false,permissionsRoleId:null,permsByRole:{},saved:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  openCreate=()=>this.setState({createOpen:true,newName:'',nameError:false}); closeCreate=()=>this.setState({createOpen:false});
+  onNewName=(e)=>this.setState({newName:e.target.value});
+  submitCreate=()=>{ if(!this.state.newName.trim()){this.setState({nameError:true});return;}
+    const r={id:Date.now(),name:this.state.newName.trim(),count:0,permCount:0}; this.setState(s=>({roles:[...s.roles,r],createOpen:false})); };
+  openPermissions=(role)=>()=>this.setState(s=>({viewingPermissions:true,permissionsRoleId:role.id,
+    permsByRole: s.permsByRole[role.id] ? s.permsByRole : {...s.permsByRole,[role.id]:defaultPerms(role.name)}}));
+  closePermissions=()=>this.setState({viewingPermissions:false});
+  togglePerm=(moduleIdx,key)=>()=>this.setState(s=>{ const roleId=s.permissionsRoleId; const perms=(s.permsByRole[roleId]||[]).slice();
+    perms[moduleIdx]={...perms[moduleIdx],[key]:!perms[moduleIdx][key]};
+    return { permsByRole:{...s.permsByRole,[roleId]:perms}, saved:false }; });
+  savePermissions=()=>{ this.setState({saved:true}); setTimeout(()=>this.setState({saved:false}),1500); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px',whiteSpace:'nowrap'};
+    const roles=this.state.roles.map(r=>({...r,onOpenPermissions:this.openPermissions(r)}));
+    const permissionsRole=this.state.roles.find(r=>r.id===this.state.permissionsRoleId);
+    const perms=this.state.permsByRole[this.state.permissionsRoleId]||[];
+    const permRows=perms.map((m,i)=>({...m,onView:this.togglePerm(i,'view'),onEdit:this.togglePerm(i,'edit'),onDel:this.togglePerm(i,'del')}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,roles,createOpen:this.state.createOpen,openCreate:this.openCreate,closeCreate:this.closeCreate,
+      newName:this.state.newName,nameError:this.state.nameError,onNewName:this.onNewName,submitCreate:this.submitCreate,
+      viewingPermissions:this.state.viewingPermissions,closePermissions:this.closePermissions,
+      permissionsRoleName:permissionsRole?permissionsRole.name:'',permRows,savePermissions:this.savePermissions,saveLabel:this.state.saved?'Saved':'Save Changes',
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:900,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer'},
+      backLinkStyle:{display:'inline-flex',alignItems:'center',color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',background:'transparent',border:'none',padding:0,cursor:'pointer',marginBottom:16},
+      cardListStyle:{display:'flex',flexDirection:'column',gap:12},
+      roleCardStyle:{display:'flex',alignItems:'center',justifyContent:'space-between',background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16},
+      roleNameStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:0},roleMetaStyle:{color:C.muted,fontFamily:FONT,fontSize:12,margin:'4px 0 0'},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      thCenterStyle:{padding:'12px 16px',textAlign:'center',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},tdCenterStyle:{padding:'12px 16px',textAlign:'center',borderBottom:`1px solid ${C.border}`},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:12},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT}
+    };
+  }
+}
+</script>
+</body>
+</html>

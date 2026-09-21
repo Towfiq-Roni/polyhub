@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet></helmet>
+<footer style="{{ footerStyle }}">Powered by Deus Ex Automata (DEA)</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:48},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const DARK = { surface:'#080808', border:'rgba(111,126,143,0.32)', muted:'#717F91' };
+const LIGHT = { surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', muted:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+class Component extends DCLogic {
+  renderVals(){
+    const C = this.props.theme === 'light' ? LIGHT : DARK;
+    return {
+      footerStyle: { padding: '16px 24px', borderTop: `1px solid ${C.border}`, background: C.surface, color: C.muted, fontFamily: FONT, fontSize: 12, textAlign: 'center' }
+    };
+  }
+}
+</script>
+</body>
+</html>

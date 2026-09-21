@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Accounting.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Accounting" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Accounting</h1></header>
+      <div style="{{ tabRowStyle }}">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button type="button" style="{{ t.style }}" onClick="{{ t.onClick }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isChart }}" hint-placeholder-val="{{ true }}">
+        <header style="{{ sectionHeaderStyle }}"><h2 style="{{ sectionTitleStyle }}">Chart of Accounts</h2><button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openAddCode }}">Add Accounting Code</button></header>
+        <div style="{{ tableWrapStyle }}">
+          <table style="{{ tableStyle }}">
+            <thead><tr><th style="{{ thStyle }}">Code</th><th style="{{ thStyle }}">Name</th><th style="{{ thStyle }}">Type</th><th style="{{ thStyle }}">Normal Balance</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ accountCodes }}" as="a" hint-placeholder-count="8">
+                <tr><td style="{{ tdStyle }}">{{ a.code }}</td><td style="{{ tdStyle }}">{{ a.name }}</td><td style="{{ tdStyle }}">{{ a.type }}</td><td style="{{ tdStyle }}"><span style="{{ a.dirChip }}">{{ a.normalBalance }}</span></td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isJournal }}" hint-placeholder-val="{{ false }}">
+        <header style="{{ sectionHeaderStyle }}"><h2 style="{{ sectionTitleStyle }}">Journal Entries</h2></header>
+        <sc-for list="{{ journalEntries }}" as="j" hint-placeholder-count="4">
+          <div style="{{ journalCardStyle }}">
+            <div style="{{ journalHeaderStyle }}"><span style="{{ journalDateStyle }}">{{ j.date }}</span><span style="{{ journalDescStyle }}">{{ j.description }}</span></div>
+            <table style="{{ tableStyle }}">
+              <thead><tr><th style="{{ thStyle }}">Account</th><th style="{{ thNumStyle }}">Debit</th><th style="{{ thNumStyle }}">Credit</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ j.lines }}" as="l" hint-placeholder-count="2">
+                  <tr><td style="{{ tdStyle }}">{{ l.accountLabel }}</td><td style="{{ tdNumStyle }}">{{ l.debitFmt }}</td><td style="{{ tdNumStyle }}">{{ l.creditFmt }}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ isTrialBalance }}" hint-placeholder-val="{{ false }}">
+        <header style="{{ sectionHeaderStyle }}"><h2 style="{{ sectionTitleStyle }}">Trial Balance</h2></header>
+        <div style="{{ tableWrapStyle }}">
+          <table style="{{ tableStyle }}">
+            <thead><tr><th style="{{ thStyle }}">Code</th><th style="{{ thStyle }}">Account</th><th style="{{ thNumStyle }}">Debit</th><th style="{{ thNumStyle }}">Credit</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ trialBalanceRows }}" as="r" hint-placeholder-count="8">
+                <tr><td style="{{ tdStyle }}">{{ r.code }}</td><td style="{{ tdStyle }}">{{ r.name }}</td><td style="{{ tdNumStyle }}">{{ r.debitFmt }}</td><td style="{{ tdNumStyle }}">{{ r.creditFmt }}</td></tr>
+              </sc-for>
+            </tbody>
+            <tfoot><tr><td style="{{ tfootStyle }}" colspan="2">Total</td><td style="{{ tfootNumStyle }}">{{ totalDebitFmt }}</td><td style="{{ tfootNumStyle }}">{{ totalCreditFmt }}</td></tr></tfoot>
+          </table>
+        </div>
+        <p style="{{ balanceNoteStyle }}">{{ balanceNote }}</p>
+      </sc-if>
+
+      <sc-if value="{{ isLedger }}" hint-placeholder-val="{{ false }}">
+        <header style="{{ sectionHeaderStyle }}"><h2 style="{{ sectionTitleStyle }}">Account Ledger</h2></header>
+        <select style="{{ selectStyle }}" value="{{ ledgerAccountCode }}" onChange="{{ onLedgerAccount }}">
+          <sc-for list="{{ accountCodes }}" as="a" hint-placeholder-count="8"><option value="{{ a.code }}">{{ a.code }} — {{ a.name }}</option></sc-for>
+        </select>
+        <div style="{{ tableWrapStyle }}">
+          <table style="{{ tableStyle }}">
+            <thead><tr><th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Description</th><th style="{{ thNumStyle }}">Debit</th><th style="{{ thNumStyle }}">Credit</th><th style="{{ thNumStyle }}">Balance</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ ledgerRows }}" as="l" hint-placeholder-count="4">
+                <tr><td style="{{ tdStyle }}">{{ l.date }}</td><td style="{{ tdStyle }}">{{ l.description }}</td><td style="{{ tdNumStyle }}">{{ l.debitFmt }}</td><td style="{{ tdNumStyle }}">{{ l.creditFmt }}</td><td style="{{ tdNumStyle }}">{{ l.balanceFmt }}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <sc-if value="{{ noLedgerRows }}" hint-placeholder-val="{{ false }}"><p style="{{ balanceNoteStyle }}">No entries for this account yet.</p></sc-if>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+
+  <sc-if value="{{ addCodeOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ modalScrimStyle }}" onClick="{{ closeAddCode }}"></div>
+    <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add accounting code">
+      <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Accounting Code</h2></div>
+      <div style="{{ modalBodyStyle }}">
+        <label style="{{ labelStyle }}">Code</label>
+        <select style="{{ modalInputStyle }}" value="{{ newCode }}" onChange="{{ onNewCode }}">
+          <option value="">Select a code…</option>
+          <sc-for list="{{ availableCodes }}" as="c" hint-placeholder-count="6"><option value="{{ c.code }}">{{ c.code }} — {{ c.name }}</option></sc-for>
+        </select>
+        <sc-if value="{{ codeError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Select a code to add.</div></sc-if>
+        <sc-if value="{{ selectedPreview }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ previewBoxStyle }}">
+            <div style="{{ previewRowStyle }}"><span>Name</span><span style="{{ previewValStyle }}">{{ selectedName }}</span></div>
+            <div style="{{ previewRowStyle }}"><span>Type</span><span style="{{ previewValStyle }}">{{ selectedType }}</span></div>
+            <div style="{{ previewRowStyle }}"><span>Normal Balance</span><span style="{{ selectedDirChip }}">{{ selectedDirection }}</span></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noAvailableCodes }}" hint-placeholder-val="{{ false }}"><p style="{{ balanceNoteStyle }}">Every predefined code is already in your Chart of Accounts.</p></sc-if>
+      </div>
+      <div style="{{ modalFooterStyle }}">
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeAddCode }}">Cancel</button>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveCode }}">Save Code</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)', success:'#63A583', info:'#6C86AD', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', info:'#3E5C8A', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=> n===0 ? '—' : '৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+const MASTER_CODES=[
+  {code:'1000',name:'Cash',type:'Asset',normalBalance:'Debit'},
+  {code:'1010',name:'Bank',type:'Asset',normalBalance:'Debit'},
+  {code:'1020',name:'MFS',type:'Asset',normalBalance:'Debit'},
+  {code:'1100',name:'Accounts Receivable',type:'Asset',normalBalance:'Debit'},
+  {code:'1200',name:'Prepaid Expenses',type:'Asset',normalBalance:'Debit'},
+  {code:'1500',name:'Equipment',type:'Asset',normalBalance:'Debit'},
+  {code:'2000',name:'Accounts Payable',type:'Liability',normalBalance:'Credit'},
+  {code:'2100',name:'Accrued Liabilities',type:'Liability',normalBalance:'Credit'},
+  {code:'2200',name:'Unearned Revenue',type:'Liability',normalBalance:'Credit'},
+  {code:'3000',name:"Owner's Equity",type:'Equity',normalBalance:'Credit'},
+  {code:'3100',name:'Retained Earnings',type:'Equity',normalBalance:'Credit'},
+  {code:'4000',name:'Service Revenue',type:'Revenue',normalBalance:'Credit'},
+  {code:'4100',name:'Interest Income',type:'Revenue',normalBalance:'Credit'},
+  {code:'5000',name:'Salaries Expense',type:'Expense',normalBalance:'Debit'},
+  {code:'5100',name:'Office Expense',type:'Expense',normalBalance:'Debit'},
+  {code:'5200',name:'BDS Commission Expense',type:'Expense',normalBalance:'Debit'},
+  {code:'5300',name:'Marketing Expense',type:'Expense',normalBalance:'Debit'},
+  {code:'5400',name:'Utilities Expense',type:'Expense',normalBalance:'Debit'},
+  {code:'5500',name:'Depreciation Expense',type:'Expense',normalBalance:'Debit'}
+];
+const SEED_CODES=MASTER_CODES.slice(0,10);
+const SEED_JOURNAL=[
+  {id:1,date:'2026-08-20',description:'Received milestone payment — Acme Corp',lines:[{accountCode:'1010',debit:740000,credit:0},{accountCode:'1100',debit:0,credit:740000}]},
+  {id:2,date:'2026-08-18',description:'Paid July salaries — Engineering',lines:[{accountCode:'5000',debit:1240000,credit:0},{accountCode:'1010',debit:0,credit:1240000}]},
+  {id:3,date:'2026-08-12',description:'BDS commission — Rahim Hassan',lines:[{accountCode:'5200',debit:90000,credit:0},{accountCode:'1020',debit:0,credit:90000}]},
+  {id:4,date:'2026-08-10',description:'Office rent — August',lines:[{accountCode:'5100',debit:80000,credit:0},{accountCode:'1000',debit:0,credit:80000}]}
+];
+class Component extends DCLogic {
+  state={theme:'dark',tab:'chart',accountCodes:SEED_CODES,journalEntries:SEED_JOURNAL,ledgerAccountCode:'1010',
+    addCodeOpen:false,newCode:'',codeError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  setTab=(t)=>()=>this.setState({tab:t});
+  onLedgerAccount=(e)=>this.setState({ledgerAccountCode:e.target.value});
+  openAddCode=()=>this.setState({addCodeOpen:true,newCode:'',codeError:false});
+  closeAddCode=()=>this.setState({addCodeOpen:false});
+  onNewCode=(e)=>this.setState({newCode:e.target.value,codeError:false});
+  saveCode=()=>{ const s=this.state; const master=MASTER_CODES.find(c=>c.code===s.newCode);
+    if(!master){ this.setState({codeError:true}); return; }
+    this.setState(st=>({accountCodes:[...st.accountCodes,{...master}],addCodeOpen:false})); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK; const s=this.state;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const tabDef=[['chart','Chart of Accounts'],['journal','Journal Entries'],['ledger','Account Ledger'],['trial','Trial Balance']];
+    const tabs=tabDef.map(([k,label])=>({label,onClick:this.setTab(k),style:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',fontFamily:FONT,fontSize:14,padding:'8px 4px',background:'transparent',border:'none',borderBottom:s.tab===k?`2px solid ${C.accent}`:'2px solid transparent',color:s.tab===k?C.inkHi:C.muted,fontWeight:s.tab===k?600:400,cursor:'pointer'}}));
+    const codeMap={}; s.accountCodes.forEach(a=>codeMap[a.code]=a);
+    const dirChip=(dir)=>({display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color:dir==='Debit'?C.info:C.success,border:`1px solid ${dir==='Debit'?C.info:C.success}`});
+    const selectedMaster=MASTER_CODES.find(c=>c.code===s.newCode);
+    const accountCodes=s.accountCodes.map(a=>({...a,dirChip:dirChip(a.normalBalance)}));
+
+    const journalEntries=s.journalEntries.map(j=>({...j,lines:j.lines.map(l=>({...l,accountLabel:(codeMap[l.accountCode]?`${l.accountCode} — ${codeMap[l.accountCode].name}`:l.accountCode),debitFmt:fmt(l.debit),creditFmt:fmt(l.credit)}))}));
+
+    const totals={};
+    s.journalEntries.forEach(j=>j.lines.forEach(l=>{ if(!totals[l.accountCode]) totals[l.accountCode]={debit:0,credit:0}; totals[l.accountCode].debit+=l.debit; totals[l.accountCode].credit+=l.credit; }));
+    const trialBalanceRows=s.accountCodes.filter(a=>totals[a.code]).map(a=>{ const t=totals[a.code]; const net=t.debit-t.credit;
+      return {code:a.code,name:a.name,debitFmt: net>=0?fmt(net):'—', creditFmt: net<0?fmt(-net):'—'}; });
+    let totalDebit=0,totalCredit=0; s.accountCodes.forEach(a=>{ const t=totals[a.code]; if(!t)return; const net=t.debit-t.credit; if(net>=0)totalDebit+=net; else totalCredit+=-net; });
+
+    const ledgerAcc=codeMap[s.ledgerAccountCode];
+    let running=0;
+    const ledgerRows=[];
+    s.journalEntries.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(j=>{
+      j.lines.filter(l=>l.accountCode===s.ledgerAccountCode).forEach(l=>{
+        running += (ledgerAcc && ledgerAcc.normalBalance==='Debit') ? (l.debit-l.credit) : (l.credit-l.debit);
+        ledgerRows.push({date:j.date,description:j.description,debitFmt:fmt(l.debit),creditFmt:fmt(l.credit),balanceFmt:fmt(running)});
+      });
+    });
+
+    return {
+      theme:s.theme,toggleTheme:this.toggleTheme,tabs,
+      isChart:s.tab==='chart',isJournal:s.tab==='journal',isTrialBalance:s.tab==='trial',isLedger:s.tab==='ledger',
+      accountCodes,journalEntries,
+      trialBalanceRows,totalDebitFmt:fmt(totalDebit),totalCreditFmt:fmt(totalCredit),
+      balanceNote: totalDebit===totalCredit ? 'Books are balanced — total debits equal total credits.' : 'Out of balance — check recent journal entries.',
+      ledgerAccountCode:s.ledgerAccountCode,onLedgerAccount:this.onLedgerAccount,ledgerRows,noLedgerRows:ledgerRows.length===0,
+      addCodeOpen:s.addCodeOpen,openAddCode:this.openAddCode,closeAddCode:this.closeAddCode,saveCode:this.saveCode,
+      newCode:s.newCode,onNewCode:this.onNewCode,codeError:s.codeError,
+      availableCodes:MASTER_CODES.filter(c=>!s.accountCodes.some(a=>a.code===c.code)),
+      noAvailableCodes:MASTER_CODES.every(c=>s.accountCodes.some(a=>a.code===c.code)),
+      selectedPreview:!!selectedMaster,selectedName:selectedMaster&&selectedMaster.name,selectedType:selectedMaster&&selectedMaster.type,
+      selectedDirection:selectedMaster&&selectedMaster.normalBalance,
+      selectedDirChip:selectedMaster&&dirChip(selectedMaster.normalBalance),
+      previewBoxStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:6,padding:12,marginTop:4,display:'flex',flexDirection:'column',gap:6},
+      previewRowStyle:{display:'flex',justifyContent:'space-between',fontFamily:FONT,fontSize:13,color:C.inkDim},
+      previewValStyle:{color:C.inkHi,fontWeight:500},
+      rootStyle:{display:'flex',height:'100vh',overflow:'hidden',background:C.bg},sidebarMountStyle:{flexShrink:0},
+      mainColStyle:{flex:1,minWidth:0,display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'},
+      scrollAreaStyle:{flex:1,minHeight:0,display:'flex',flexDirection:'column',overflowY:'auto'},
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1100,width:'100%',boxSizing:'border-box',margin:'0 auto',flex:1},
+      pageHeaderStyle:{marginBottom:16},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      tabRowStyle:{display:'flex',gap:16,borderBottom:`1px solid ${C.border}`,marginBottom:24,flexWrap:'wrap'},
+      sectionHeaderStyle:{display:'flex',alignItems:'center',justifyContent:'space-between',gap:16,marginBottom:16,flexWrap:'wrap'},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:0},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,marginBottom:16},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8,marginBottom:16},
+      tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'10px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'10px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'10px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdNumStyle:{padding:'10px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tfootStyle:{padding:'10px 16px',color:C.inkHi,fontWeight:600,fontFamily:FONT},
+      tfootNumStyle:{padding:'10px 16px',color:C.inkHi,fontWeight:600,textAlign:'right',fontVariantNumeric:'tabular-nums',fontFamily:FONT},
+      balanceNoteStyle:{color:C.muted,fontFamily:FONT,fontSize:13},
+      journalCardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16,marginBottom:16},
+      journalHeaderStyle:{display:'flex',gap:12,alignItems:'baseline',marginBottom:12,flexWrap:'wrap'},
+      journalDateStyle:{color:C.muted,fontFamily:FONT,fontSize:12},
+      journalDescStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      radioRowStyle:{display:'flex',gap:8,marginBottom:4},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(440px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'}
+    };
+  }
+}
+</script>
+</body>
+</html>

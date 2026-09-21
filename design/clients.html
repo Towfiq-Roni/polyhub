@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clients · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item" href="team-members.html" data-label="Team Members">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item active" href="clients.html" data-label="Clients" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item" href="projects.html" data-label="Projects">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item" href="accounts.html" data-label="Accounts">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Clients</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Clients</h2>
+            <p class="page-subtitle">Active client accounts, contract value, and outstanding balances.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="addClientBtn">Add Client</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-field">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="search" class="input" id="clientSearch" placeholder="Search clients…" aria-label="Search clients">
+          </div>
+          <select class="select" id="statusFilter" aria-label="Filter by status">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Overdue">Overdue</option>
+          </select>
+        </div>
+
+        <div class="export-bar">
+          <select class="select">
+            <option>Excel</option>
+            <option>CSV</option>
+            <option>PDF</option>
+          </select>
+          <select class="select">
+            <option>This Month</option>
+            <option>This Quarter</option>
+            <option>This Year</option>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm">Export</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Stakeholder</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th class="num">Outstanding</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="clientsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="clientsEmpty" hidden>
+          <h3>No clients found</h3>
+          <p>Add your first client to get started.</p>
+        </div>
+
+        <div class="modal" id="addClientModal" hidden>
+          <div class="modal-scrim" data-close-modal></div>
+          <div class="modal-card" role="dialog" aria-label="Add client">
+            <div class="modal-header"><h2 class="modal-title">Add Client</h2></div>
+            <div class="modal-body">
+              <div class="field">
+                <label for="newClientCompany">Company</label>
+                <input type="text" class="input" id="newClientCompany" placeholder="e.g. Nova Textiles Ltd.">
+              </div>
+              <div class="error-text" id="newClientCompanyError" hidden>Company name is required.</div>
+              <div class="field">
+                <label for="newClientStakeholder">Stakeholder name</label>
+                <input type="text" class="input" id="newClientStakeholder" placeholder="e.g. Ayesha Begum">
+              </div>
+              <div class="field">
+                <label for="newClientEmail">Email</label>
+                <input type="email" class="input" id="newClientEmail" placeholder="name@company.com">
+              </div>
+              <div class="error-text" id="newClientEmailError" hidden>Enter a valid email address.</div>
+              <div class="field">
+                <label for="newClientPhone">Phone</label>
+                <input type="text" class="input" id="newClientPhone" placeholder="+880 1XXX XXXXXX">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+              <button type="button" class="btn btn-primary" id="submitClientBtn">Add Client</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function parseAmount(v) {
+      if (typeof v === 'number') return v;
+      var n = parseFloat(String(v || '').replace(/[^\d.-]/g, ''));
+      return isNaN(n) ? 0 : n;
+    }
+
+    var CHIP_CLASS = { Active: 'chip--success', Overdue: 'chip--warning' };
+    var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var clients = [
+      { id: 1, company: 'Nova Textiles Ltd.', stakeholder: 'Ayesha Begum', email: 'ayesha@novatex.com', phone: '+880 1711 234567', status: 'Active', outstanding: 1250000 },
+      { id: 2, company: 'Summit Builders', stakeholder: 'Karim Ali', email: 'karim@summitbd.com', phone: '+880 1812 345678', status: 'Overdue', outstanding: 3480500 },
+      { id: 3, company: 'Lumen Foods', stakeholder: 'Farida Akter', email: 'farida@lumenfoods.com', phone: '+880 1913 456789', status: 'Active', outstanding: 0 },
+      { id: 4, company: 'Orbit Logistics', stakeholder: 'Nadia Rahman', email: 'nadia@orbitlog.com', phone: '+880 1614 567890', status: 'Active', outstanding: 875250 },
+      { id: 5, company: 'Crest Agro', stakeholder: 'Tanvir Hasan', email: 'tanvir@crestagro.com', phone: '+880 1515 678901', status: 'Overdue', outstanding: 2040750 }
+    ];
+
+    /* consume-once handoff from OpportunityDetail's "Create Client" action: read, prepend, clear */
+    try {
+      var created = JSON.parse(localStorage.getItem('hub-created-clients')) || [];
+      if (created.length) {
+        for (var i = created.length - 1; i >= 0; i--) {
+          var c = created[i];
+          clients.unshift({
+            id: c.id,
+            company: c.company || '-',
+            stakeholder: c.name && c.name !== '-' ? c.name : '-',
+            email: c.email || '-',
+            phone: c.phone || '-',
+            status: c.status || 'Active',
+            outstanding: parseAmount(c.outstanding)
+          });
+        }
+        localStorage.removeItem('hub-created-clients');
+      }
+    } catch (e) {}
+
+    function persist() {
+      try { localStorage.setItem('hub-clients', JSON.stringify(clients)); } catch (e) {}
+    }
+
+    var searchEl = document.getElementById('clientSearch');
+    var statusFilterEl = document.getElementById('statusFilter');
+    var bodyEl = document.getElementById('clientsBody');
+    var emptyEl = document.getElementById('clientsEmpty');
+
+    function renderClients() {
+      var search = searchEl.value.trim().toLowerCase();
+      var statusFilter = statusFilterEl.value;
+
+      var filtered = clients.filter(function (c) {
+        if (search && c.company.toLowerCase().indexOf(search) === -1 && c.stakeholder.toLowerCase().indexOf(search) === -1 && c.email.toLowerCase().indexOf(search) === -1) return false;
+        if (statusFilter && c.status !== statusFilter) return false;
+        return true;
+      });
+
+      bodyEl.innerHTML = filtered.map(function (c) {
+        return '<tr data-expandable aria-expanded="false">' +
+          '<td><a href="client-detail.html?id=' + c.id + '" class="link">' + escapeHtml(c.company) + '</a></td>' +
+          '<td>' + escapeHtml(c.stakeholder) + '</td>' +
+          '<td>' + escapeHtml(c.email) + '</td>' +
+          '<td><span class="chip ' + (CHIP_CLASS[c.status] || 'chip--neutral') + '">' + escapeHtml(c.status) + '</span></td>' +
+          '<td class="num data">' + fmt(c.outstanding) + '</td>' +
+          '<td><a href="client-detail.html?id=' + c.id + '" class="btn btn-ghost btn-sm">View</a></td>' +
+          '</tr>' +
+          '<tr class="row-detail" hidden><td colspan="6"><dl>' +
+          '<dt>Phone</dt><dd>' + escapeHtml(c.phone) + '</dd>' +
+          '</dl></td></tr>';
+      }).join('');
+
+      emptyEl.hidden = filtered.length !== 0;
+    }
+
+    searchEl.addEventListener('input', renderClients);
+    statusFilterEl.addEventListener('change', renderClients);
+
+    var addClientModal = document.getElementById('addClientModal');
+    document.getElementById('addClientBtn').addEventListener('click', function () { addClientModal.hidden = false; });
+    addClientModal.querySelectorAll('[data-close-modal]').forEach(function (el) {
+      el.addEventListener('click', function () { addClientModal.hidden = true; });
+    });
+    document.getElementById('submitClientBtn').addEventListener('click', function () {
+      var companyEl = document.getElementById('newClientCompany');
+      var emailEl = document.getElementById('newClientEmail');
+      var company = companyEl.value.trim();
+      var email = emailEl.value.trim();
+      var companyErrorEl = document.getElementById('newClientCompanyError');
+      var emailErrorEl = document.getElementById('newClientEmailError');
+      var nameError = !company;
+      var emailError = !!email && !EMAIL_RE.test(email);
+      companyErrorEl.hidden = !nameError;
+      emailErrorEl.hidden = !emailError;
+      if (nameError || emailError) return;
+
+      clients.unshift({
+        id: Date.now(),
+        company: company,
+        stakeholder: document.getElementById('newClientStakeholder').value.trim() || '-',
+        email: email || '-',
+        phone: document.getElementById('newClientPhone').value.trim() || '-',
+        status: 'Active',
+        outstanding: 0
+      });
+      addClientModal.hidden = true;
+      companyEl.value = '';
+      document.getElementById('newClientStakeholder').value = '';
+      emailEl.value = '';
+      document.getElementById('newClientPhone').value = '';
+      renderClients();
+      persist();
+    });
+
+    renderClients();
+    persist();
+  })();
+</script>
+</body>
+</html>

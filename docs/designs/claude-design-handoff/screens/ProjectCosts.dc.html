@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="ProjectCosts.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Project Costs" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Project Costs</h1></header>
+      <div style="{{ filterBarStyle }}"><select style="{{ selectStyle }}" value="{{ projectFilter }}" onChange="{{ onProjectFilter }}">
+        <option value="">All Projects</option><option value="ERP Implementation">ERP Implementation</option><option value="CRM Migration">CRM Migration</option><option value="Mobile App Development">Mobile App Development</option><option value="Legacy System Cleanup">Legacy System Cleanup</option><option value="Website Redesign">Website Redesign</option>
+      </select></div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Category</th><th style="{{ thNumStyle }}">Budget</th><th style="{{ thNumStyle }}">Spent</th><th style="{{ thStyle }}">Utilization</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="c" hint-placeholder-count="6">
+              <tr><td style="{{ tdStyle }}">{{ c.project }}</td><td style="{{ tdStyle }}">{{ c.category }}</td><td style="{{ tdNumStyle }}">{{ c.budget }}</td><td style="{{ tdNumStyle }}">{{ c.spent }}</td>
+                <td style="{{ tdStyle }}"><div style="{{ barTrackStyle }}"><div style="{{ c.barStyle }}"></div></div><span style="{{ c.pctTextStyle }}">{{ c.pct }}%</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+const SEED=[
+ {id:1,project:'ERP Implementation',category:'Labor',budget:5000000,spent:3200000},
+ {id:2,project:'ERP Implementation',category:'Infrastructure',budget:1200000,spent:1150000},
+ {id:3,project:'CRM Migration',category:'Labor',budget:2500000,spent:2600000},
+ {id:4,project:'CRM Migration',category:'Licensing',budget:600000,spent:400000},
+ {id:5,project:'Mobile App Development',category:'Labor',budget:3000000,spent:900000},
+ {id:6,project:'Mobile App Development',category:'Infrastructure',budget:800000,spent:150000}
+];
+class Component extends DCLogic {
+  state={theme:'dark',projectFilter:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onProjectFilter=(e)=>this.setState({projectFilter:e.target.value});
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=SEED.filter(c=>!this.state.projectFilter||c.project===this.state.projectFilter);
+    const pageRows=filtered.map(c=>{ const pct=Math.round(c.spent/c.budget*100); const over=pct>100;
+      return {...c,budget:fmt(c.budget),spent:fmt(c.spent),pct,
+        barStyle:{width:Math.min(pct,100)+'%',height:6,borderRadius:3,background:over?C.danger:(pct>85?C.warning:C.success)},
+        pctTextStyle:{color:over?C.danger:C.muted,fontSize:12,fontFamily:FONT,marginLeft:8}}; });
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,projectFilter:this.state.projectFilter,onProjectFilter:this.onProjectFilter,pageRows,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,display:'table-cell'},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`},
+      barTrackStyle:{display:'inline-block',width:100,height:6,borderRadius:3,background:C.border,verticalAlign:'middle'}
+    };
+  }
+}
+</script>
+</body>
+</html>

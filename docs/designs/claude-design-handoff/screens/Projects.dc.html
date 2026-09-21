@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;} a{color:inherit;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Projects.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Projects" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Projects</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Project</button>
+      </header>
+
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search projects..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option>
+          <option value="Draft">Draft</option>
+          <option value="Planning">Planning</option>
+          <option value="Active">Active</option>
+          <option value="On Hold">On Hold</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr>
+            <th style="{{ thSortStyle }}" onClick="{{ sortByCode }}">Project{{ sortMarkCode }}</th>
+            <th style="{{ thStyle }}">Client</th>
+            <th style="{{ thStyle }}">Status</th>
+            <th style="{{ thStyle }}">Progress</th>
+            <th style="{{ thNumStyle }}" onClick="{{ sortByAmount }}">Value{{ sortMarkAmount }}</th>
+            <th style="{{ thStyle }}"></th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="p" hint-placeholder-count="10">
+              <tr style="{{ rowStyle }}" onClick="{{ p.onOpenQuickView }}">
+                <td style="{{ tdStyle }}"><div style="{{ projectCellStyle }}"><span style="{{ codeTextStyle }}">{{ p.code }}</span><span style="{{ nameTextStyle }}">{{ p.name }}</span></div></td>
+                <td style="{{ tdStyle }}">{{ p.client }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td>
+                <td style="{{ tdStyle }}">
+                  <div style="{{ progressBarStyle }}"><div style="{{ p.progressFillStyle }}"></div></div>
+                  <small style="{{ smallMutedStyle }}">{{ p.progress }}%</small>
+                </td>
+                <td style="{{ tdNumStyle }}">{{ p.amount }}</td>
+                <td style="{{ tdActionsStyle }}"><sc-if value="{{ p.canAssign }}" hint-placeholder-val="{{ true }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ p.onOpenAssign }}">Assign</button></sc-if></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No projects found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div>
+      </sc-if>
+
+      <nav style="{{ paginationStyle }}" aria-label="Pagination">
+        <button type="button" style="{{ pageBtnStyle }}" disabled="{{ atFirstPage }}" onClick="{{ prevPage }}">« Prev</button>
+        <span style="{{ pageInfoStyle }}">Page {{ page }} of {{ totalPages }}</span>
+        <button type="button" style="{{ pageBtnStyle }}" disabled="{{ atLastPage }}" onClick="{{ nextPage }}">Next »</button>
+      </nav>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add project">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Project</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Project name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Website Redesign"></input>
+            <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Project name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Client</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newClient }}" onInput="{{ onNewClient }}" placeholder="e.g. Acme Corp"></input>
+            <label style="{{ labelStyle }}">Contract value (৳)</label>
+            <input type="number" style="{{ modalInputStyle }}" value="{{ newAmount }}" onInput="{{ onNewAmount }}" placeholder="0"></input>
+            <sc-if value="{{ amountError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter a valid, positive amount.</div></sc-if>
+            <label style="{{ labelStyle }}">Owner</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newOwner }}" onInput="{{ onNewOwner }}" placeholder="e.g. Rahim Uddin"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Project</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ quickViewOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeQuickView }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Project quick view">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">{{ qvName }}</h2><p style="{{ qvSubStyle }}">{{ qvCode }} · {{ qvClient }}</p></div>
+          <div style="{{ modalBodyStyle }}">
+            <div style="{{ qvGridStyle }}">
+              <div><label style="{{ labelStyle }}">Status</label><p style="{{ qvValueStyle }}"><span style="{{ qvChipStyle }}">{{ qvStatus }}</span></p></div>
+              <div><label style="{{ labelStyle }}">Progress</label><p style="{{ qvValueStyle }}">{{ qvProgress }}%</p></div>
+              <div><label style="{{ labelStyle }}">Contract Value</label><p style="{{ qvValueStyle }}">{{ qvAmount }}</p></div>
+              <div><label style="{{ labelStyle }}">Owner</label><p style="{{ qvValueStyle }}">{{ qvOwner }}</p></div>
+              <div><label style="{{ labelStyle }}">Team</label><p style="{{ qvValueStyle }}">{{ qvTeamSummary }}</p></div>
+            </div>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeQuickView }}">Close</button>
+            <a href="ProjectDetail.dc.html" style="{{ btnPrimaryLinkStyle }}">View Full Details →</a>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ teamOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeTeam }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Assign">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Assign — {{ teamProjectName }}</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Quick-select a team (optional)</label>
+            <select style="{{ modalInputStyle }}" value="{{ selectedTeam }}" onChange="{{ onSelectTeam }}">
+              <option value="">Choose a team…</option>
+              <sc-for list="{{ teamOptions }}" as="t" hint-placeholder-count="5"><option value="{{ t }}">{{ t }}</option></sc-for>
+            </select>
+            <p style="{{ hintTextStyle }}">Picking a team checks everyone already in it below — adjust individually as needed.</p>
+
+            <label style="{{ labelStyle }}">Members</label>
+            <sc-for list="{{ rosterRows }}" as="m" hint-placeholder-count="8">
+              <label style="{{ checkRowStyle }}"><input type="checkbox" checked="{{ m.checked }}" onChange="{{ m.onToggle }}"></input><span>{{ m.name }}</span><span style="{{ rosterRoleStyle }}">{{ m.role }}</span></label>
+            </sc-for>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ closeTeam }}">Done</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', borderStrong:'#6F7E8F', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)',
+  success:'#63A583', info:'#6C86AD', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', borderStrong:'#C2C9D1', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)',
+  success:'#2E7D54', info:'#3E5C8A', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const PAGE_SIZE = 10;
+
+function chip(status, C) {
+  const map = { Active: C.success, Planning: C.info, 'On Hold': C.warning, Completed: C.success, Draft: C.neutral, Cancelled: C.danger };
+  const color = map[status] || C.neutral;
+  return { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, fontFamily: FONT, color, border: `1px solid ${color}` };
+}
+
+const SEED = [
+  { id: 1, code: 'PRJ-2026-001', name: 'ERP Implementation', client: 'Acme Corp', status: 'Active', progress: 60, amount: 1850000, owner: 'Rahim Uddin' },
+  { id: 2, code: 'PRJ-2026-002', name: 'CRM Migration', client: 'Bayzid Group', status: 'Planning', progress: 15, amount: 1250000, owner: 'Karim Ali' },
+  { id: 3, code: 'PRJ-2026-003', name: 'Mobile App Development', client: 'Delta Tech', status: 'On Hold', progress: 40, amount: 980000, owner: 'Farida Akter' },
+  { id: 4, code: 'PRJ-2026-004', name: 'Legacy System Cleanup', client: 'Ekushey Solutions', status: 'Completed', progress: 100, amount: 810000, owner: 'Kamal Hossain' },
+  { id: 5, code: 'PRJ-2026-005', name: 'Website Redesign', client: 'Futura Ltd', status: 'Draft', progress: 5, amount: 520000, owner: 'Nadia Rahman' }
+];
+const fmt = (n) => '৳' + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
+const ROSTER = [
+  { id: 1, name: 'Rahim Uddin', role: 'Project Manager' }, { id: 2, name: 'Karim Ali', role: 'Senior Developer' },
+  { id: 3, name: 'Farida Akter', role: 'Senior Developer' }, { id: 4, name: 'Nadia Rahman', role: 'QA Engineer' },
+  { id: 5, name: 'Mahmudul Islam', role: 'DevOps Engineer' }, { id: 6, name: 'Tasnim Ahmed', role: 'Account Executive' },
+  { id: 7, name: 'Rahima Khatun', role: 'Business Developer' }, { id: 8, name: 'Kamal Hossain', role: 'Developer' }
+];
+const TEAM_MEMBERS = {
+  'Engineering': [1,2,3,8], 'Design': [3], 'QA & Testing': [4], 'DevOps': [5], 'Sales': [6,7]
+};
+
+class Component extends DCLogic {
+  state = { theme: 'dark', search: '', statusFilter: '', sortKey: 'code', sortDir: 1, page: 1, createOpen: false, newName: '', newClient: '', newAmount: '', newOwner: '', nameError: false, amountError: false, projects: SEED,
+    teamOpen: false, teamProjectId: null, projectTeams: { 1: [1,2,3], 2: [2], 3: [3,4], 4: [8], 5: [4] }, assignMode: 'members', selectedTeam: 'Engineering',
+    quickViewOpen: false, quickViewId: null };
+
+  componentDidMount() { try { this.setState({ theme: localStorage.getItem('hub-theme') || 'dark' }); } catch (e) {}
+    try { const created = JSON.parse(localStorage.getItem('hub-created-projects')) || [];
+      if (created.length) { this.setState(s => ({ projects: [...created, ...s.projects] })); localStorage.removeItem('hub-created-projects'); } } catch (e) {} }
+  toggleTheme = () => this.setState(s => { const n = s.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('hub-theme', n); } catch (e) {} return { theme: n }; });
+  onSearch = (e) => this.setState({ search: e.target.value, page: 1 });
+  onStatusFilter = (e) => this.setState({ statusFilter: e.target.value, page: 1 });
+  sortBy = (key) => this.setState(s => ({ sortKey: key, sortDir: s.sortKey === key ? -s.sortDir : 1 }));
+  prevPage = () => this.setState(s => ({ page: Math.max(1, s.page - 1) }));
+  nextPage = (max) => this.setState(s => ({ page: Math.min(max, s.page + 1) }));
+  openCreate = () => this.setState({ createOpen: true, newName: '', newClient: '', newAmount: '', newOwner: '', nameError: false, amountError: false });
+  closeCreate = () => this.setState({ createOpen: false });
+  onNewName = (e) => this.setState({ newName: e.target.value });
+  onNewClient = (e) => this.setState({ newClient: e.target.value });
+  onNewAmount = (e) => this.setState({ newAmount: e.target.value });
+  onNewOwner = (e) => this.setState({ newOwner: e.target.value });
+  submitCreate = () => {
+    const nameError = !this.state.newName.trim();
+    const amt = parseFloat(this.state.newAmount);
+    const amountError = this.state.newAmount !== '' && (isNaN(amt) || amt < 0);
+    if (nameError || amountError) { this.setState({ nameError, amountError }); return; }
+    const p = { id: Date.now(), code: 'PRJ-2026-' + String(this.state.projects.length + 1).padStart(3, '0'), name: this.state.newName.trim(), client: this.state.newClient.trim() || '—', status: 'Draft', progress: 0, amount: isNaN(amt) ? 0 : amt, owner: this.state.newOwner.trim() || '—' };
+    this.setState(s => ({ projects: [p, ...s.projects], createOpen: false, page: 1 }));
+  };
+  openTeam = (projectId) => (e) => { if (e) e.stopPropagation(); this.setState({ teamOpen: true, teamProjectId: projectId, selectedTeam: '' }); };
+  closeTeam = () => this.setState({ teamOpen: false });
+  onSelectTeam = (e) => { const team = e.target.value; if (!team) { this.setState({ selectedTeam: '' }); return; } this.setState(s => {
+    const ids = TEAM_MEMBERS[team] || []; const cur = s.projectTeams[s.teamProjectId] || [];
+    const merged = Array.from(new Set([...cur, ...ids]));
+    return { selectedTeam: team, projectTeams: { ...s.projectTeams, [s.teamProjectId]: merged } };
+  }); };
+  toggleTeamMember = (projectId, memberId) => (e) => { if (e) e.stopPropagation(); this.setState(s => {
+    const cur = s.projectTeams[projectId] || [];
+    const next = cur.includes(memberId) ? cur.filter(id => id !== memberId) : [...cur, memberId];
+    return { projectTeams: { ...s.projectTeams, [projectId]: next } };
+  }); };
+  openQuickView = (id) => () => this.setState({ quickViewOpen: true, quickViewId: id });
+  closeQuickView = () => this.setState({ quickViewOpen: false });
+
+  renderVals() {
+    const C = this.state.theme === 'light' ? LIGHT : DARK;
+    let filtered = this.state.projects.filter(p =>
+      (!this.state.search || p.name.toLowerCase().includes(this.state.search.toLowerCase()) || p.client.toLowerCase().includes(this.state.search.toLowerCase())) &&
+      (!this.state.statusFilter || p.status === this.state.statusFilter));
+    const { sortKey, sortDir } = this.state;
+    filtered = filtered.slice().sort((a, b) => {
+      const av = a[sortKey], bv = b[sortKey];
+      if (typeof av === 'number') return (av - bv) * sortDir;
+      return String(av).localeCompare(String(bv)) * sortDir;
+    });
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const page = Math.min(this.state.page, totalPages);
+    const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map(p => ({
+      ...p, amount: fmt(p.amount), chipStyle: chip(p.status, C), canAssign: p.status !== 'Completed',
+      onOpenAssign: this.openTeam(p.id), onOpenQuickView: this.openQuickView(p.id),
+      progressFillStyle: { display: 'block', height: '100%', width: p.progress + '%', background: C.accent, borderRadius: 'inherit' }
+    }));
+
+    const btnBase = { display: 'inline-flex', alignItems: 'center', gap: 4, borderRadius: 4, border: '1px solid transparent', cursor: 'pointer', fontFamily: FONT, fontSize: 14, padding: '8px 16px', whiteSpace: 'nowrap' };
+    const smBtnBase = { ...btnBase, fontSize: 12, padding: '4px 12px' };
+    const mark = (k) => sortKey === k ? (sortDir === 1 ? ' ▲' : ' ▼') : '';
+
+    const teamProject = this.state.projects.find(p => p.id === this.state.teamProjectId);
+    const teamAssigned = this.state.projectTeams[this.state.teamProjectId] || [];
+    const rosterRows = ROSTER.map(m => ({ ...m, checked: teamAssigned.includes(m.id), onToggle: this.toggleTeamMember(this.state.teamProjectId, m.id) }));
+
+    const qv = this.state.projects.find(p => p.id === this.state.quickViewId) || {};
+    const qvAssigned = this.state.projectTeams[this.state.quickViewId] || [];
+    const qvTeamSummary = qvAssigned.length ? `${qvAssigned.length} member${qvAssigned.length===1?'':'s'} — ${qvAssigned.map(id=>(ROSTER.find(r=>r.id===id)||{}).name).filter(Boolean).join(', ')}` : 'Unassigned';
+
+    return {
+      theme: this.state.theme, toggleTheme: this.toggleTheme,
+      search: this.state.search, statusFilter: this.state.statusFilter, onSearch: this.onSearch, onStatusFilter: this.onStatusFilter,
+      pageRows, noResults: filtered.length === 0,
+      sortByCode: () => this.sortBy('code'), sortByAmount: () => this.sortBy('amount'),
+      sortMarkCode: mark('code'), sortMarkAmount: mark('amount'),
+      page, totalPages, atFirstPage: page <= 1, atLastPage: page >= totalPages,
+      prevPage: this.prevPage, nextPage: () => this.nextPage(totalPages),
+      createOpen: this.state.createOpen, openCreate: this.openCreate, closeCreate: this.closeCreate,
+      newName: this.state.newName, newClient: this.state.newClient, newAmount: this.state.newAmount, newOwner: this.state.newOwner,
+      nameError: this.state.nameError, amountError: this.state.amountError,
+      onNewName: this.onNewName, onNewClient: this.onNewClient, onNewAmount: this.onNewAmount, onNewOwner: this.onNewOwner, submitCreate: this.submitCreate,
+      teamOpen: this.state.teamOpen, closeTeam: this.closeTeam, teamProjectName: teamProject ? teamProject.name : '', rosterRows,
+      selectedTeam: this.state.selectedTeam, onSelectTeam: this.onSelectTeam, teamOptions: Object.keys(TEAM_MEMBERS),
+      quickViewOpen: this.state.quickViewOpen, closeQuickView: this.closeQuickView,
+      qvName: qv.name, qvCode: qv.code, qvClient: qv.client, qvStatus: qv.status, qvProgress: qv.progress, qvAmount: fmt(qv.amount||0), qvOwner: qv.owner,
+      qvChipStyle: chip(qv.status, C), qvTeamSummary,
+
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },
+      sidebarMountStyle: { flexShrink: 0 },
+      mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
+      scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle: { padding: '32px 24px 64px', maxWidth: 1000, width: '100%', boxSizing: 'border-box', margin: '0 auto', flex: 1 },
+      pageHeaderStyle: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, marginBottom: 24, flexWrap: 'wrap' },
+      pageTitleStyle: { color: C.inkHi, fontSize: 20, lineHeight: '28px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      btnPrimaryStyle: { ...btnBase, background: C.accent, color: C.accentInk },
+      btnPrimaryLinkStyle: { ...btnBase, background: C.accent, color: C.accentInk, textDecoration: 'none' },
+      btnGhostStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+      btnGhostSmStyle: { ...smBtnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+
+      filterBarStyle: { display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 },
+      searchInputStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, minWidth: 200 },
+      selectStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14 },
+
+      tableWrapStyle: { border: `1px solid ${C.border}`, borderRadius: 8 },
+      tableStyle: { width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', fontSize: 13, fontFamily: FONT },
+      rowStyle: { cursor: 'pointer' },
+      thStyle: { padding: '10px 12px', textAlign: 'left', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}` },
+      thSortStyle: { padding: '10px 12px', textAlign: 'left', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}`, cursor: 'pointer' },
+      thNumStyle: { padding: '10px 12px', textAlign: 'right', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}`, cursor: 'pointer' },
+      tdStyle: { padding: '10px 12px', color: C.inkDim, borderBottom: `1px solid ${C.border}`, overflow: 'hidden', textOverflow: 'ellipsis' },
+      tdNumStyle: { padding: '10px 12px', color: C.inkHi, fontWeight: 500, textAlign: 'right', fontVariantNumeric: 'tabular-nums', borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' },
+      tdActionsStyle: { padding: '10px 12px', borderBottom: `1px solid ${C.border}`, textAlign: 'right' },
+      projectCellStyle: { display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' },
+      codeTextStyle: { color: C.muted, fontSize: 11, fontFamily: FONT },
+      nameTextStyle: { color: C.inkHi, fontSize: 13, fontFamily: FONT, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+      progressBarStyle: { height: 6, background: C.border, borderRadius: 999, overflow: 'hidden', minWidth: 60 },
+      smallMutedStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+
+      emptyStyle: { color: C.muted, textAlign: 'center', padding: 48, fontFamily: FONT },
+      emptyTitleStyle: { color: C.inkHi, fontFamily: FONT, margin: '0 0 8px' },
+      emptyTextStyle: { margin: 0, fontSize: 14 },
+      paginationStyle: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 },
+      pageBtnStyle: { ...smBtnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+      pageInfoStyle: { color: C.muted, fontSize: 13, fontFamily: FONT },
+
+      radioRowStyle: { display: 'flex', gap: 8, marginBottom: 8 },
+      hintTextStyle: { color: C.muted, fontSize: 12, fontFamily: FONT, margin: '0 0 8px' },
+      checkRowStyle: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px 4px', fontFamily: FONT, fontSize: 14, color: C.ink, cursor: 'pointer' },
+      rosterRoleStyle: { marginLeft: 'auto', color: C.muted, fontSize: 12 },
+
+      qvSubStyle: { color: C.muted, fontFamily: FONT, fontSize: 13, margin: '4px 0 0' },
+      qvGridStyle: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16 },
+      qvValueStyle: { color: C.inkHi, fontFamily: FONT, fontSize: 14, margin: 0 },
+
+      modalScrimStyle: { position: 'fixed', inset: 0, background: 'rgba(1,1,1,0.6)', zIndex: 55 },
+      modalCardStyle: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 61, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, width: 'min(480px, 90vw)', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 8px 24px rgba(0,0,0,0.55)' },
+      modalHeaderStyle: { padding: 24, borderBottom: `1px solid ${C.border}` },
+      modalTitleStyle: { color: C.inkHi, fontFamily: FONT, fontSize: 16, fontWeight: 600, margin: 0 },
+      modalBodyStyle: { padding: 24, display: 'flex', flexDirection: 'column', gap: 4 },
+      modalFooterStyle: { display: 'flex', justifyContent: 'flex-end', gap: 8, padding: 24, borderTop: `1px solid ${C.border}` },
+      labelStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+      modalInputStyle: { background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, width: '100%', boxSizing: 'border-box', marginBottom: 8 },
+      errorTextStyle: { color: C.danger, fontSize: 12, fontFamily: FONT }
+    };
+  }
+}
+</script>
+</body>
+</html>

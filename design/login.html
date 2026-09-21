@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="brand-mark">DEA</span>
+      <span class="brand-name">Hub</span>
+    </div>
+
+    <div id="signInView">
+      <h1 class="login-title">Sign In</h1>
+      <form id="loginForm" class="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input class="input" type="email" id="email" name="email" placeholder="you@dea.bd" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input class="input" type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <p class="error-text" id="loginError" hidden>Enter both email and password.</p>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+        <a href="#" id="forgotLink" class="forgot-link">Forgot password?</a>
+      </form>
+    </div>
+
+    <div id="forgotView" hidden>
+      <h1 class="login-title">Reset Your Password</h1>
+      <p class="hint">Hub is an internal ≤5-user tool with no self-service email reset. Contact your Super Admin directly; they can reset your password from the Users screen.</p>
+      <a href="#" id="backToSignIn" class="forgot-link">&larr; Back to Sign In</a>
+    </div>
+
+    <div class="login-footer">Powered by Deus Ex Automata (DEA)</div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script>
+  (function () {
+    var form = document.getElementById('loginForm');
+    var errorEl = document.getElementById('loginError');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value.trim();
+      if (!email || !password) {
+        errorEl.hidden = false;
+        return;
+      }
+      errorEl.hidden = true;
+      window.location.href = 'dashboard.html';
+    });
+
+    var signInView = document.getElementById('signInView');
+    var forgotView = document.getElementById('forgotView');
+    document.getElementById('forgotLink').addEventListener('click', function (e) {
+      e.preventDefault();
+      signInView.hidden = true;
+      forgotView.hidden = false;
+    });
+    document.getElementById('backToSignIn').addEventListener('click', function (e) {
+      e.preventDefault();
+      forgotView.hidden = true;
+      signInView.hidden = false;
+    });
+  })();
+</script>
+</body>
+</html>

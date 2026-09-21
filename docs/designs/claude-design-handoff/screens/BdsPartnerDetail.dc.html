@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="BdsPartners.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="{{ name }}" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="BdsPartners.dc.html" style="{{ backLinkStyle }}">← Back to BDS Partners</a>
+      <header style="{{ pageHeaderStyle }}">
+        <div><h1 style="{{ pageTitleStyle }}">{{ name }}</h1>
+          <div style="{{ statusRowStyle }}"><span style="{{ statusChipStyle }}">{{ statusLabelPlain }}</span></div>
+          <p style="{{ metaStyle }}">BDS Partner · {{ commission }} commission · {{ leadsCount }} leads attributed</p>
+        </div>
+        <div style="{{ actionsRowStyle }}">
+          <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><button type="button" style="{{ btnGhostStyle }}" onClick="{{ startEdit }}">Edit Partner</button></sc-if>
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ discardEdit }}">Discard</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveEdit }}">Save</button>
+          </sc-if>
+          <button type="button" style="{{ statusBtnStyle }}" onClick="{{ toggleStatus }}">{{ statusLabel }}</button>
+        </div>
+      </header>
+      <div style="{{ tabRowStyle }}">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button type="button" style="{{ t.style }}" onClick="{{ t.onClick }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ cardGridStyle }}">
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Contact Information</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Email</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="email" style="{{ inputStyle }}" value="{{ email }}" onInput="{{ onEmail }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ email }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Phone</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ phone }}" onInput="{{ onPhone }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ phone }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Address</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ address }}" onInput="{{ onAddress }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ address }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Commission Rate</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ commission }}" onInput="{{ onCommission }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ commission }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Joined</label><p style="{{ valueStyle }}">{{ joined }}</p></div>
+          </div>
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Performance</h3>
+            <div style="{{ kpiGridStyle }}">
+              <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Leads Attributed</span><span style="{{ kpiValueStyle }}">{{ leadsCount }}</span></div>
+              <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Converted to Opp.</span><span style="{{ kpiValueStyle }}">{{ converted }}</span></div>
+              <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Won</span><span style="{{ kpiValueStyle }}">{{ won }}</span></div>
+              <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Total Pipeline</span><span style="{{ kpiValueStyle }}">{{ pipeline }}</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="{{ cardStyle }}">
+          <h3 style="{{ cardTitleStyle }}">Compensation Summary</h3>
+          <div style="{{ kpiGridStyle }}">
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Total Earned</span><span style="{{ kpiSuccessValueStyle }}">{{ totalEarned }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Paid</span><span style="{{ kpiValueStyle }}">{{ paidAmt }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Outstanding</span><span style="{{ kpiWarnValueStyle }}">{{ outstanding }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">This Quarter</span><span style="{{ kpiValueStyle }}">{{ thisQuarter }}</span></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isLeads }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Lead</th><th style="{{ thStyle }}">Client</th><th style="{{ thStyle }}">Status</th><th style="{{ thNumStyle }}">Est. Value</th><th style="{{ thStyle }}">Converted</th><th style="{{ thStyle }}">Date</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ leadRows }}" as="l" hint-placeholder-count="6">
+              <tr><td style="{{ tdStyle }}">{{ l.code }}</td><td style="{{ tdStyle }}">{{ l.client }}</td><td style="{{ tdStyle }}"><span style="{{ l.chipStyle }}">{{ l.status }}</span></td><td style="{{ tdNumStyle }}">{{ l.value }}</td><td style="{{ tdStyle }}">{{ l.converted }}</td><td style="{{ tdStyle }}">{{ l.date }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+
+      <sc-if value="{{ isCompensation }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Source</th><th style="{{ thStyle }}">Type</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Status</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ compensationRows }}" as="c" hint-placeholder-count="5">
+              <tr><td style="{{ tdStyle }}">{{ c.date }}</td><td style="{{ tdStyle }}">{{ c.source }}</td><td style="{{ tdStyle }}">{{ c.type }}</td><td style="{{ tdNumStyle }}">{{ c.amount }}</td><td style="{{ tdStyle }}"><span style="{{ c.chipStyle }}">{{ c.status }}</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+
+      <sc-if value="{{ isPayments }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Description</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Method</th><th style="{{ thStyle }}">Ref</th><th style="{{ thStyle }}">Status</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ paymentRows }}" as="p" hint-placeholder-count="5">
+              <tr><td style="{{ tdStyle }}">{{ p.date }}</td><td style="{{ tdStyle }}">{{ p.desc }}</td><td style="{{ tdNumStyle }}">{{ p.amount }}</td><td style="{{ tdStyle }}">{{ p.method }}</td><td style="{{ tdStyle }}">{{ p.ref }}</td><td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F', info:'#6C86AD' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675', info:'#3E5C8A' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+function getQueryId(){ try{ return new URLSearchParams(window.location.search).get('id'); }catch(e){ return null; } }
+function chip(status,C){ const map={Active:C.success,Inactive:C.neutral,New:C.neutral,Contacted:C.warning,Qualified:C.info,Proposal:C.success,Won:C.success,Lost:C.danger,Paid:C.success,Pending:C.warning}; const color=map[status]||C.neutral; return {display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const LEADS_SEED=[
+ {code:'L-2026-001',client:'Acme Corp',status:'Won',value:'৳1,500,000.00',converted:'Yes (OPP-2026-001)',date:'2026-08-20'},
+ {code:'L-2026-002',client:'Bayzid Group',status:'Proposal',value:'৳2,250,000.00',converted:'Yes (OPP-2026-002)',date:'2026-08-18'},
+ {code:'L-2026-003',client:'Delta Tech',status:'New',value:'৳800,000.00',converted:'No',date:'2026-08-21'},
+ {code:'L-2026-004',client:'Ekushey Solutions',status:'Won',value:'৳3,500,000.00',converted:'Yes',date:'2026-08-15'}
+];
+const COMPENSATION_SEED=[
+ {date:'2026-08-15',source:'ERP Implementation',type:'Project Commission',amount:'৳90,000.00',status:'Paid'},
+ {date:'2026-08-10',source:'CRM Migration',type:'Project Commission',amount:'৳60,000.00',status:'Paid'},
+ {date:'2026-08-05',source:'L-2026-004 (Ekushey)',type:'Lead Conversion',amount:'৳30,000.00',status:'Paid'},
+ {date:'2026-08-01',source:'L-2026-008 (Impact)',type:'Lead Conversion',amount:'৳40,000.00',status:'Pending'}
+];
+const PAYMENTS_SEED=[
+ {date:'2026-08-15',desc:'Commission payout - July',amount:'৳210,000.00',method:'Bank Transfer',ref:'TXN-2026-0815',status:'Paid'},
+ {date:'2026-07-15',desc:'Commission payout - June',amount:'৳180,000.00',method:'Bank Transfer',ref:'TXN-2026-0715',status:'Paid'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',tab:'overview',editing:false,snapshot:null,active:true,
+    name:'Rahim Hassan',email:'rahim.hassan@bds.bd',phone:'+8801711-111111',address:'45 Banani Road, Dhaka',commission:'5%',joined:'2025-01-15',
+    leadsCount:12,converted:8,won:4,pipeline:'৳4,850,000.00',totalEarned:'৳1,240,000.00',paidAmt:'৳930,000.00',outstanding:'৳310,000.00',thisQuarter:'৳120,000.00'};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{ const id=getQueryId(); if(id){ const list=JSON.parse(localStorage.getItem('hub-bds-partners'))||[]; const found=list.find(p=>String(p.id)===String(id));
+      if(found) this.setState({name:found.name,email:found.email,phone:found.phone,commission:found.commission,leadsCount:found.leads,active:found.status==='Active',outstanding:'৳'+(found.outstanding||0).toLocaleString?('৳'+found.outstanding.toLocaleString('en-US',{minimumFractionDigits:2})):this.state.outstanding}); }
+    }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  setTab=(t)=>()=>this.setState({tab:t});
+  toggleStatus=()=>this.setState(s=>({active:!s.active}));
+  startEdit=()=>this.setState(s=>({editing:true,snapshot:{email:s.email,phone:s.phone,address:s.address,commission:s.commission}}));
+  saveEdit=()=>this.setState({editing:false,snapshot:null});
+  discardEdit=()=>this.setState(s=>({editing:false,...(s.snapshot||{}),snapshot:null}));
+  onEmail=(e)=>this.setState({email:e.target.value}); onPhone=(e)=>this.setState({phone:e.target.value});
+  onAddress=(e)=>this.setState({address:e.target.value}); onCommission=(e)=>this.setState({commission:e.target.value});
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px',whiteSpace:'nowrap'};
+    const smBtnBase={...btnBase,fontSize:12,padding:'4px 12px'};
+    const tabDef=[['overview','Overview'],['leads','Leads'],['compensation','Compensation'],['payments','Payments']];
+    const tabs=tabDef.map(([k,label])=>({label,onClick:this.setTab(k),style:{...smBtnBase,background:'transparent',color:this.state.tab===k?C.inkHi:C.muted,borderColor:'transparent',borderBottom:this.state.tab===k?`2px solid ${C.accent}`:'2px solid transparent',borderRadius:0,padding:'8px 4px'}}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,tabs,
+      isOverview:this.state.tab==='overview',isLeads:this.state.tab==='leads',isCompensation:this.state.tab==='compensation',isPayments:this.state.tab==='payments',
+      name:this.state.name,statusLabelPlain:this.state.active?'Active':'Inactive',statusChipStyle:chip(this.state.active?'Active':'Inactive',C),
+      metaStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'8px 0 0'},
+      toggleStatus:this.toggleStatus,statusLabel:this.state.active?'Deactivate':'Activate',
+      statusBtnStyle:{...btnBase,background:'transparent',color:this.state.active?C.danger:C.success,borderColor:this.state.active?C.danger:C.success},
+      editing:this.state.editing,notEditing:!this.state.editing,startEdit:this.startEdit,saveEdit:this.saveEdit,discardEdit:this.discardEdit,
+      email:this.state.email,onEmail:this.onEmail,phone:this.state.phone,onPhone:this.onPhone,address:this.state.address,onAddress:this.onAddress,
+      commission:this.state.commission,onCommission:this.onCommission,joined:this.state.joined,
+      leadsCount:this.state.leadsCount,converted:this.state.converted,won:this.state.won,pipeline:this.state.pipeline,
+      totalEarned:this.state.totalEarned,paidAmt:this.state.paidAmt,outstanding:this.state.outstanding,thisQuarter:this.state.thisQuarter,
+      leadRows:LEADS_SEED.map(l=>({...l,chipStyle:chip(l.status,C)})),
+      compensationRows:COMPENSATION_SEED.map(c=>({...c,chipStyle:chip(c.status,C)})),
+      paymentRows:PAYMENTS_SEED.map(p=>({...p,chipStyle:chip(p.status,C)})),
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1100,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:16,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      statusRowStyle:{marginTop:8}, actionsRowStyle:{display:'flex',gap:8,alignItems:'center'},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      tabRowStyle:{display:'flex',gap:16,borderBottom:`1px solid ${C.border}`,marginBottom:24,flexWrap:'wrap'},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:16,marginBottom:24},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16,marginBottom:24},
+      cardTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:'0 0 12px'},
+      fieldRowStyle:{marginBottom:12}, labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:4},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 10px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      kpiGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12},
+      kpiCardStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,padding:12,display:'flex',flexDirection:'column',gap:6},
+      kpiLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      kpiValueStyle:{color:C.inkHi,fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      kpiSuccessValueStyle:{color:C.success,fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      kpiWarnValueStyle:{color:C.warning,fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'}
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Opportunities.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Opportunity" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="Opportunities.dc.html" style="{{ backLinkStyle }}">← Back to Opportunities</a>
+      <header style="{{ pageHeaderStyle }}">
+        <div><h1 style="{{ pageTitleStyle }}">{{ code }}</h1><p style="{{ subTitleStyle }}">{{ client }}</p></div>
+        <span style="{{ stageChipStyle }}">{{ stage }}</span>
+      </header>
+      <div style="{{ cardGridStyle }}">
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Est. Value</label><p style="{{ valueStyle }}">{{ value }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Expected Close</label><p style="{{ valueStyle }}">{{ closeDate }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Owner</label><p style="{{ valueStyle }}">{{ owner }}</p></div>
+      </div>
+      <h2 style="{{ sectionTitleStyle }}">Advance Stage</h2>
+      <div style="{{ stageRowStyle }}">
+        <sc-for list="{{ stageOptions }}" as="s" hint-placeholder-count="6">
+          <button type="button" style="{{ s.style }}" onClick="{{ s.onClick }}">{{ s.label }}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ isWon }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ wonBoxStyle }}">
+          <sc-if value="{{ !clientCreated }}" hint-placeholder-val="{{ true }}">
+            <p style="{{ wonTextStyle }}">This opportunity is won. Create a client record to start the project.</p>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ createClient }}">Create Client</button>
+          </sc-if>
+          <sc-if value="{{ clientCreated }}" hint-placeholder-val="{{ false }}">
+            <p style="{{ wonTextStyle }}">Client created.</p>
+            <div style="{{ wonActionsStyle }}">
+              <a href="Clients.dc.html" style="{{ btnGhostLinkStyle }}">View Clients</a>
+              <sc-if value="{{ !projectCreated }}" hint-placeholder-val="{{ true }}"><button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ createProject }}">Create Project</button></sc-if>
+              <sc-if value="{{ projectCreated }}" hint-placeholder-val="{{ false }}"><a href="Projects.dc.html" style="{{ btnPrimaryLinkStyle }}">View Project →</a></sc-if>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <h2 style="{{ sectionTitleStyle }}">Notes</h2>
+      <textarea style="{{ textareaStyle }}" value="{{ notes }}" onInput="{{ onNotes }}" placeholder="Add a note about this opportunity..."></textarea>
+      <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveNote }}">Save Note</button>
+      <sc-if value="{{ savedFlash }}" hint-placeholder-val="{{ false }}"><span style="{{ savedFlashStyle }}">Saved</span></sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', info:'#6C86AD', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', info:'#3E5C8A', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+(n||0).toLocaleString('en-US',{minimumFractionDigits:2});
+const STAGES=['Discovery','Qualification','Proposal','Negotiation','Won','Lost'];
+function getQueryId(){ try{ return new URLSearchParams(window.location.search).get('id'); }catch(e){ return null; } }
+class Component extends DCLogic {
+  state={theme:'dark',id:null,code:'OPP-2026-001',client:'Acme Corp',value:1850000,closeDate:'2026-09-15',owner:'Rahim Uddin',stage:'Proposal',notes:'',savedFlash:false,clientCreated:false,projectCreated:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{
+      const id=getQueryId();
+      if(id){
+        const list=JSON.parse(localStorage.getItem('hub-opportunities'))||[];
+        const found=list.find(o=>String(o.id)===String(id));
+        if(found) this.setState({id:found.id,code:found.code,client:found.client,value:found.value,closeDate:found.closeDate,owner:found.owner,stage:found.stage});
+      }
+    }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  setStage=(s)=>()=>this.setState({stage:s});
+  createClient=()=>{
+    const c={id:Date.now(),name:'—',status:'Active',company:this.state.client,email:'—',phone:'—',outstanding:'৳0.00'};
+    try{ const existing=JSON.parse(localStorage.getItem('hub-created-clients'))||[]; localStorage.setItem('hub-created-clients', JSON.stringify([...existing,c])); }catch(e){}
+    this.setState({clientCreated:true});
+  };
+  createProject=()=>{
+    const p={id:Date.now(),code:'PRJ-2026-'+String(Date.now()).slice(-3),name:this.state.client+' Engagement',client:this.state.client,status:'Draft',progress:0,amount:this.state.value,owner:this.state.owner};
+    try{ const existing=JSON.parse(localStorage.getItem('hub-created-projects'))||[]; localStorage.setItem('hub-created-projects', JSON.stringify([...existing,p])); }catch(e){}
+    this.setState({projectCreated:true});
+  };
+  onNotes=(e)=>this.setState({notes:e.target.value});
+  saveNote=()=>{ this.setState({savedFlash:true}); setTimeout(()=>this.setState({savedFlash:false}),1500); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const map={Discovery:C.neutral,Qualification:C.info,Proposal:C.warning,Negotiation:C.success,Won:C.success,Lost:C.danger};
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:13,padding:'6px 14px'};
+    const stageOptions=STAGES.map(s=>({label:s,onClick:this.setStage(s),style:{...btnBase,background:this.state.stage===s?map[s]:'transparent',color:this.state.stage===s?(this.state.theme==='light'?'#fff':'#010101'):map[s],borderColor:map[s]}}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,stage:this.state.stage,stageOptions,
+      code:this.state.code,client:this.state.client,value:fmt(this.state.value),closeDate:this.state.closeDate,owner:this.state.owner,
+      isWon:this.state.stage==='Won',clientCreated:this.state.clientCreated,createClient:this.createClient,
+      projectCreated:this.state.projectCreated,createProject:this.createProject,
+      wonActionsStyle:{display:'flex',gap:8,flexWrap:'wrap'},
+      btnGhostLinkStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border,textDecoration:'none'},
+      wonBoxStyle:{background:C.surface,border:`1px solid ${C.success}`,borderRadius:8,padding:16,marginBottom:32,display:'flex',flexDirection:'column',gap:8,alignItems:'flex-start'},
+      wonTextStyle:{color:C.inkDim,fontFamily:FONT,fontSize:14,margin:0},
+      btnPrimaryLinkStyle:{...btnBase,background:C.accent,color:C.accentInk,textDecoration:'none'},
+      notes:this.state.notes,onNotes:this.onNotes,saveNote:this.saveNote,savedFlash:this.state.savedFlash,
+      stageChipStyle:{display:'inline-flex',padding:'4px 12px',borderRadius:999,fontSize:13,fontWeight:500,fontFamily:FONT,color:map[this.state.stage],border:`1px solid ${map[this.state.stage]}`,height:'fit-content'},
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1100,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      subTitleStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'4px 0 0'},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginBottom:32},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:8},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'0 0 12px'},
+      stageRowStyle:{display:'flex',gap:8,flexWrap:'wrap',marginBottom:32},
+      textareaStyle:{width:'100%',minHeight:96,background:C.surface,border:`1px solid ${C.border}`,borderRadius:6,padding:12,color:C.ink,fontFamily:FONT,fontSize:14,boxSizing:'border-box',resize:'vertical',marginBottom:12},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      savedFlashStyle:{color:C.success,fontFamily:FONT,fontSize:13,marginLeft:12}
+    };
+  }
+}
+</script>
+</body>
+</html>

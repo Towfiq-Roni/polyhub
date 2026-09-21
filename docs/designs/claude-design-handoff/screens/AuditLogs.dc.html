@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="AuditLogs.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Audit Logs" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Audit Logs</h1></header>
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search logs..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ actionFilter }}" onChange="{{ onActionFilter }}">
+          <option value="">All Actions</option><option value="Create">Create</option><option value="Update">Update</option><option value="Delete">Delete</option><option value="Login">Login</option>
+        </select>
+      </div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Timestamp</th><th style="{{ thStyle }}">User</th><th style="{{ thStyle }}">Action</th><th style="{{ thStyle }}">Target</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="l" hint-placeholder-count="8">
+              <tr><td style="{{ tdStyle }}">{{ l.ts }}</td><td style="{{ tdStyle }}">{{ l.user }}</td><td style="{{ tdStyle }}"><span style="{{ l.chipStyle }}">{{ l.action }}</span></td><td style="{{ tdStyle }}">{{ l.target }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}"><div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No logs found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div></sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', info:'#6C86AD', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', info:'#3E5C8A', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+function chip(action,C){ const map={Create:C.success,Update:C.info,Delete:C.danger,Login:C.warning}; const color=map[action]||C.muted; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,ts:'2026-08-29 09:12',user:'Rahim Uddin',action:'Update',target:'Project: Nova ERP Rollout'},
+ {id:2,ts:'2026-08-29 08:47',user:'Karim Ali',action:'Create',target:'Lead: Delta Tech'},
+ {id:3,ts:'2026-08-28 17:03',user:'Nadia Rahman',action:'Login',target:'—'},
+ {id:4,ts:'2026-08-28 15:20',user:'Farida Akter',action:'Delete',target:'Deliverable: Draft Spec v1'},
+ {id:5,ts:'2026-08-28 11:05',user:'Mahmudul Islam',action:'Update',target:'Account: HSBC Current'},
+ {id:6,ts:'2026-08-27 14:41',user:'Tasnim Ahmed',action:'Create',target:'Opportunity: Horizon Systems'},
+ {id:7,ts:'2026-08-27 09:30',user:'Rahima Khatun',action:'Login',target:'—'},
+ {id:8,ts:'2026-08-26 16:12',user:'Kamal Hossain',action:'Update',target:'Milestone: Phase 1'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',actionFilter:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value}); onActionFilter=(e)=>this.setState({actionFilter:e.target.value});
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=SEED.filter(l=>(!this.state.search||l.user.toLowerCase().includes(this.state.search.toLowerCase())||l.target.toLowerCase().includes(this.state.search.toLowerCase()))&&(!this.state.actionFilter||l.action===this.state.actionFilter));
+    const pageRows=filtered.map(l=>({...l,chipStyle:chip(l.action,C)}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,actionFilter:this.state.actionFilter,onSearch:this.onSearch,onActionFilter:this.onActionFilter,
+      pageRows,noResults:pageRows.length===0,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},
+      emptyStyle:{color:C.muted,textAlign:'center',padding:48,fontFamily:FONT},emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px'},emptyTextStyle:{margin:0,fontSize:14}
+    };
+  }
+}
+</script>
+</body>
+</html>

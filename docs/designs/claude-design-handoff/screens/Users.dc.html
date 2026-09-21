@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Users.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Users" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Users</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add User</button>
+      </header>
+
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search users..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ roleFilter }}" onChange="{{ onRoleFilter }}">
+          <option value="">All Roles</option>
+          <option value="Super Admin">Super Admin</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="Member">Member</option>
+        </select>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr>
+            <th style="{{ thSortStyle }}" onClick="{{ sortByName }}">User{{ sortMarkName }}</th>
+            <th style="{{ thStyle }}">Email</th><th style="{{ thStyle }}">Role</th><th style="{{ thStyle }}">Teams</th><th style="{{ thStyle }}">Last Login</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}"></th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="u" hint-placeholder-count="5">
+              <tr>
+                <td style="{{ tdStyle }}"><div style="{{ memberCellStyle }}"><span style="{{ avatarStyle }}">{{ u.initials }}</span><span>{{ u.name }}</span></div></td>
+                <td style="{{ tdStyle }}">{{ u.email }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ u.roleChipStyle }}">{{ u.role }}</span></td>
+                <td style="{{ tdStyle }}">{{ u.teams }}</td>
+                <td style="{{ tdStyle }}">{{ u.lastLogin }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ u.statusChipStyle }}">{{ u.status }}</span></td>
+                <td style="{{ tdStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ u.edit }}">Edit</button></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No users found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div>
+      </sc-if>
+
+      <nav style="{{ paginationStyle }}" aria-label="Pagination">
+        <button type="button" style="{{ pageBtnStyle }}" disabled="{{ atFirstPage }}" onClick="{{ prevPage }}">« Prev</button>
+        <span style="{{ pageInfoStyle }}">Page {{ page }} of {{ totalPages }}</span>
+        <button type="button" style="{{ pageBtnStyle }}" disabled="{{ atLastPage }}" onClick="{{ nextPage }}">Next »</button>
+      </nav>
+
+      <sc-if value="{{ editOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeEdit }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Edit user">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Edit {{ editName }}</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Full name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ editName2 }}" onInput="{{ onEditName }}"></input>
+            <label style="{{ labelStyle }}">Email</label>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ editEmail }}" onInput="{{ onEditEmail }}"></input>
+            <label style="{{ labelStyle }}">Role</label>
+            <select style="{{ modalInputStyle }}" value="{{ editRole }}" onChange="{{ onEditRole }}">
+              <option value="Super Admin">Super Admin</option><option value="Admin">Admin</option><option value="Manager">Manager</option><option value="Member">Member</option>
+            </select>
+            <label style="{{ labelStyle }}">Status</label>
+            <select style="{{ modalInputStyle }}" value="{{ editStatus }}" onChange="{{ onEditStatus }}">
+              <option value="Active">Active</option><option value="Inactive">Inactive</option>
+            </select>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeEdit }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveEdit }}">Save Changes</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add user">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add User</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Full name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Jamil Hossain"></input>
+            <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Email</label>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@dea.bd"></input>
+            <sc-if value="{{ emailError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter a valid email address.</div></sc-if>
+            <label style="{{ labelStyle }}">Role</label>
+            <select style="{{ modalInputStyle }}" value="{{ newRole }}" onChange="{{ onNewRole }}">
+              <option value="Member">Member</option><option value="Manager">Manager</option><option value="Admin">Admin</option><option value="Super Admin">Super Admin</option>
+            </select>
+            <label style="{{ labelStyle }}">Teams</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newTeams }}" onInput="{{ onNewTeams }}" placeholder="e.g. Engineering, DevOps"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add User</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)',
+  success:'#63A583', info:'#6C86AD', neutral:'#6F7E8F', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)',
+  success:'#2E7D54', info:'#3E5C8A', neutral:'#5A6675', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const PAGE_SIZE = 5;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function roleColor(role, C) { return role === 'Super Admin' ? C.danger : role === 'Admin' ? C.success : role === 'Manager' ? C.info : C.neutral; }
+function chip(color) { return { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, fontFamily: FONT, color, border: `1px solid ${color}` }; }
+function initials(name) { return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(); }
+
+const SEED = [
+  { id: 1, name: 'Rahim Uddin', email: 'rahim@dea.bd', role: 'Super Admin', teams: 'Engineering', lastLogin: '2026-08-22 09:30', status: 'Active' },
+  { id: 2, name: 'Karim Ali', email: 'karim@dea.bd', role: 'Admin', teams: 'Engineering, DevOps', lastLogin: '2026-08-21 14:15', status: 'Active' },
+  { id: 3, name: 'Farida Akter', email: 'farida@dea.bd', role: 'Manager', teams: 'Design', lastLogin: '2026-08-22 08:45', status: 'Active' },
+  { id: 4, name: 'Nadia Rahman', email: 'nadia@dea.bd', role: 'Member', teams: 'QA & Testing', lastLogin: '2026-08-20 16:30', status: 'Active' },
+  { id: 5, name: 'Mahmudul Islam', email: 'mahmud@dea.bd', role: 'Member', teams: 'DevOps', lastLogin: '2026-08-19 11:20', status: 'Active' },
+  { id: 6, name: 'Tasnim Ahmed', email: 'tasnim@dea.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-18 10:45', status: 'Active' },
+  { id: 7, name: 'Rahima Khatun', email: 'rahima@dea.bd', role: 'Member', teams: 'Sales', lastLogin: '2026-08-15 09:15', status: 'Inactive' }
+];
+
+class Component extends DCLogic {
+  state = {
+    theme: 'dark', search: '', roleFilter: '', statusFilter: '', sortKey: 'name', sortDir: 1, page: 1,
+    users: SEED, editOpen: false, editId: null, editRole: '', editStatus: '', editName2: '', editEmail: '',
+    createOpen: false, newName: '', newEmail: '', newRole: 'Member', newTeams: '', nameError: false, emailError: false
+  };
+
+  componentDidMount() { try { this.setState({ theme: localStorage.getItem('hub-theme') || 'dark' }); } catch (e) {} }
+  toggleTheme = () => this.setState(s => { const n = s.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('hub-theme', n); } catch (e) {} return { theme: n }; });
+  onSearch = (e) => this.setState({ search: e.target.value, page: 1 });
+  onRoleFilter = (e) => this.setState({ roleFilter: e.target.value, page: 1 });
+  onStatusFilter = (e) => this.setState({ statusFilter: e.target.value, page: 1 });
+  sortByName = () => this.setState(s => ({ sortDir: s.sortKey === 'name' ? -s.sortDir : 1, sortKey: 'name' }));
+  prevPage = () => this.setState(s => ({ page: Math.max(1, s.page - 1) }));
+  nextPage = (max) => this.setState(s => ({ page: Math.min(max, s.page + 1) }));
+
+  openEdit = (u) => this.setState({ editOpen: true, editId: u.id, editRole: u.role, editStatus: u.status, editName2: u.name, editEmail: u.email });
+  closeEdit = () => this.setState({ editOpen: false });
+  onEditRole = (e) => this.setState({ editRole: e.target.value });
+  onEditStatus = (e) => this.setState({ editStatus: e.target.value });
+  onEditName = (e) => this.setState({ editName2: e.target.value });
+  onEditEmail = (e) => this.setState({ editEmail: e.target.value });
+  saveEdit = () => this.setState(s => ({ users: s.users.map(u => u.id === s.editId ? { ...u, role: s.editRole, status: s.editStatus, name: s.editName2.trim() || u.name, email: s.editEmail.trim() || u.email } : u), editOpen: false }));
+
+  openCreate = () => this.setState({ createOpen: true, newName: '', newEmail: '', newRole: 'Member', newTeams: '', nameError: false, emailError: false });
+  closeCreate = () => this.setState({ createOpen: false });
+  onNewName = (e) => this.setState({ newName: e.target.value });
+  onNewEmail = (e) => this.setState({ newEmail: e.target.value });
+  onNewRole = (e) => this.setState({ newRole: e.target.value });
+  onNewTeams = (e) => this.setState({ newTeams: e.target.value });
+  submitCreate = () => {
+    const nameError = !this.state.newName.trim();
+    const emailError = !EMAIL_RE.test(this.state.newEmail.trim());
+    if (nameError || emailError) { this.setState({ nameError, emailError }); return; }
+    const u = { id: Date.now(), name: this.state.newName.trim(), email: this.state.newEmail.trim(), role: this.state.newRole, teams: this.state.newTeams.trim() || '—', lastLogin: 'Never', status: 'Active' };
+    this.setState(s => ({ users: [u, ...s.users], createOpen: false }));
+  };
+
+  renderVals() {
+    const C = this.state.theme === 'light' ? LIGHT : DARK;
+    let filtered = this.state.users.filter(u =>
+      (!this.state.search || u.name.toLowerCase().includes(this.state.search.toLowerCase()) || u.email.toLowerCase().includes(this.state.search.toLowerCase())) &&
+      (!this.state.roleFilter || u.role === this.state.roleFilter) &&
+      (!this.state.statusFilter || u.status === this.state.statusFilter));
+    filtered = filtered.slice().sort((a, b) => a.name.localeCompare(b.name) * this.state.sortDir);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const page = Math.min(this.state.page, totalPages);
+    const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map(u => ({
+      ...u, initials: initials(u.name),
+      avatarStyle: { width: 32, height: 32, borderRadius: '50%', background: C.accentSoft, color: C.accent, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 12, fontFamily: FONT },
+      roleChipStyle: chip(roleColor(u.role, C)),
+      statusChipStyle: chip(u.status === 'Active' ? C.success : C.neutral),
+      edit: () => this.openEdit(u)
+    }));
+
+    const btnBase = { display: 'inline-flex', alignItems: 'center', gap: 4, borderRadius: 4, border: '1px solid transparent', cursor: 'pointer', fontFamily: FONT, fontSize: 14, padding: '8px 16px' };
+    const editUser = this.state.users.find(u => u.id === this.state.editId);
+
+    return {
+      theme: this.state.theme, toggleTheme: this.toggleTheme,
+      search: this.state.search, roleFilter: this.state.roleFilter, statusFilter: this.state.statusFilter,
+      onSearch: this.onSearch, onRoleFilter: this.onRoleFilter, onStatusFilter: this.onStatusFilter,
+      sortByName: this.sortByName, sortMarkName: this.state.sortKey === 'name' ? (this.state.sortDir === 1 ? ' ▲' : ' ▼') : '',
+      pageRows, noResults: filtered.length === 0,
+      page, totalPages, atFirstPage: page <= 1, atLastPage: page >= totalPages, prevPage: this.prevPage, nextPage: () => this.nextPage(totalPages),
+      memberCellStyle: { display: 'flex', alignItems: 'center', gap: 12 },
+
+      editOpen: this.state.editOpen, editName: editUser ? editUser.name : '', editRole: this.state.editRole, editStatus: this.state.editStatus,
+      editName2: this.state.editName2, editEmail: this.state.editEmail, onEditName: this.onEditName, onEditEmail: this.onEditEmail,
+      onEditRole: this.onEditRole, onEditStatus: this.onEditStatus, closeEdit: this.closeEdit, saveEdit: this.saveEdit,
+
+      createOpen: this.state.createOpen, openCreate: this.openCreate, closeCreate: this.closeCreate,
+      newName: this.state.newName, newEmail: this.state.newEmail, newRole: this.state.newRole, newTeams: this.state.newTeams, nameError: this.state.nameError, emailError: this.state.emailError,
+      onNewName: this.onNewName, onNewEmail: this.onNewEmail, onNewRole: this.onNewRole, onNewTeams: this.onNewTeams, submitCreate: this.submitCreate,
+
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },
+      sidebarMountStyle: { flexShrink: 0 },
+      mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle: { padding: '32px 24px 64px', maxWidth: 1280, width: '100%', boxSizing: 'border-box', margin: '0 auto', flex: 1 },
+      pageHeaderStyle: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, marginBottom: 24, flexWrap: 'wrap' },
+      pageTitleStyle: { color: C.inkHi, fontSize: 20, lineHeight: '28px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      btnPrimaryStyle: { ...btnBase, background: C.accent, color: C.accentInk },
+      btnGhostStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+      btnGhostSmStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border, fontSize: 12, padding: '4px 12px' },
+
+      filterBarStyle: { display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 },
+      searchInputStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, minWidth: 220 },
+      selectStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14 },
+
+      tableWrapStyle: { overflowX: 'auto', border: `1px solid ${C.border}`, borderRadius: 8 },
+      tableStyle: { width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: FONT },
+      thStyle: { padding: '12px 16px', textAlign: 'left', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}` },
+      thSortStyle: { padding: '12px 16px', textAlign: 'left', color: C.muted, fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', whiteSpace: 'nowrap', borderBottom: `1px solid ${C.border}`, cursor: 'pointer' },
+      tdStyle: { padding: '12px 16px', color: C.inkDim, borderBottom: `1px solid ${C.border}` },
+      emptyStyle: { color: C.muted, textAlign: 'center', padding: 48, fontFamily: FONT },
+      emptyTitleStyle: { color: C.inkHi, fontFamily: FONT, margin: '0 0 8px' },
+      emptyTextStyle: { margin: 0, fontSize: 14 },
+      paginationStyle: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 },
+      pageBtnStyle: { ...btnBase, padding: '4px 12px', fontSize: 12, background: 'transparent', color: C.ink, borderColor: C.border },
+      pageInfoStyle: { color: C.muted, fontSize: 13, fontFamily: FONT },
+
+      modalScrimStyle: { position: 'fixed', inset: 0, background: 'rgba(1,1,1,0.6)', zIndex: 55 },
+      modalCardStyle: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 61, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, width: 'min(420px, 90vw)', boxShadow: '0 8px 24px rgba(0,0,0,0.55)' },
+      modalHeaderStyle: { padding: 24, borderBottom: `1px solid ${C.border}` },
+      modalTitleStyle: { color: C.inkHi, fontFamily: FONT, fontSize: 16, fontWeight: 600, margin: 0 },
+      modalBodyStyle: { padding: 24, display: 'flex', flexDirection: 'column', gap: 12 },
+      modalFooterStyle: { display: 'flex', justifyContent: 'flex-end', gap: 8, padding: 24, borderTop: `1px solid ${C.border}` },
+      labelStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+      modalInputStyle: { background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, width: '100%', boxSizing: 'border-box' },
+      errorTextStyle: { color: C.danger, fontSize: 12, fontFamily: FONT }
+    };
+  }
+}
+</script>
+</body>
+</html>

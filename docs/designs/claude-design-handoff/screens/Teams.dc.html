@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Teams.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Teams" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Teams</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Create Team</button>
+      </header>
+
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search teams..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Forming">Forming</option>
+        </select>
+      </div>
+
+      <div style="{{ gridStyle }}">
+        <sc-for list="{{ filteredTeams }}" as="t" hint-placeholder-count="5">
+          <article style="{{ cardStyle }}">
+            <header style="{{ cardHeaderStyle }}">
+              <h2 style="{{ cardTitleStyle }}">{{ t.name }}</h2>
+              <span style="{{ t.chipStyle }}">{{ t.status }}</span>
+            </header>
+            <div style="{{ cardBodyStyle }}">
+              <dl style="{{ dlStyle }}">
+                <dt style="{{ dtStyle }}">Members</dt><dd style="{{ ddStyle }}">{{ t.members }}</dd>
+                <dt style="{{ dtStyle }}">Projects</dt><dd style="{{ ddStyle }}">{{ t.projects }}</dd>
+                <dt style="{{ dtStyle }}">Lead</dt><dd style="{{ ddStyle }}">{{ t.lead }}</dd>
+                <dt style="{{ dtStyle }}">Budget</dt><dd style="{{ ddNumStyle }}">{{ t.budget }}</dd>
+              </dl>
+            </div>
+            <footer style="{{ cardFooterStyle }}">
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ t.openMembers }}">Assign Members</button>
+              <a href="Projects.dc.html" style="{{ btnGhostSmLinkStyle }}">View Projects</a>
+            </footer>
+          </article>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ membersOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeMembers }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Assign members">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ cardTitleStyle }}">Assign Members — {{ membersTeamName }}</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <sc-for list="{{ rosterRows }}" as="m" hint-placeholder-count="8">
+              <label style="{{ checkRowStyle }}"><input type="checkbox" checked="{{ m.checked }}" onChange="{{ m.onToggle }}"></input><span>{{ m.name }}</span><span style="{{ rosterRoleStyle }}">{{ m.role }}</span></label>
+            </sc-for>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ closeMembers }}">Done</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No teams found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div>
+      </sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Create team">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ cardTitleStyle }}">Create Team</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Team name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Marketing"></input>
+            <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Team name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Lead</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newLead }}" onInput="{{ onNewLead }}" placeholder="e.g. Karim Ali"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Create Team</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)',
+  success:'#63A583', successTint:'rgba(99,165,131,0.15)', warning:'#C9A24B', warningTint:'rgba(201,162,75,0.16)', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)',
+  success:'#2E7D54', successTint:'rgba(46,125,84,0.12)', warning:'#9A6E1E', warningTint:'rgba(154,110,30,0.14)', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+function chipStyle(kind, C) {
+  const color = kind === 'Active' ? C.success : kind === 'Forming' ? C.warning : C.muted;
+  return { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, fontFamily: FONT, color, border: `1px solid ${color}` };
+}
+
+const SEED = [
+  { id: 1, name: 'Engineering', status: 'Active', members: 8, projects: 3, lead: 'Rahim Uddin', budget: '৳4,500,000.00' },
+  { id: 2, name: 'Design', status: 'Active', members: 4, projects: 2, lead: 'Farida Akter', budget: '৳1,800,000.00' },
+  { id: 3, name: 'QA & Testing', status: 'Active', members: 3, projects: 2, lead: 'Nadia Rahman', budget: '৳1,200,000.00' },
+  { id: 4, name: 'DevOps', status: 'Forming', members: 2, projects: 1, lead: 'Karim Ali', budget: '৳800,000.00' },
+  { id: 5, name: 'Sales', status: 'Active', members: 5, projects: 0, lead: 'Karim Ali', budget: '৳2,500,000.00' }
+];
+const ROSTER = [
+  { id: 1, name: 'Rahim Uddin', role: 'Project Manager' }, { id: 2, name: 'Karim Ali', role: 'Senior Developer' },
+  { id: 3, name: 'Farida Akter', role: 'Senior Developer' }, { id: 4, name: 'Nadia Rahman', role: 'QA Engineer' },
+  { id: 5, name: 'Mahmudul Islam', role: 'DevOps Engineer' }, { id: 6, name: 'Tasnim Ahmed', role: 'Account Executive' },
+  { id: 7, name: 'Rahima Khatun', role: 'Business Developer' }, { id: 8, name: 'Kamal Hossain', role: 'Developer' }
+];
+
+class Component extends DCLogic {
+  state = { theme: 'dark', search: '', statusFilter: '', createOpen: false, newName: '', newLead: '', nameError: false, teams: SEED, membersOpen: false, membersTeamId: null, assignments: { 1: [1,2,3,4,5,6,7,8].slice(0,8), 2: [3], 3: [4], 4: [5], 5: [6,7] } };
+
+  componentDidMount() { try { this.setState({ theme: localStorage.getItem('hub-theme') || 'dark' }); } catch (e) {} }
+  toggleTheme = () => this.setState(s => { const n = s.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('hub-theme', n); } catch (e) {} return { theme: n }; });
+  onSearch = (e) => this.setState({ search: e.target.value });
+  onStatusFilter = (e) => this.setState({ statusFilter: e.target.value });
+  openCreate = () => this.setState({ createOpen: true, newName: '', newLead: '', nameError: false });
+  closeCreate = () => this.setState({ createOpen: false });
+  onNewName = (e) => this.setState({ newName: e.target.value });
+  onNewLead = (e) => this.setState({ newLead: e.target.value });
+  submitCreate = () => {
+    if (!this.state.newName.trim()) { this.setState({ nameError: true }); return; }
+    const team = { id: Date.now(), name: this.state.newName.trim(), status: 'Forming', members: 1, projects: 0, lead: this.state.newLead.trim() || '—', budget: '৳0.00' };
+    this.setState(s => ({ teams: [team, ...s.teams], createOpen: false }));
+  };
+  openMembers = (teamId) => this.setState({ membersOpen: true, membersTeamId: teamId });
+  closeMembers = () => this.setState({ membersOpen: false });
+  toggleMember = (teamId, memberId) => () => this.setState(s => {
+    const cur = s.assignments[teamId] || [];
+    const next = cur.includes(memberId) ? cur.filter(id => id !== memberId) : [...cur, memberId];
+    return { assignments: { ...s.assignments, [teamId]: next } };
+  });
+
+  renderVals() {
+    const C = this.state.theme === 'light' ? LIGHT : DARK;
+    const filtered = this.state.teams.filter(t =>
+      (!this.state.search || t.name.toLowerCase().includes(this.state.search.toLowerCase())) &&
+      (!this.state.statusFilter || t.status === this.state.statusFilter));
+    const filteredTeams = filtered.map(t => ({ ...t, members: (this.state.assignments[t.id] || []).length, chipStyle: chipStyle(t.status, C), openMembers: () => this.openMembers(t.id) }));
+
+    const btnBase = { display: 'inline-flex', alignItems: 'center', gap: 4, borderRadius: 4, border: '1px solid transparent', cursor: 'pointer', fontFamily: FONT, fontSize: 14, padding: '8px 16px' };
+    const membersTeam = this.state.teams.find(t => t.id === this.state.membersTeamId);
+    const assigned = this.state.assignments[this.state.membersTeamId] || [];
+    const rosterRows = ROSTER.map(m => ({ ...m, checked: assigned.includes(m.id), onToggle: this.toggleMember(this.state.membersTeamId, m.id) }));
+
+    return {
+      theme: this.state.theme, toggleTheme: this.toggleTheme,
+      search: this.state.search, statusFilter: this.state.statusFilter, onSearch: this.onSearch, onStatusFilter: this.onStatusFilter,
+      filteredTeams, noResults: filteredTeams.length === 0,
+      createOpen: this.state.createOpen, openCreate: this.openCreate, closeCreate: this.closeCreate,
+      newName: this.state.newName, newLead: this.state.newLead, nameError: this.state.nameError,
+      onNewName: this.onNewName, onNewLead: this.onNewLead, submitCreate: this.submitCreate,
+      membersOpen: this.state.membersOpen, closeMembers: this.closeMembers, membersTeamName: membersTeam ? membersTeam.name : '', rosterRows,
+      checkRowStyle: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px 4px', fontFamily: FONT, fontSize: 14, color: C.ink, cursor: 'pointer' },
+      rosterRoleStyle: { marginLeft: 'auto', color: C.muted, fontSize: 12 },
+
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },
+      sidebarMountStyle: { flexShrink: 0 },
+      mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle: { padding: '32px 24px 64px', maxWidth: 1280, width: '100%', boxSizing: 'border-box', margin: '0 auto', flex: 1 },
+      pageHeaderStyle: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, marginBottom: 24, flexWrap: 'wrap' },
+      pageTitleStyle: { color: C.inkHi, fontSize: 20, lineHeight: '28px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      btnPrimaryStyle: { ...btnBase, background: C.accent, color: C.accentInk },
+      btnGhostStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+      btnGhostSmStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border, fontSize: 12, padding: '4px 12px' },
+      btnGhostSmLinkStyle: { display: 'inline-flex', alignItems: 'center', borderRadius: 4, border: `1px solid ${C.border}`, color: C.ink, fontFamily: FONT, fontSize: 12, padding: '4px 12px', textDecoration: 'none' },
+
+      filterBarStyle: { display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 },
+      searchInputStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, minWidth: 220 },
+      selectStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14 },
+
+      gridStyle: { display: 'grid', gap: 24, gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' },
+      cardStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', display: 'flex', flexDirection: 'column' },
+      cardHeaderStyle: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 24px', borderBottom: `1px solid ${C.border}` },
+      cardTitleStyle: { color: C.inkHi, fontSize: 16, lineHeight: '24px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      cardBodyStyle: { padding: 24, flex: 1 },
+      dlStyle: { display: 'grid', gridTemplateColumns: 'max-content 1fr', gap: '8px 24px', margin: 0 },
+      dtStyle: { color: C.muted, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: FONT, alignSelf: 'center' },
+      ddStyle: { color: C.inkDim, fontFamily: FONT, fontSize: 14, margin: 0 },
+      ddNumStyle: { color: C.inkHi, fontWeight: 500, fontVariantNumeric: 'tabular-nums', fontFamily: FONT, fontSize: 14, margin: 0 },
+      cardFooterStyle: { display: 'flex', gap: 8, padding: '12px 24px', borderTop: `1px solid ${C.border}` },
+      emptyStyle: { color: C.muted, textAlign: 'center', padding: 48, fontFamily: FONT },
+      emptyTitleStyle: { color: C.inkHi, fontFamily: FONT, margin: '0 0 8px' },
+      emptyTextStyle: { margin: 0, fontSize: 14 },
+
+      modalScrimStyle: { position: 'fixed', inset: 0, background: 'rgba(1,1,1,0.6)', zIndex: 55 },
+      modalCardStyle: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 61, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, width: 'min(420px, 90vw)', boxShadow: '0 8px 24px rgba(0,0,0,0.55)' },
+      modalHeaderStyle: { padding: 24, borderBottom: `1px solid ${C.border}` },
+      modalBodyStyle: { padding: 24, display: 'flex', flexDirection: 'column', gap: 4, maxHeight: '60vh', overflowY: 'auto' },
+      modalFooterStyle: { display: 'flex', justifyContent: 'flex-end', gap: 8, padding: 24, borderTop: `1px solid ${C.border}` },
+      labelStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+      modalInputStyle: { background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, width: '100%', boxSizing: 'border-box' },
+      errorTextStyle: { color: C.danger, fontSize: 12, fontFamily: FONT }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Leads.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Leads" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Leads</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Lead</button>
+      </header>
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search leads..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Proposal">Proposal</option><option value="Won">Won</option><option value="Lost">Lost</option>
+        </select>
+      </div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Lead</th><th style="{{ thStyle }}">Company</th><th style="{{ thStyle }}">Contact</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}">BDS Partner</th><th style="{{ thNumStyle }}">Est. Value</th><th style="{{ thStyle }}">Last Activity</th><th style="{{ thStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="l" hint-placeholder-count="8">
+              <tr>
+                <td style="{{ tdStyle }}">{{ l.code }}</td><td style="{{ tdStyle }}">{{ l.company }}</td><td style="{{ tdStyle }}">{{ l.contact }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ l.chipStyle }}">{{ l.status }}</span></td><td style="{{ tdStyle }}">{{ l.bds }}</td>
+                <td style="{{ tdNumStyle }}">{{ l.value }}</td><td style="{{ tdStyle }}">{{ l.lastActivity }}</td>
+                <td style="{{ tdActionsStyle }}">
+                  <sc-if value="{{ l.canConvert }}" hint-placeholder-val="{{ false }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ l.onConvert }}">Convert to Opportunity</button></sc-if>
+                  <sc-if value="{{ l.converted }}" hint-placeholder-val="{{ false }}"><a href="Opportunities.dc.html" style="{{ btnGhostSmLinkStyle }}">View Opportunity</a></sc-if>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}"><div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No leads found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div></sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add lead">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Lead</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Company</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newCompany }}" onInput="{{ onNewCompany }}" placeholder="e.g. Nova Textiles"></input>
+            <sc-if value="{{ companyError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Company is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Contact name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newContact }}" onInput="{{ onNewContact }}" placeholder="e.g. Ayesha Begum"></input>
+            <label style="{{ labelStyle }}">Est. value (৳)</label>
+            <input type="number" style="{{ modalInputStyle }}" value="{{ newValue }}" onInput="{{ onNewValue }}" placeholder="0"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Lead</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', info:'#6C86AD', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', info:'#3E5C8A', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+function chip(status,C){ const map={New:C.neutral,Contacted:C.warning,Qualified:C.info,Proposal:C.success,Won:C.success,Lost:C.danger}; const color=map[status]||C.neutral; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,code:'L-2026-001',company:'Acme Corp',contact:'Rahim Uddin',status:'Qualified',bds:'Rahim Hassan',value:1500000,lastActivity:'2026-08-20'},
+ {id:2,code:'L-2026-002',company:'Bayzid Group',contact:'Bayzid Hasan',status:'Proposal',bds:'Karim Ali',value:2250000,lastActivity:'2026-08-18'},
+ {id:3,code:'L-2026-003',company:'Delta Tech',contact:'Farida Akter',status:'New',bds:'Salma Begum',value:800000,lastActivity:'2026-08-21'},
+ {id:4,code:'L-2026-004',company:'Ekushey Solutions',contact:'Kamal Hossain',status:'Won',bds:'Rahim Hassan',value:3500000,lastActivity:'2026-08-15'},
+ {id:5,code:'L-2026-005',company:'Futura Ltd',contact:'Nadia Rahman',status:'Contacted',bds:'Karim Ali',value:1200000,lastActivity:'2026-08-10'},
+ {id:6,code:'L-2026-006',company:'Greenfield Inc',contact:'Mahmudul Islam',status:'Lost',bds:'Unassigned',value:550000,lastActivity:'2026-08-05'},
+ {id:7,code:'L-2026-007',company:'Horizon Systems',contact:'Tasnim Ahmed',status:'Qualified',bds:'Salma Begum',value:1800000,lastActivity:'2026-08-12'},
+ {id:8,code:'L-2026-008',company:'Impact Ventures',contact:'Rahima Khatun',status:'Proposal',bds:'Rahim Hassan',value:2800000,lastActivity:'2026-08-19'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',statusFilter:'',leads:SEED,createOpen:false,newCompany:'',newContact:'',newValue:'',companyError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value}); onStatusFilter=(e)=>this.setState({statusFilter:e.target.value});
+  openCreate=()=>this.setState({createOpen:true,newCompany:'',newContact:'',newValue:'',companyError:false}); closeCreate=()=>this.setState({createOpen:false});
+  onNewCompany=(e)=>this.setState({newCompany:e.target.value}); onNewContact=(e)=>this.setState({newContact:e.target.value}); onNewValue=(e)=>this.setState({newValue:e.target.value});
+  submitCreate=()=>{ if(!this.state.newCompany.trim()){this.setState({companyError:true});return;} const v=parseFloat(this.state.newValue)||0;
+    const l={id:Date.now(),code:'L-2026-'+String(this.state.leads.length+1).padStart(3,'0'),company:this.state.newCompany.trim(),contact:this.state.newContact.trim()||'—',status:'New',bds:'Unassigned',value:v,lastActivity:new Date().toISOString().slice(0,10)};
+    this.setState(s=>({leads:[l,...s.leads],createOpen:false})); };
+  convertLead=(l)=>()=>{
+    const opp={id:Date.now(),code:'OPP-2026-CV'+l.id,client:l.company,stage:'Qualification',value:l.value,closeDate:'—',owner:l.contact};
+    try{ const existing=JSON.parse(localStorage.getItem('hub-converted-leads'))||[]; localStorage.setItem('hub-converted-leads', JSON.stringify([...existing,opp])); }catch(e){}
+    this.setState(s=>({leads:s.leads.map(x=>x.id===l.id?{...x,status:'Won',converted:true}:x)}));
+    window.location.href='Opportunities.dc.html';
+  };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=this.state.leads.filter(l=>(!this.state.search||l.company.toLowerCase().includes(this.state.search.toLowerCase())||l.contact.toLowerCase().includes(this.state.search.toLowerCase()))&&(!this.state.statusFilter||l.status===this.state.statusFilter));
+    const pageRows=filtered.map(l=>({...l,value:fmt(l.value),chipStyle:chip(l.status,C),
+      canConvert:!l.converted&&(l.status==='Qualified'||l.status==='Proposal'||l.status==='Won'),onConvert:this.convertLead(l)}));
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,statusFilter:this.state.statusFilter,onSearch:this.onSearch,onStatusFilter:this.onStatusFilter,
+      pageRows,noResults:pageRows.length===0,createOpen:this.state.createOpen,openCreate:this.openCreate,closeCreate:this.closeCreate,
+      newCompany:this.state.newCompany,newContact:this.state.newContact,newValue:this.state.newValue,companyError:this.state.companyError,
+      onNewCompany:this.onNewCompany,onNewContact:this.onNewContact,onNewValue:this.onNewValue,submitCreate:this.submitCreate,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmLinkStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',textDecoration:'none',whiteSpace:'nowrap'},
+      btnGhostSmStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer',whiteSpace:'nowrap'},
+      tdActionsStyle:{padding:'12px 16px',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      emptyStyle:{color:C.muted,textAlign:'center',padding:48,fontFamily:FONT},emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px'},emptyTextStyle:{margin:0,fontSize:14},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:12},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT}
+    };
+  }
+}
+</script>
+</body>
+</html>

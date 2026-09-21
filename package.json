@@ -1,0 +1,16 @@
+{
+  "name": "hub",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "// dev": "runs -r (all workspace packages); only apps/api exists so far, apps/web joins once it's scaffolded",
+    "dev": "pnpm -r dev",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build"
+  }
+}

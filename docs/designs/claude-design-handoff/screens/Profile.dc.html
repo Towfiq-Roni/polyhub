@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="My Profile" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <div style="{{ identityRowStyle }}">
+          <span style="{{ avatarLgStyle }}">RU</span>
+          <div><h1 style="{{ pageTitleStyle }}">{{ name }}</h1><p style="{{ subTitleStyle }}">{{ role }}</p></div>
+        </div>
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ toggleEdit }}">{{ editLabel }}</button>
+      </header>
+
+      <div style="{{ cardGridStyle }}">
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Full name</label>
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ name }}" onInput="{{ onName }}"></input></sc-if>
+          <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ name }}</p></sc-if>
+        </div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Email</label>
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="email" style="{{ inputStyle }}" value="{{ email }}" onInput="{{ onEmail }}"></input></sc-if>
+          <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ email }}</p></sc-if>
+        </div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Role</label><p style="{{ valueStyle }}">{{ role }}</p></div>
+        <div style="{{ cardStyle }}"><label style="{{ labelStyle }}">Joined</label><p style="{{ valueStyle }}">2024-01-15</p></div>
+      </div>
+      <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveEdit }}">Save Changes</button></sc-if>
+      <sc-if value="{{ savedFlash }}" hint-placeholder-val="{{ false }}"><span style="{{ savedFlashStyle }}">Saved</span></sc-if>
+
+      <h2 style="{{ sectionTitleStyle }}">Change Password</h2>
+      <div style="{{ cardStyle }}">
+        <label style="{{ labelStyle }}">Current password</label>
+        <input type="password" style="{{ inputStyle }}" value="{{ curPassword }}" onInput="{{ onCurPassword }}" placeholder="••••••••"></input>
+        <label style="{{ labelStyle }}">New password</label>
+        <input type="password" style="{{ inputStyle }}" value="{{ newPassword }}" onInput="{{ onNewPassword }}" placeholder="••••••••"></input>
+        <sc-if value="{{ pwError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter both fields.</div></sc-if>
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ changePassword }}">Update Password</button>
+        <sc-if value="{{ pwSaved }}" hint-placeholder-val="{{ false }}"><span style="{{ savedFlashStyle }}">Password updated</span></sc-if>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)', success:'#63A583', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+class Component extends DCLogic {
+  state={theme:'dark',editing:false,name:'Rahim Uddin',email:'rahim@dea.bd',role:'Finance Manager',savedFlash:false,curPassword:'',newPassword:'',pwError:false,pwSaved:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  toggleEdit=()=>this.setState(s=>({editing:!s.editing}));
+  onName=(e)=>this.setState({name:e.target.value}); onEmail=(e)=>this.setState({email:e.target.value});
+  saveEdit=()=>{ this.setState({editing:false,savedFlash:true}); setTimeout(()=>this.setState({savedFlash:false}),1500); };
+  onCurPassword=(e)=>this.setState({curPassword:e.target.value,pwError:false}); onNewPassword=(e)=>this.setState({newPassword:e.target.value,pwError:false});
+  changePassword=()=>{ if(!this.state.curPassword.trim()||!this.state.newPassword.trim()){this.setState({pwError:true});return;}
+    this.setState({curPassword:'',newPassword:'',pwSaved:true}); setTimeout(()=>this.setState({pwSaved:false}),1500); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,editing:this.state.editing,notEditing:!this.state.editing,toggleEdit:this.toggleEdit,saveEdit:this.saveEdit,
+      editLabel:this.state.editing?'Cancel':'Edit Profile',name:this.state.name,email:this.state.email,role:this.state.role,onName:this.onName,onEmail:this.onEmail,savedFlash:this.state.savedFlash,
+      curPassword:this.state.curPassword,newPassword:this.state.newPassword,pwError:this.state.pwError,pwSaved:this.state.pwSaved,onCurPassword:this.onCurPassword,onNewPassword:this.onNewPassword,changePassword:this.changePassword,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:800,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      identityRowStyle:{display:'flex',alignItems:'center',gap:16,flexShrink:0},
+      avatarLgStyle:{width:56,height:56,borderRadius:'50%',background:C.accentSoft,color:C.accent,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:FONT,fontWeight:600,fontSize:18,flexShrink:0},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0,whiteSpace:'nowrap'},
+      subTitleStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'4px 0 0',whiteSpace:'nowrap'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border,whiteSpace:'nowrap'},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk,marginTop:16},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginBottom:16},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16,display:'flex',flexDirection:'column',gap:8},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block'},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'32px 0 12px'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT},
+      savedFlashStyle:{color:C.success,fontFamily:FONT,fontSize:13,marginLeft:12}
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# Architecture Decision Records
+
+This directory holds full Nygard-format ADRs for hub's load-bearing architecture
+decisions — the ones that shape module boundaries, data models, or infra topology
+and are expensive to reverse.
+
+This is a **deep-dive companion** to `docs/memory/DECISIONS.md`, not a replacement:
+
+- `docs/memory/DECISIONS.md` — append-only, terse, one line per decision (any
+  decision, including process/tooling ones). Chronological source of truth.
+- `docs/adr/` — one file per *architectural* decision, full context/decision/
+  consequences, superseding records when a decision is revisited. Not
+  append-only — a superseded ADR gets a new file that links back to it, and the
+  old one's Status line is updated to `Superseded by ADR-NNNN`.
+
+Not every `DEC-###` gets an ADR. Skill vendoring, delegation/workflow rules, UI
+density rules, and other process decisions stay in `DECISIONS.md` only. An ADR
+is warranted when the decision picks a system boundary, a data representation,
+or an infra dependency that later features will build directly on top of.
+
+## Index
+
+| ADR | Title | Status | Source DEC(s) |
+|---|---|---|---|
+| [0000](0000-record-architecture-decisions.md) | Record architecture decisions | Accepted | — |
+| [0001](0001-frontend-stack.md) | Frontend stack: Next.js App Router + Serwist PWA, self-hosted | Accepted | DEC-001 |
+| [0002](0002-backend-stack.md) | Backend stack: NestJS + Prisma + PostgreSQL | Accepted | DEC-002 |
+| [0003](0003-single-vm-deployment-topology.md) | Single free-tier VM deployment topology | Accepted | DEC-003, DEC-004, DEC-005, DEC-025 |
+| [0004](0004-jwt-argon2-auth.md) | JWT access/refresh auth with argon2id, no SMTP | Superseded by [0012](0012-jwt-access-token-ttl-1-day.md) | DEC-012 |
+| [0005](0005-money-as-integer-poisha.md) | Money as integer poisha, computed balances | Accepted | DEC-013 |
+| [0006](0006-immutable-ledger-reversals.md) | Immutable posted financials, corrections via reversal | Accepted | DEC-010 (gap F-8) |
+| [0007](0007-allow-only-rbac.md) | Allow-only RBAC, permission union over active roles | Accepted | requirements-analysis §7.5 A2 |
+| [0008](0008-unified-resource-model.md) | Unified Resource table for uploads + deliverable attachments | Accepted | DEC-006, DEC-011 (gap D-1) |
+| [0009](0009-universal-export-architecture.md) | Universal list-export architecture (Excel/CSV/PDF) | Accepted | DEC-033 |
+| [0010](0010-enriched-error-envelope.md) | Enriched error envelope, single global exception filter | Accepted | DEC-034 |
+| [0011](0011-derived-chart-of-accounts-reporting.md) | Derived Chart-of-Accounts reporting (trial balance/P&L/balance sheet), no second ledger | Superseded by [0013](0013-full-double-entry-general-ledger.md) | DEC-060, DEC-061, DEC-063, DEC-064 |
+| [0012](0012-jwt-access-token-ttl-1-day.md) | JWT access-token TTL changed to 1 day (supersedes 0004 on this point only) | Accepted | DEC-073 |
+| [0013](0013-full-double-entry-general-ledger.md) | Full double-entry general ledger is the financial system of record (supersedes 0011) | Accepted | DEC-068, DEC-071, DEC-074 |
+
+More ADRs get added as Phase 1+ implementation surfaces further architecture-grade
+decisions (e.g. cursor-pagination threshold, X-Accel-Redirect download path,
+audit-interceptor design) — this set covers what's already decided as of Phase 0
+close.

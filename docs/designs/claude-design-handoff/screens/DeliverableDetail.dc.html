@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Projects.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Deliverable" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="MilestoneDetail.dc.html" style="{{ backLinkStyle }}">← Back to Milestone</a>
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Third-party API connectors</h1>
+        <select style="{{ statusSelectStyle }}" value="{{ status }}" onChange="{{ onStatus }}">
+          <option value="Not Started">Not Started</option><option value="In Progress">In Progress</option><option value="Review">Review</option><option value="Done">Done</option>
+        </select>
+      </header>
+      <div style="{{ cardStyle }}">
+        <label style="{{ labelStyle }}">Assignee</label><p style="{{ valueStyle }}">Karim Ali</p>
+        <label style="{{ labelStyle }}">Due</label><p style="{{ valueStyle }}">2026-10-10</p>
+      </div>
+      <h2 style="{{ sectionTitleStyle }}">Comments</h2>
+      <div style="{{ commentListStyle }}">
+        <sc-for list="{{ comments }}" as="c" hint-placeholder-count="2">
+          <div style="{{ commentRowStyle }}"><span style="{{ commentAuthorStyle }}">{{ c.author }}</span><p style="{{ commentTextStyle }}">{{ c.text }}</p></div>
+        </sc-for>
+      </div>
+      <textarea style="{{ textareaStyle }}" value="{{ newComment }}" onInput="{{ onNewComment }}" placeholder="Add a comment..."></textarea>
+      <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ addComment }}">Comment</button>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+class Component extends DCLogic {
+  state={theme:'dark',status:'In Progress',comments:[{id:1,author:'Rahim Uddin',text:'Please prioritize the payments connector first.'}],newComment:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onStatus=(e)=>this.setState({status:e.target.value}); onNewComment=(e)=>this.setState({newComment:e.target.value});
+  addComment=()=>{ if(!this.state.newComment.trim())return; this.setState(s=>({comments:[...s.comments,{id:Date.now(),author:'You',text:s.newComment.trim()}],newComment:''})); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,status:this.state.status,onStatus:this.onStatus,comments:this.state.comments,newComment:this.state.newComment,onNewComment:this.onNewComment,addComment:this.addComment,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:800,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      statusSelectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 10px',color:C.ink,fontFamily:FONT,fontSize:13},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16,display:'flex',flexDirection:'column',gap:6,marginBottom:32},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:'0 0 8px'},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'0 0 12px'},
+      commentListStyle:{display:'flex',flexDirection:'column',gap:12,marginBottom:16},
+      commentRowStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:12},
+      commentAuthorStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontWeight:600},
+      commentTextStyle:{color:C.inkDim,fontFamily:FONT,fontSize:14,margin:'4px 0 0'},
+      textareaStyle:{width:'100%',minHeight:72,background:C.surface,border:`1px solid ${C.border}`,borderRadius:6,padding:12,color:C.ink,fontFamily:FONT,fontSize:14,boxSizing:'border-box',resize:'vertical',marginBottom:12},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk}
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Member Detail · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item active" href="team-members.html" data-label="Team Members" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item" href="clients.html" data-label="Clients">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item" href="projects.html" data-label="Projects">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item" href="accounts.html" data-label="Accounts">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Team Member</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="breadcrumbs" style="margin-block-end:var(--space-md)"><a href="team-members.html">← Back to Team Members</a></div>
+
+        <div class="page-header">
+          <div class="member-cell">
+            <span class="avatar" id="tmAvatar">RU</span>
+            <div>
+              <h2 class="page-title" id="tmName">Rahim Uddin</h2>
+              <p class="page-subtitle" id="tmMeta">Project Manager · Engineering</p>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="statusToggleBtn">Deactivate</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="editBtn">Edit</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="discardBtn" hidden>Discard</button>
+            <button type="button" class="btn btn-primary btn-sm" id="saveBtn" hidden>Save</button>
+            <span class="success" id="savedFlash" hidden>Saved</span>
+          </div>
+        </div>
+
+        <div class="tab-nav" role="tablist">
+          <button type="button" class="tab-btn active" id="overview-tab" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+          <button type="button" class="tab-btn" id="projects-tab" role="tab" aria-selected="false" data-tab="projects">Projects</button>
+          <button type="button" class="tab-btn" id="payments-tab" role="tab" aria-selected="false" data-tab="payments">Payments</button>
+          <button type="button" class="tab-btn" id="accounts-tab" role="tab" aria-selected="false" data-tab="accounts">Bank Accounts</button>
+          <button type="button" class="tab-btn" id="activity-tab" role="tab" aria-selected="false" data-tab="activity">Activity</button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="overview-panel" role="tabpanel">
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Personal Information</h3></div>
+                <div class="card-body">
+                  <div class="field">
+                    <label for="tmd-email-input">Email</label>
+                    <p id="tmd-email-display">rahim@dea.bd</p>
+                    <input type="email" class="input" id="tmd-email-input" value="rahim@dea.bd" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-phone-input">Phone</label>
+                    <p id="tmd-phone-display">+8801711-111111</p>
+                    <input type="text" class="input" id="tmd-phone-input" value="+8801711-111111" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-address-input">Address</label>
+                    <p id="tmd-address-display">House 12, Road 5, Gulshan-1, Dhaka</p>
+                    <input type="text" class="input" id="tmd-address-input" value="House 12, Road 5, Gulshan-1, Dhaka" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-emergency-input">Emergency Contact</label>
+                    <p id="tmd-emergency-display">Rahima Khatun - +8801711-999999</p>
+                    <input type="text" class="input" id="tmd-emergency-input" value="Rahima Khatun - +8801711-999999" placeholder="Name - phone" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-nid-input">National ID</label>
+                    <p id="tmd-nid-display">19901234567890123</p>
+                    <input type="text" class="input" id="tmd-nid-input" value="19901234567890123" hidden>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Employment Details</h3></div>
+                <div class="card-body">
+                  <div class="field">
+                    <label for="tmd-rate-input">Rate</label>
+                    <p id="tmd-rate-display">৳2,500.00/hr</p>
+                    <input type="text" class="input" id="tmd-rate-input" value="৳2,500.00/hr" hidden>
+                  </div>
+                  <div class="field"><label>Joined</label><p id="tmd-joined-display">2024-01-15</p></div>
+                  <div class="field"><label>Status</label><p><span class="chip chip--success" id="tmd-status-chip">Active</span></p></div>
+                  <div class="field">
+                    <label for="tmd-manager-input">Manager</label>
+                    <p id="tmd-manager-display">Self-managed</p>
+                    <input type="text" class="input" id="tmd-manager-input" value="Self-managed" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-contract-select">Contract Type</label>
+                    <p id="tmd-contract-display">Full-time</p>
+                    <select class="select" id="tmd-contract-select" hidden>
+                      <option value="Full-time">Full-time</option>
+                      <option value="Part-time">Part-time</option>
+                      <option value="Contract">Contract</option>
+                      <option value="Intern">Intern</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="tmd-leave-input">Leave Balance</label>
+                    <p id="tmd-leave-display">18 days</p>
+                    <input type="text" class="input" id="tmd-leave-input" value="18 days" placeholder="e.g. 18 days" hidden>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3 class="card-title">Performance Summary</h3></div>
+              <div class="card-body">
+                <div class="kpi-grid" style="margin-block-end:0">
+                  <div class="kpi-card">
+                    <div class="kpi-label">Projects Assigned</div>
+                    <div class="kpi-value" id="kpiProjectsAssigned">2</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">Hours Logged (YTD)</div>
+                    <div class="kpi-value">1,240</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">Amount Earned (YTD)</div>
+                    <div class="kpi-value success">৳3,100,000.00</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">Outstanding Payments</div>
+                    <div class="kpi-value warning">৳250,000.00</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="projects-panel" role="tabpanel" hidden>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Project</th><th>Role</th><th>Allocation</th><th id="projectsRemoveHead" hidden></th></tr>
+                </thead>
+                <tbody id="projectAssignmentsBody"></tbody>
+              </table>
+            </div>
+            <div class="draft-trigger" id="addProjectRow" hidden>
+              <select class="select" id="newProjectSelect"></select>
+              <button type="button" class="btn btn-ghost btn-sm" id="addProjectBtn">+ Add Project</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="payments-panel" role="tabpanel" hidden>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Project</th><th>Period</th><th class="num">Hours</th><th class="num">Amount</th><th>Status</th><th>Ref</th></tr></thead>
+                <tbody id="paymentsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="accounts-panel" role="tabpanel" hidden>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Method</th><th>Bank / Provider</th><th>Account Number</th><th>Status</th><th id="accountsToggleHead" hidden></th></tr>
+                </thead>
+                <tbody id="bankAccountsBody"></tbody>
+              </table>
+            </div>
+            <p class="empty-text" id="noBankAccounts" hidden>No accounts saved yet.</p>
+
+            <div class="draft-trigger" id="addAccountTrigger" hidden>
+              <button type="button" class="btn btn-ghost btn-sm" id="openAddAccountBtn">+ Add Account</button>
+            </div>
+
+            <div class="drafts-card" id="accountDraftsCard" hidden>
+              <div id="accountDraftRows"></div>
+              <div class="draft-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="cancelAccountDraftsBtn">Cancel</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="addAnotherAccountDraftBtn">+ Add Another Account</button>
+                <button type="button" class="btn btn-primary" id="commitAccountDraftsBtn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="activity-panel" role="tabpanel" hidden>
+            <div class="activity-timeline" id="activityList"></div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function initials(n) { return n.split(' ').map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase(); }
+    function getQueryId() { try { return new URLSearchParams(location.search).get('id'); } catch (e) { return null; } }
+
+    var PAYMENT_CHIP = { Paid: 'chip--success', Pending: 'chip--warning' };
+    var PROJECT_OPTIONS = ['ERP Implementation', 'CRM Migration', 'Mobile App Development', 'Legacy System Cleanup', 'Website Redesign', 'Nova ERP Rollout', 'Delta Migration'];
+    var PAYMENTS_SEED = [
+      { date: '2026-08-15', project: 'ERP Implementation', period: 'Jul 2026', hours: 160, amount: 400000, status: 'Paid', ref: 'TXN-2026-0815' },
+      { date: '2026-07-15', project: 'ERP Implementation', period: 'Jun 2026', hours: 160, amount: 400000, status: 'Paid', ref: 'TXN-2026-0715' },
+      { date: '2026-08-10', project: 'CRM Migration', period: 'Jul 2026', hours: 80, amount: 140000, status: 'Pending', ref: '-' }
+    ];
+    var ACTIVITY_SEED = [
+      { text: 'Logged 8h on Nova ERP Rollout', time: '2026-08-28' },
+      { text: 'Marked milestone "Phase 1" complete', time: '2026-08-20' }
+    ];
+
+    /* ---- member record: hydrated from ?id= + hub-team-members (team-members.html persists this key) ---- */
+    var member = {
+      name: 'Rahim Uddin', role: 'Project Manager', team: 'Engineering', email: 'rahim@dea.bd', phone: '+8801711-111111',
+      rate: '৳2,500.00/hr', joined: '2024-01-15', status: 'Active'
+    };
+    (function hydrate() {
+      var id = getQueryId();
+      if (!id) return;
+      try {
+        var list = JSON.parse(localStorage.getItem('hub-team-members')) || [];
+        var found = list.filter(function (m) { return String(m.id) === String(id); })[0];
+        if (found) {
+          member.name = found.name || member.name;
+          member.role = found.role || member.role;
+          member.team = found.team || member.team;
+          member.email = found.email || member.email;
+          member.rate = typeof found.rate === 'number' ? fmt(found.rate) + '/hr' : (found.rate || member.rate);
+          member.joined = found.joined || member.joined;
+          member.status = found.status || member.status;
+        }
+      } catch (e) {}
+    })();
+
+    var active = member.status !== 'Inactive';
+
+    /* ---- mutable state spanning multiple tabs (Projects + Bank Accounts) ---- */
+    var projectAssignments = [
+      { id: 1, project: 'Nova ERP Rollout', role: 'Lead PM', allocation: 100 },
+      { id: 2, project: 'Delta Migration', role: 'Advisor', allocation: 20 }
+    ];
+    var bankAccounts = [
+      { id: 1, method: 'Bank', label: 'City Bank', number: '2200-1188-90', status: 'Active' }
+    ];
+
+    function renderHeader() {
+      document.getElementById('tmAvatar').textContent = initials(member.name);
+      document.getElementById('tmName').textContent = member.name;
+      document.getElementById('tmMeta').textContent = member.role + ' · ' + member.team;
+      document.title = member.name + ' · hub';
+      var statusChip = document.getElementById('tmd-status-chip');
+      statusChip.textContent = active ? 'Active' : 'Inactive';
+      statusChip.className = 'chip ' + (active ? 'chip--success' : 'chip--neutral');
+      document.getElementById('statusToggleBtn').textContent = active ? 'Deactivate' : 'Activate';
+      document.getElementById('tmd-joined-display').textContent = member.joined;
+    }
+
+    document.getElementById('statusToggleBtn').addEventListener('click', function () {
+      active = !active;
+      renderHeader();
+    });
+
+    /* ---- tabs ---- */
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.getAttribute('data-tab');
+        tabButtons.forEach(function (b) {
+          var isActive = b === btn;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(function (panel) {
+          panel.hidden = panel.id !== target + '-panel';
+          panel.classList.toggle('active', panel.id === target + '-panel');
+        });
+      });
+    });
+
+    /* ---- header-level Edit/Discard/Save: ONE editing boolean gates Overview, Projects and
+       Bank Accounts tabs at once. startEdit() snapshots every editable field across all three
+       tabs into one object; discardEdit() restores that whole snapshot in one shot. ---- */
+    var OVERVIEW_FIELDS = ['email', 'phone', 'address', 'emergency', 'nid', 'rate', 'manager', 'leave'];
+    var editing = false;
+    var snapshot = null;
+
+    function fieldEls(key) {
+      return { display: document.getElementById('tmd-' + key + '-display'), input: document.getElementById('tmd-' + key + '-input') };
+    }
+
+    function setEditing(on) {
+      editing = on;
+      document.getElementById('editBtn').hidden = on;
+      document.getElementById('discardBtn').hidden = !on;
+      document.getElementById('saveBtn').hidden = !on;
+      OVERVIEW_FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (!e.display || !e.input) return;
+        e.display.hidden = on;
+        e.input.hidden = !on;
+      });
+      var contractDisplay = document.getElementById('tmd-contract-display');
+      var contractSelect = document.getElementById('tmd-contract-select');
+      contractDisplay.hidden = on;
+      contractSelect.hidden = !on;
+      document.getElementById('projectsRemoveHead').hidden = !on;
+      document.getElementById('accountsToggleHead').hidden = !on;
+      document.getElementById('addProjectRow').hidden = !on;
+      if (!on) { closeAccountDrafts(); }
+      document.getElementById('addAccountTrigger').hidden = !on || accountDrafts !== null;
+      renderProjectAssignments();
+      renderBankAccounts();
+    }
+
+    function startEdit() {
+      snapshot = {
+        contract: document.getElementById('tmd-contract-select').value,
+        projectAssignments: JSON.parse(JSON.stringify(projectAssignments)),
+        bankAccounts: JSON.parse(JSON.stringify(bankAccounts))
+      };
+      OVERVIEW_FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (e.input) snapshot[key] = e.input.value;
+      });
+      setEditing(true);
+    }
+
+    function discardEdit() {
+      if (snapshot) {
+        OVERVIEW_FIELDS.forEach(function (key) {
+          var e = fieldEls(key);
+          if (e.input && snapshot[key] !== undefined) e.input.value = snapshot[key];
+        });
+        document.getElementById('tmd-contract-select').value = snapshot.contract;
+        projectAssignments = snapshot.projectAssignments;
+        bankAccounts = snapshot.bankAccounts;
+      }
+      snapshot = null;
+      setEditing(false);
+    }
+
+    function saveEdit() {
+      OVERVIEW_FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (!e.display || !e.input) return;
+        e.display.textContent = e.input.value;
+        if (key === 'rate') member.rate = e.input.value;
+      });
+      document.getElementById('tmd-contract-display').textContent = document.getElementById('tmd-contract-select').value;
+      snapshot = null;
+      setEditing(false);
+      var flash = document.getElementById('savedFlash');
+      flash.hidden = false;
+      setTimeout(function () { flash.hidden = true; }, 1500);
+    }
+
+    document.getElementById('editBtn').addEventListener('click', startEdit);
+    document.getElementById('discardBtn').addEventListener('click', discardEdit);
+    document.getElementById('saveBtn').addEventListener('click', saveEdit);
+
+    /* ---- Projects tab: inline role/allocation editing gated by the same `editing` flag ---- */
+    var projectsBody = document.getElementById('projectAssignmentsBody');
+    function renderProjectAssignments() {
+      projectsBody.innerHTML = projectAssignments.map(function (p) {
+        var roleCell = editing
+          ? '<input type="text" class="input" data-role-for="' + p.id + '" value="' + escapeHtml(p.role) + '">'
+          : escapeHtml(p.role);
+        var allocCell = editing
+          ? '<input type="number" class="input" data-allocation-for="' + p.id + '" value="' + p.allocation + '" style="max-inline-size:96px">%'
+          : p.allocation + '%';
+        var removeCell = editing ? '<td><button type="button" class="btn btn-ghost btn-sm" data-remove-project="' + p.id + '">Remove</button></td>' : '';
+        return '<tr><td>' + escapeHtml(p.project) + '</td><td>' + roleCell + '</td><td>' + allocCell + '</td>' + removeCell + '</tr>';
+      }).join('');
+      document.getElementById('kpiProjectsAssigned').textContent = projectAssignments.length;
+    }
+    projectsBody.addEventListener('input', function (e) {
+      var roleId = e.target.getAttribute('data-role-for');
+      if (roleId) {
+        projectAssignments = projectAssignments.map(function (p) { return String(p.id) === roleId ? Object.assign({}, p, { role: e.target.value }) : p; });
+        return;
+      }
+      var allocId = e.target.getAttribute('data-allocation-for');
+      if (allocId) {
+        projectAssignments = projectAssignments.map(function (p) { return String(p.id) === allocId ? Object.assign({}, p, { allocation: parseFloat(e.target.value) || 0 }) : p; });
+      }
+    });
+    projectsBody.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-remove-project]');
+      if (!btn) return;
+      var id = btn.getAttribute('data-remove-project');
+      projectAssignments = projectAssignments.filter(function (p) { return String(p.id) !== id; });
+      renderProjectAssignments();
+    });
+
+    var newProjectSelect = document.getElementById('newProjectSelect');
+    newProjectSelect.innerHTML = PROJECT_OPTIONS.map(function (p) { return '<option value="' + escapeHtml(p) + '">' + escapeHtml(p) + '</option>'; }).join('');
+    document.getElementById('addProjectBtn').addEventListener('click', function () {
+      projectAssignments.push({ id: Date.now(), project: newProjectSelect.value, role: 'Contributor', allocation: 10 });
+      renderProjectAssignments();
+    });
+
+    /* ---- Payments tab: read-only history, not gated by editing ---- */
+    document.getElementById('paymentsBody').innerHTML = PAYMENTS_SEED.map(function (p) {
+      return '<tr><td>' + escapeHtml(p.date) + '</td><td>' + escapeHtml(p.project) + '</td><td>' + escapeHtml(p.period) + '</td><td class="num">' + p.hours + '</td><td class="num data">' + fmt(p.amount) + '</td><td><span class="chip ' + (PAYMENT_CHIP[p.status] || 'chip--neutral') + '">' + escapeHtml(p.status) + '</span></td><td>' + escapeHtml(p.ref) + '</td></tr>';
+    }).join('');
+
+    /* ---- Bank Accounts tab: inline edit gated by `editing`; multi-add drafts-card pattern
+       reused verbatim from project-milestones.html's milestone drafts mechanism ---- */
+    var bankAccountsBody = document.getElementById('bankAccountsBody');
+    function renderBankAccounts() {
+      bankAccountsBody.innerHTML = bankAccounts.map(function (a) {
+        var methodCell = editing
+          ? '<select class="select" data-method-for="' + a.id + '"><option value="Bank"' + (a.method === 'Bank' ? ' selected' : '') + '>Bank</option><option value="MFS"' + (a.method === 'MFS' ? ' selected' : '') + '>MFS</option></select>'
+          : escapeHtml(a.method);
+        var labelCell = editing
+          ? '<input type="text" class="input" data-label-for="' + a.id + '" value="' + escapeHtml(a.label) + '">'
+          : escapeHtml(a.label);
+        var numberCell = editing
+          ? '<input type="text" class="input" data-number-for="' + a.id + '" value="' + escapeHtml(a.number) + '">'
+          : escapeHtml(a.number);
+        var toggleCell = editing
+          ? '<td><button type="button" class="btn btn-ghost btn-sm" data-toggle-account="' + a.id + '">' + (a.status === 'Active' ? 'Deactivate' : 'Activate') + '</button></td>'
+          : '';
+        return '<tr><td>' + methodCell + '</td><td>' + labelCell + '</td><td>' + numberCell + '</td><td><span class="chip ' + (a.status === 'Active' ? 'chip--success' : 'chip--neutral') + '">' + escapeHtml(a.status) + '</span></td>' + toggleCell + '</tr>';
+      }).join('');
+      document.getElementById('noBankAccounts').hidden = bankAccounts.length !== 0;
+    }
+    bankAccountsBody.addEventListener('input', function (e) {
+      var labelId = e.target.getAttribute('data-label-for');
+      if (labelId) { bankAccounts = bankAccounts.map(function (a) { return String(a.id) === labelId ? Object.assign({}, a, { label: e.target.value }) : a; }); return; }
+      var numberId = e.target.getAttribute('data-number-for');
+      if (numberId) { bankAccounts = bankAccounts.map(function (a) { return String(a.id) === numberId ? Object.assign({}, a, { number: e.target.value }) : a; }); }
+    });
+    bankAccountsBody.addEventListener('change', function (e) {
+      var methodId = e.target.getAttribute('data-method-for');
+      if (methodId) bankAccounts = bankAccounts.map(function (a) { return String(a.id) === methodId ? Object.assign({}, a, { method: e.target.value }) : a; });
+    });
+    bankAccountsBody.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-toggle-account]');
+      if (!btn) return;
+      var id = btn.getAttribute('data-toggle-account');
+      bankAccounts = bankAccounts.map(function (a) { return String(a.id) === id ? Object.assign({}, a, { status: a.status === 'Active' ? 'Inactive' : 'Active' }) : a; });
+      renderBankAccounts();
+    });
+
+    var accountDrafts = null;
+    var accountDraftsCard = document.getElementById('accountDraftsCard');
+    var accountDraftRows = document.getElementById('accountDraftRows');
+    var addAccountTrigger = document.getElementById('addAccountTrigger');
+
+    function renderAccountDrafts() {
+      accountDraftRows.innerHTML = accountDrafts.map(function (d, i) {
+        return '<div class="draft-row" data-draft-id="' + d.id + '">' +
+          '<div class="draft-row-header"><span class="draft-row-number">' + (i + 1) + '.</span>' +
+          '<button type="button" class="btn btn-ghost btn-sm" data-remove-account-draft="' + d.id + '">Remove</button></div>' +
+          '<div class="draft-fields">' +
+            '<div class="draft-field"><label>Method</label><select class="select" data-draft-field="method"><option value="Bank"' + (d.method === 'Bank' ? ' selected' : '') + '>Bank</option><option value="MFS"' + (d.method === 'MFS' ? ' selected' : '') + '>MFS</option></select></div>' +
+            '<div class="draft-field"><label>Bank / provider</label><input type="text" class="input" data-draft-field="label" value="' + escapeHtml(d.label) + '" placeholder="e.g. Brac Bank"></div>' +
+            '<div class="draft-field"><label>Account number</label><input type="text" class="input" data-draft-field="number" value="' + escapeHtml(d.number) + '" placeholder="Account / wallet number"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+    function openAccountDrafts() {
+      accountDrafts = [{ id: Date.now(), method: 'Bank', label: '', number: '' }];
+      addAccountTrigger.hidden = true;
+      accountDraftsCard.hidden = false;
+      renderAccountDrafts();
+    }
+    function closeAccountDrafts() {
+      accountDrafts = null;
+      accountDraftsCard.hidden = true;
+      addAccountTrigger.hidden = !editing;
+    }
+    document.getElementById('openAddAccountBtn').addEventListener('click', openAccountDrafts);
+    document.getElementById('cancelAccountDraftsBtn').addEventListener('click', closeAccountDrafts);
+    document.getElementById('addAnotherAccountDraftBtn').addEventListener('click', function () {
+      accountDrafts.push({ id: Date.now() + Math.random(), method: 'Bank', label: '', number: '' });
+      renderAccountDrafts();
+    });
+    accountDraftRows.addEventListener('input', function (e) {
+      var field = e.target.getAttribute('data-draft-field');
+      if (!field) return;
+      var row = e.target.closest('[data-draft-id]');
+      var id = row.getAttribute('data-draft-id');
+      accountDrafts = accountDrafts.map(function (d) { return String(d.id) === id ? Object.assign({}, d, { [field]: e.target.value }) : d; });
+    });
+    accountDraftRows.addEventListener('change', function (e) {
+      var field = e.target.getAttribute('data-draft-field');
+      if (!field) return;
+      var row = e.target.closest('[data-draft-id]');
+      var id = row.getAttribute('data-draft-id');
+      accountDrafts = accountDrafts.map(function (d) { return String(d.id) === id ? Object.assign({}, d, { [field]: e.target.value }) : d; });
+    });
+    accountDraftRows.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-remove-account-draft]');
+      if (!btn) return;
+      var id = btn.getAttribute('data-remove-account-draft');
+      accountDrafts = accountDrafts.filter(function (d) { return String(d.id) !== id; });
+      if (accountDrafts.length === 0) { closeAccountDrafts(); } else { renderAccountDrafts(); }
+    });
+    document.getElementById('commitAccountDraftsBtn').addEventListener('click', function () {
+      var valid = accountDrafts.filter(function (d) { return d.label.trim(); });
+      var newAccounts = valid.map(function (d) { return { id: Date.now() + Math.random(), method: d.method, label: d.label.trim(), number: d.number.trim() || '-', status: 'Active' }; });
+      bankAccounts = bankAccounts.concat(newAccounts);
+      closeAccountDrafts();
+      renderBankAccounts();
+    });
+
+    /* ---- Activity tab: simple read-only log ---- */
+    document.getElementById('activityList').innerHTML = ACTIVITY_SEED.map(function (a) {
+      return '<div class="activity-item"><span class="activity-marker"></span><div>' +
+        '<div class="activity-header"><span class="activity-content">' + escapeHtml(a.text) + '</span></div>' +
+        '<div class="activity-meta">' + escapeHtml(a.time) + '</div></div></div>';
+    }).join('');
+
+    /* ---- populate editable field values from the (possibly hydrated) member before first render ---- */
+    document.getElementById('tmd-email-display').textContent = member.email;
+    document.getElementById('tmd-email-input').value = member.email;
+    document.getElementById('tmd-phone-display').textContent = member.phone;
+    document.getElementById('tmd-phone-input').value = member.phone;
+    document.getElementById('tmd-address-input').value = document.getElementById('tmd-address-display').textContent;
+    document.getElementById('tmd-emergency-input').value = document.getElementById('tmd-emergency-display').textContent;
+    document.getElementById('tmd-nid-input').value = document.getElementById('tmd-nid-display').textContent;
+    document.getElementById('tmd-rate-display').textContent = member.rate;
+    document.getElementById('tmd-rate-input').value = member.rate;
+    document.getElementById('tmd-manager-input').value = document.getElementById('tmd-manager-display').textContent;
+    document.getElementById('tmd-leave-input').value = document.getElementById('tmd-leave-display').textContent;
+
+    renderHeader();
+    renderProjectAssignments();
+    renderBankAccounts();
+  })();
+</script>
+</body>
+</html>

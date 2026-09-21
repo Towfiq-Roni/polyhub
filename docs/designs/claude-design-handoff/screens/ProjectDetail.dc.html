@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Projects.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Project" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="Projects.dc.html" style="{{ backLinkStyle }}">← Back to Projects</a>
+      <header style="{{ pageHeaderStyle }}"><div style="{{ titleColStyle }}"><h1 style="{{ pageTitleStyle }}">Nova ERP Rollout</h1><p style="{{ subTitleStyle }}">Acme Corp</p></div>
+        <span style="{{ statusChipStyle }}">In Progress</span>
+      </header>
+      <div style="{{ progressWrapStyle }}"><div style="{{ progressLabelRowStyle }}"><span>Overall Progress</span><span>{{ progress }}%</span></div>
+        <div style="{{ barTrackStyle }}"><div style="{{ barFillStyle }}"></div></div>
+      </div>
+
+      <h2 style="{{ sectionTitleStyle }}">Team ({{ teamCount }})</h2>
+      <div style="{{ teamChipRowStyle }}">
+        <sc-for list="{{ teamMembers }}" as="tm" hint-placeholder-count="4">
+          <span style="{{ teamChipStyle }}">{{ tm.name }} <span style="{{ teamRoleStyle }}">· {{ tm.role }}</span></span>
+        </sc-for>
+        <sc-if value="{{ noTeam }}" hint-placeholder-val="{{ false }}"><span style="{{ dueStyle }}">No one assigned yet.</span></sc-if>
+      </div>
+      <div style="{{ manageTeamWrapStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openTeamModal }}">Manage Team</button></div>
+      <h2 style="{{ sectionTitleStyle }}">Milestones</h2>
+      <div style="{{ milestoneListStyle }}">
+        <sc-for list="{{ milestones }}" as="m" hint-placeholder-count="3">
+          <div style="{{ milestoneRowStyle }}">
+            <sc-if value="{{ !m.editing }}" hint-placeholder-val="{{ true }}">
+              <button type="button" style="{{ m.checkStyle }}" onClick="{{ m.onToggle }}">{{ m.checkMark }}</button>
+              <span style="{{ m.labelStyle }}">{{ m.name }}</span>
+              <span style="{{ m.amountStyle }}">{{ m.receivableFmt }}</span>
+              <span style="{{ dueStyle }}">{{ m.due }}</span>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onEdit }}">Edit</button>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onRemove }}">Remove</button>
+            </sc-if>
+            <sc-if value="{{ m.editing }}" hint-placeholder-val="{{ false }}">
+              <input type="text" style="{{ inlineInputStyle }}" value="{{ m.editName }}" onInput="{{ m.onEditName }}"></input>
+              <input type="date" style="{{ inlineInputStyle }}" value="{{ m.editDue }}" onInput="{{ m.onEditDue }}"></input>
+              <input type="number" style="{{ inlineNumStyle }}" value="{{ m.editReceivable }}" onInput="{{ m.onEditReceivable }}"></input>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onCancelEdit }}">Cancel</button>
+              <button type="button" style="{{ btnPrimarySmStyle }}" onClick="{{ m.onSaveEdit }}">Save</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ noMilestones }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStateStyle }}"><h3 style="{{ emptyTitleStyle }}">No milestones yet</h3><p style="{{ emptyTextStyle }}">Break this project into milestones to track progress and billing.</p></div>
+      </sc-if>
+
+      <sc-if value="{{ !addingMilestone }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ triggerWrapStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAddMilestone }}">+ Add Milestone</button></div>
+      </sc-if>
+      <sc-if value="{{ addingMilestone }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ addCardStyle }}">
+          <sc-for list="{{ drafts }}" as="d" hint-placeholder-count="1">
+            <div style="{{ draftRowWrapStyle }}">
+              <div style="{{ addCardHeaderStyle }}"><span style="{{ addCardTitleStyle }}">{{ d.num }}.</span><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ d.onRemove }}">Remove</button></div>
+              <div style="{{ addFieldsStyle }}">
+                <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Name</label><input type="text" style="{{ inputStyle }}" value="{{ d.name }}" onInput="{{ d.onName }}" placeholder="e.g. QA Sign-off"></input></div>
+                <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Due date</label><input type="date" style="{{ inputStyle }}" value="{{ d.due }}" onInput="{{ d.onDue }}"></input></div>
+                <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Receivable (৳)</label><input type="number" style="{{ inputStyle }}" value="{{ d.receivable }}" onInput="{{ d.onReceivable }}" placeholder="0"></input></div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="{{ addActionsStyle }}">
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ cancelAddMilestone }}">Cancel</button>
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ addAnotherDraft }}">+ Add Another</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveMilestones }}">Add Milestone(s)</button>
+          </div>
+        </div>
+      </sc-if>
+      <h2 style="{{ sectionTitleStyle }}">Resources</h2>
+      <div style="{{ resourceListStyle }}">
+        <sc-for list="{{ resources }}" as="r" hint-placeholder-count="2">
+          <div style="{{ resourceRowStyle }}">
+            <span style="{{ resourceTypeChip }}">{{ r.type }}</span>
+            <sc-if value="{{ r.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ r.url }}" target="_blank" style="{{ resourceLinkStyle }}">{{ r.label }}</a></sc-if>
+            <sc-if value="{{ r.isFile }}" hint-placeholder-val="{{ true }}"><a href="{{ r.fileUrl }}" target="_blank" style="{{ resourceLinkStyle }}">{{ r.label }}</a></sc-if>
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ r.onRemove }}">Remove</button>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noResources }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStateStyle }}"><h3 style="{{ emptyTitleStyle }}">No resources yet</h3><p style="{{ emptyTextStyle }}">Attach a file or a link to this project.</p></div>
+      </sc-if>
+      <sc-if value="{{ !addingResource }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ triggerWrapStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAddResource }}">+ Add Resource</button></div>
+      </sc-if>
+      <sc-if value="{{ addingResource }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ addCardStyle }}">
+          <div style="{{ addFieldsStyle }}">
+            <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Upload file (optional)</label>
+              <div style="{{ fileUploadRowStyle }}">
+                <label style="{{ fileUploadBtnStyle }}">Choose File<input type="file" style="{{ hiddenFileInputStyle }}" onChange="{{ onNewResourceFile }}"></input></label>
+                <span style="{{ fileNameDisplayStyle }}">{{ fileNameDisplay }}</span>
+              </div>
+            </div>
+            <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Link URL (optional)</label><input type="text" style="{{ inputStyle }}" value="{{ newResourceUrl }}" onInput="{{ onNewResourceUrl }}" placeholder="https://..."></input></div>
+            <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Link label (optional)</label><input type="text" style="{{ inputStyle }}" value="{{ newResourceLabel }}" onInput="{{ onNewResourceLabel }}" placeholder="e.g. Design File"></input></div>
+          </div>
+          <sc-if value="{{ resourceError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Upload a file or provide a link URL.</div></sc-if>
+          <div style="{{ addActionsStyle }}">
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ cancelAddResource }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveResource }}">Add Resource</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+
+    <sc-if value="{{ teamModalOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ modalScrimStyle }}" onClick="{{ closeTeamModal }}"></div>
+      <div style="{{ modalCardStyle }}" role="dialog" aria-label="Manage team">
+        <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Manage Team</h2></div>
+        <div style="{{ modalBodyStyle }}">
+          <label style="{{ labelStyle }}">Quick-select a team (optional)</label>
+          <select style="{{ modalInputStyle }}" value="{{ selectedTeamOption }}" onChange="{{ onSelectTeamOption }}">
+            <option value="">Choose a team…</option>
+            <sc-for list="{{ teamOptions }}" as="t" hint-placeholder-count="5"><option value="{{ t }}">{{ t }}</option></sc-for>
+          </select>
+          <p style="{{ hintTextStyle }}">Picking a team checks everyone already in it below.</p>
+          <label style="{{ labelStyle }}">Members</label>
+          <sc-for list="{{ rosterRows }}" as="m" hint-placeholder-count="8">
+            <label style="{{ checkRowStyle }}"><input type="checkbox" style="{{ checkboxInputStyle }}" checked="{{ m.checked }}" onChange="{{ m.onToggle }}"></input><span style="{{ checkNameStyle }}">{{ m.name }}</span><span style="{{ rosterRoleStyle }}">{{ m.role }}</span></label>
+          </sc-for>
+        </div>
+        <div style="{{ modalFooterStyle }}">
+          <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ closeTeamModal }}">Done</button>
+        </div>
+      </div>
+    </sc-if>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=> n ? '৳'+n.toLocaleString('en-US',{minimumFractionDigits:2}) : '—';
+const SEED=[{id:1,name:'Discovery & Scoping',due:'2026-06-15',done:true,receivable:0},{id:2,name:'Phase 1: Core Modules',due:'2026-09-01',done:true,receivable:800000},{id:3,name:'Phase 2: Integrations',due:'2026-10-15',done:false,receivable:600000},{id:4,name:'UAT & Go-Live',due:'2026-11-30',done:false,receivable:450000}];
+const TEAM_SEED=[{id:1,name:'Rahim Uddin',role:'Project Manager'},{id:2,name:'Karim Ali',role:'Senior Developer'},{id:4,name:'Nadia Rahman',role:'QA Engineer'}];
+const ROSTER=[
+  {id:1,name:'Rahim Uddin',role:'Project Manager'},{id:2,name:'Karim Ali',role:'Senior Developer'},
+  {id:3,name:'Farida Akter',role:'Senior Developer'},{id:4,name:'Nadia Rahman',role:'QA Engineer'},
+  {id:5,name:'Mahmudul Islam',role:'DevOps Engineer'},{id:6,name:'Tasnim Ahmed',role:'Account Executive'},
+  {id:7,name:'Rahima Khatun',role:'Business Developer'},{id:8,name:'Kamal Hossain',role:'Developer'}
+];
+const TEAM_MEMBERS={ 'Engineering':[1,2,3,8], 'Design':[3], 'QA & Testing':[4], 'DevOps':[5], 'Sales':[6,7] };
+class Component extends DCLogic {
+  state={theme:'dark',milestones:SEED,addingMilestone:false,drafts:[],editingId:null,editName:'',editDue:'',editReceivable:'',
+    assignedIds:TEAM_SEED.map(t=>t.id),teamModalOpen:false,selectedTeamOption:'',
+    resources:[],addingResource:false,newResourceFile:'',newResourceUrl:'',newResourceLabel:'',resourceError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  toggleMilestone=(id)=>()=>this.setState(s=>({milestones:s.milestones.map(m=>m.id===id?{...m,done:!m.done}:m)}));
+  removeMilestone=(id)=>()=>this.setState(s=>({milestones:s.milestones.filter(m=>m.id!==id)}));
+  startEditMilestone=(m)=>()=>this.setState({editingId:m.id,editName:m.name,editDue:m.due,editReceivable:m.receivable});
+  cancelEditMilestone=()=>this.setState({editingId:null});
+  onEditName=(e)=>this.setState({editName:e.target.value}); onEditDue=(e)=>this.setState({editDue:e.target.value}); onEditReceivable=(e)=>this.setState({editReceivable:e.target.value});
+  saveEditMilestone=()=>{ const s=this.state; this.setState(st=>({milestones:st.milestones.map(m=>m.id===s.editingId?{...m,name:s.editName,due:s.editDue,receivable:parseFloat(s.editReceivable)||0}:m),editingId:null})); };
+  openAddMilestone=()=>this.setState({addingMilestone:true,drafts:[{id:Date.now(),name:'',due:'',receivable:''}]});
+  cancelAddMilestone=()=>this.setState({addingMilestone:false,drafts:[]});
+  addAnotherDraft=()=>this.setState(s=>({drafts:[...s.drafts,{id:Date.now()+Math.random(),name:'',due:'',receivable:''}]}));
+  removeDraft=(id)=>()=>this.setState(s=>({drafts:s.drafts.filter(d=>d.id!==id)}));
+  onDraftName=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,name:e.target.value}:d)}));
+  onDraftDue=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,due:e.target.value}:d)}));
+  onDraftReceivable=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,receivable:e.target.value}:d)}));
+  saveMilestones=()=>{ const valid=this.state.drafts.filter(d=>d.name.trim());
+    const newOnes=valid.map(d=>({id:Date.now()+Math.random(),name:d.name.trim(),due:d.due||'—',done:false,receivable:parseFloat(d.receivable)||0}));
+    this.setState(s=>({milestones:[...s.milestones,...newOnes],addingMilestone:false,drafts:[]})); };
+  openTeamModal=()=>this.setState({teamModalOpen:true,selectedTeamOption:''});
+  closeTeamModal=()=>this.setState({teamModalOpen:false});
+  onSelectTeamOption=(e)=>{ const team=e.target.value; if(!team){ this.setState({selectedTeamOption:''}); return; }
+    this.setState(s=>{ const ids=TEAM_MEMBERS[team]||[]; const merged=Array.from(new Set([...s.assignedIds,...ids])); return { selectedTeamOption:team, assignedIds:merged }; }); };
+  toggleMember=(id)=>()=>this.setState(s=>{ const has=s.assignedIds.includes(id); return { assignedIds: has ? s.assignedIds.filter(x=>x!==id) : [...s.assignedIds,id] }; });
+  openAddResource=()=>this.setState({addingResource:true,newResourceFile:'',newResourceFileUrl:'',newResourceUrl:'',newResourceLabel:'',resourceError:false});
+  cancelAddResource=()=>this.setState({addingResource:false});
+  onNewResourceFile=(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f){ this.setState({newResourceFile:'',newResourceFileUrl:'',resourceError:false}); return; }
+    const url=URL.createObjectURL(f); this.setState({newResourceFile:f.name,newResourceFileUrl:url,resourceError:false}); };
+  onNewResourceUrl=(e)=>this.setState({newResourceUrl:e.target.value,resourceError:false});
+  onNewResourceLabel=(e)=>this.setState({newResourceLabel:e.target.value});
+  removeResource=(id)=>()=>this.setState(s=>({resources:s.resources.filter(r=>r.id!==id)}));
+  saveResource=()=>{ const s=this.state; const file=s.newResourceFile.trim(); const url=s.newResourceUrl.trim();
+    if(!file && !url){ this.setState({resourceError:true}); return; }
+    const r = url
+      ? {id:Date.now(),type:'Link',isLink:true,isFile:false,url,label:s.newResourceLabel.trim()||url}
+      : {id:Date.now(),type:'File',isLink:false,isFile:true,label:file,fileUrl:s.newResourceFileUrl};
+    this.setState(st=>({resources:[...st.resources,r],addingResource:false})); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const progress=Math.round(this.state.milestones.filter(m=>m.done).length/this.state.milestones.length*100);
+    const milestones=this.state.milestones.map(m=>({...m,onToggle:this.toggleMilestone(m.id),checkMark:m.done?'✓':'',receivableFmt:fmt(m.receivable),
+      editing:this.state.editingId===m.id,editName:this.state.editName,onEditName:this.onEditName,editDue:this.state.editDue,onEditDue:this.onEditDue,editReceivable:this.state.editReceivable,onEditReceivable:this.onEditReceivable,
+      onEdit:this.startEditMilestone(m),onCancelEdit:this.cancelEditMilestone,onSaveEdit:this.saveEditMilestone,onRemove:this.removeMilestone(m.id),
+      amountStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontVariantNumeric:'tabular-nums'},
+      checkStyle:{width:20,height:20,borderRadius:4,border:`1px solid ${m.done?C.success:C.border}`,background:m.done?C.success:'transparent',color:C.bg,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',padding:0},
+      labelStyle:{color:C.ink,fontFamily:FONT,fontSize:14,textDecoration:m.done?'line-through':'none',opacity:m.done?0.6:1,flex:1}}));
+    const teamMembers=ROSTER.filter(r=>this.state.assignedIds.includes(r.id));
+    const rosterRows=ROSTER.map(r=>({...r,checked:this.state.assignedIds.includes(r.id),onToggle:this.toggleMember(r.id)}));
+    const resources=this.state.resources.map(r=>({...r,onRemove:this.removeResource(r.id)}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,progress,milestones,
+      teamMembers,teamCount:teamMembers.length,noTeam:teamMembers.length===0,
+      teamModalOpen:this.state.teamModalOpen,openTeamModal:this.openTeamModal,closeTeamModal:this.closeTeamModal,
+      selectedTeamOption:this.state.selectedTeamOption,onSelectTeamOption:this.onSelectTeamOption,teamOptions:Object.keys(TEAM_MEMBERS),rosterRows,
+      noMilestones:this.state.milestones.length===0,
+      addingMilestone:this.state.addingMilestone,openAddMilestone:this.openAddMilestone,cancelAddMilestone:this.cancelAddMilestone,
+      addAnotherDraft:this.addAnotherDraft,saveMilestones:this.saveMilestones,
+      drafts:this.state.drafts.map((d,i)=>({...d,num:i+1,onName:this.onDraftName(d.id),onDue:this.onDraftDue(d.id),onReceivable:this.onDraftReceivable(d.id),onRemove:this.removeDraft(d.id)})),
+      resources,noResources:resources.length===0,
+      addingResource:this.state.addingResource,openAddResource:this.openAddResource,cancelAddResource:this.cancelAddResource,saveResource:this.saveResource,
+      newResourceFile:this.state.newResourceFile,onNewResourceFile:this.onNewResourceFile,newResourceUrl:this.state.newResourceUrl,onNewResourceUrl:this.onNewResourceUrl,
+      newResourceLabel:this.state.newResourceLabel,onNewResourceLabel:this.onNewResourceLabel,resourceError:this.state.resourceError,
+      resourceListStyle:{display:'flex',flexDirection:'column',gap:8,marginBottom:8},
+      resourceRowStyle:{display:'flex',alignItems:'center',gap:12,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:'10px 12px'},
+      resourceTypeChip:{display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:11,fontWeight:500,fontFamily:FONT,color:C.muted,border:`1px solid ${C.border}`,flexShrink:0},
+      resourceLinkStyle:{color:C.accent,fontFamily:FONT,fontSize:14,textDecoration:'none',flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      resourceLabelStyle:{color:C.ink,fontFamily:FONT,fontSize:14,flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      fileNameStyle:{color:C.muted,fontSize:12,fontFamily:FONT,marginTop:4,display:'block'},
+      fileNameDisplay:this.state.newResourceFile||'No file selected',
+      fileUploadRowStyle:{display:'flex',alignItems:'center',gap:8},
+      fileUploadBtnStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:13,padding:'8px 12px',cursor:'pointer',flexShrink:0},
+      hiddenFileInputStyle:{display:'none'},
+      fileNameDisplayStyle:{color:C.muted,fontFamily:FONT,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      errorTextStyle:{color:'#CD6A5E',fontSize:12,fontFamily:FONT},
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:900,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      titleColStyle:{flex:1,minWidth:0},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      subTitleStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'4px 0 0'},
+      statusChipStyle:{display:'inline-flex',padding:'4px 12px',borderRadius:999,fontSize:13,fontWeight:500,fontFamily:FONT,color:C.success,border:`1px solid ${C.success}`,height:'fit-content'},
+      progressWrapStyle:{marginBottom:32}, progressLabelRowStyle:{display:'flex',justifyContent:'space-between',color:C.muted,fontFamily:FONT,fontSize:12,marginBottom:8},
+      barTrackStyle:{width:'100%',height:8,borderRadius:4,background:C.border}, barFillStyle:{width:progress+'%',height:8,borderRadius:4,background:C.accent},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'24px 0 12px'},
+      teamChipRowStyle:{display:'flex',flexWrap:'wrap',gap:8,marginBottom:4},
+      teamChipStyle:{display:'inline-flex',alignItems:'center',gap:4,padding:'4px 10px',borderRadius:999,border:`1px solid ${C.border}`,background:C.surface,color:C.inkHi,fontFamily:FONT,fontSize:13},
+      teamRoleStyle:{color:C.muted},
+      manageTeamLinkStyle:{color:C.accent,fontFamily:FONT,fontSize:12,textDecoration:'none',display:'inline-block',marginBottom:8},
+      manageTeamWrapStyle:{marginTop:8,marginBottom:8},
+      milestoneListStyle:{display:'flex',flexDirection:'column',gap:12},
+      milestoneRowStyle:{display:'flex',alignItems:'center',gap:12,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:12},
+      dueStyle:{color:C.muted,fontFamily:FONT,fontSize:12},
+      addRowStyle:{display:'flex',gap:8,alignItems:'center',marginTop:12,flexWrap:'wrap'},
+      addCardStyle:{background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8,padding:16,marginTop:12,display:'flex',flexDirection:'column',gap:12},
+      addCardHeaderStyle:{display:'flex',justifyContent:'space-between',alignItems:'center'},
+      addCardTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontWeight:600},
+      draftRowWrapStyle:{display:'flex',flexDirection:'column',gap:12,paddingBottom:16,marginBottom:16,borderBottom:`1px solid ${C.border}`},
+      inlineInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,boxSizing:'border-box',flex:1,minWidth:100},
+      inlineNumStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,boxSizing:'border-box',width:100},
+      btnPrimarySmStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:'1px solid transparent',background:C.accent,color:C.accentInk,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer'},
+      addFieldsStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12},
+      addFieldStyle:{display:'flex',flexDirection:'column',gap:4},
+      addFieldLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      addActionsStyle:{display:'flex',justifyContent:'flex-end',gap:8},
+      triggerWrapStyle:{marginTop:12},
+      emptyStateStyle:{color:C.muted,textAlign:'center',padding:'32px 16px',fontFamily:FONT,background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8},
+      emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px',fontSize:14},
+      emptyTextStyle:{margin:0,fontSize:13},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,boxSizing:'border-box'},
+      radioRowStyle:{display:'flex',gap:8,marginBottom:4},
+      hintTextStyle:{color:C.muted,fontSize:12,fontFamily:FONT,margin:'0 0 8px'},
+      checkRowStyle:{display:'flex',alignItems:'center',gap:12,padding:'8px 4px',fontFamily:FONT,fontSize:14,color:C.ink,cursor:'pointer',width:'100%',boxSizing:'border-box'},
+      checkboxInputStyle:{flexShrink:0,width:16,height:16,margin:0},
+      checkNameStyle:{flex:1,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'},
+      rosterRoleStyle:{marginLeft:'auto',color:C.muted,fontSize:12,flexShrink:0},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(440px, 90vw)',maxHeight:'80vh',overflowY:'auto',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:4},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box',marginBottom:8},
+      btnGhostSmStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer'},
+      btnPrimaryStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:'1px solid transparent',background:C.accent,color:C.accentInk,fontFamily:FONT,fontSize:14,padding:'8px 16px',cursor:'pointer'}
+    };
+  }
+}
+</script>
+</body>
+</html>

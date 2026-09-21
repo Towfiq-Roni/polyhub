@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="BankAccounts.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Accounts" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Accounts</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Account</button>
+      </header>
+      <p style="{{ hintTextStyle }}">Your organization's cash, bank, and MFS accounts — used as the "our account" side of every payment entry.</p>
+
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Method</th><th style="{{ thStyle }}">Bank / Provider</th><th style="{{ thStyle }}">Account Name / Type</th><th style="{{ thStyle }}">Account Number</th><th style="{{ thNumStyle }}">Balance</th><th style="{{ thStyle }}">Status</th><th style="{{ thActionsStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ accounts }}" as="a" hint-placeholder-count="6">
+              <tr>
+                <td style="{{ tdStyle }}"><span style="{{ a.methodChip }}">{{ a.method }}</span></td>
+                <td style="{{ tdStyle }}">{{ a.bankName }}</td>
+                <td style="{{ tdStyle }}">{{ a.accountType }}</td>
+                <td style="{{ tdStyle }}">{{ a.accountNumber }}</td>
+                <td style="{{ tdNumStyle }}">{{ a.balanceFmt }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ a.statusChip }}">{{ a.status }}</span></td>
+                <td style="{{ tdActionsStyle }}">
+                  <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ a.onView }}">View</button>
+                  <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ a.onEdit }}">Edit</button>
+                  <button type="button" style="{{ a.toggleStyle }}" onClick="{{ a.onToggleStatus }}">{{ a.toggleLabel }}</button>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+
+      <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeModal }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Account">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">{{ modalTitle }}</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Method</label>
+            <div style="{{ radioRowStyle }}">
+              <button type="button" style="{{ bankBtnStyle }}" onClick="{{ setMethodBank }}">Bank</button>
+              <button type="button" style="{{ mfsBtnStyle }}" onClick="{{ setMethodMfs }}">MFS</button>
+              <button type="button" style="{{ cashBtnStyle }}" onClick="{{ setMethodCash }}">Cash</button>
+            </div>
+            <label style="{{ labelStyle }}">Bank / Provider name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ bankName }}" onInput="{{ onBankName }}" placeholder="e.g. HSBC, bKash, Petty Cash"></input>
+            <sc-if value="{{ bankNameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Bank / provider name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Account name / type</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ accountType }}" onInput="{{ onAccountType }}" placeholder="e.g. Current, Payroll, Merchant"></input>
+            <sc-if value="{{ typeError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Distinguish this account with a name or type.</div></sc-if>
+            <label style="{{ labelStyle }}">Account number</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ accountNumber }}" onInput="{{ onAccountNumber }}" placeholder="Account / wallet number"></input>
+            <label style="{{ labelStyle }}">{{ balanceLabel }} (৳)</label>
+            <input type="number" style="{{ modalInputStyle }}" value="{{ balance }}" onInput="{{ onBalance }}" placeholder="0"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeModal }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ save }}">Save Account</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeView }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Account details">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">{{ viewBankName }}</h2><p style="{{ viewSubStyle }}">{{ viewAccountType }}</p></div>
+          <div style="{{ modalBodyStyle }}">
+            <div style="{{ viewGridStyle }}">
+              <div><label style="{{ labelStyle }}">Method</label><p style="{{ viewValueStyle }}"><span style="{{ viewMethodChip }}">{{ viewMethod }}</span></p></div>
+              <div><label style="{{ labelStyle }}">Status</label><p style="{{ viewValueStyle }}"><span style="{{ viewStatusChip }}">{{ viewStatus }}</span></p></div>
+              <div><label style="{{ labelStyle }}">Account Number</label><p style="{{ viewValueStyle }}">{{ viewAccountNumber }}</p></div>
+              <div><label style="{{ labelStyle }}">Balance</label><p style="{{ viewValueStyle }}">{{ viewBalance }}</p></div>
+            </div>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeView }}">Close</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ editFromView }}">Edit Account</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)', success:'#63A583', neutral:'#6F7E8F', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', neutral:'#5A6675', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+(n||0).toLocaleString('en-US',{minimumFractionDigits:2});
+const SEED=[
+  {id:1,method:'Bank',bankName:'HSBC',accountType:'Current',accountNumber:'0011-223344-01',balance:12500000,status:'Active'},
+  {id:2,method:'Bank',bankName:'Dutch-Bangla',accountType:'Savings',accountNumber:'0022-556677-02',balance:4200000,status:'Active'},
+  {id:3,method:'Cash',bankName:'Petty Cash',accountType:'Cash',accountNumber:'—',balance:85000,status:'Active'},
+  {id:4,method:'MFS',bankName:'bKash',accountType:'Merchant',accountNumber:'01711-000111',balance:320000,status:'Active'},
+  {id:5,method:'MFS',bankName:'Nagad',accountType:'Merchant',accountNumber:'01911-222333',balance:0,status:'Active'},
+  {id:6,method:'Bank',bankName:'Old City Bank',accountType:'Current',accountNumber:'0099-112233-00',balance:0,status:'Inactive'}
+];
+function methodChip(method,C){ const color=method==='Bank'?C.accent:(method==='MFS'?C.success:C.neutral); return {display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+function statusChip(status,C){ const color=status==='Active'?C.success:C.neutral; return {display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+class Component extends DCLogic {
+  state={theme:'dark',accounts:SEED,modalOpen:false,editingId:null,method:'Bank',bankName:'',accountType:'',accountNumber:'',balance:'',bankNameError:false,typeError:false,
+    viewOpen:false,viewingId:null};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{ const saved=JSON.parse(localStorage.getItem('hub-bank-accounts')); if(Array.isArray(saved)&&saved.length) this.setState({accounts:saved}); }catch(e){} }
+  persist=(accounts)=>{ try{ localStorage.setItem('hub-bank-accounts', JSON.stringify(accounts)); }catch(e){} };
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  openCreate=()=>this.setState({modalOpen:true,editingId:null,method:'Bank',bankName:'',accountType:'',accountNumber:'',balance:'',bankNameError:false,typeError:false});
+  openEdit=(acc)=>()=>this.setState({modalOpen:true,editingId:acc.id,method:acc.method,bankName:acc.bankName,accountType:acc.accountType,accountNumber:acc.accountNumber,balance:acc.balance,bankNameError:false,typeError:false,viewOpen:false});
+  toggleStatus=(id)=>()=>this.setState(s=>{ const accounts=s.accounts.map(a=>a.id===id?{...a,status:a.status==='Active'?'Inactive':'Active'}:a); this.persist(accounts); return {accounts}; });
+  closeModal=()=>this.setState({modalOpen:false});
+  setMethodBank=()=>this.setState({method:'Bank'}); setMethodMfs=()=>this.setState({method:'MFS'}); setMethodCash=()=>this.setState({method:'Cash'});
+  onBankName=(e)=>this.setState({bankName:e.target.value,bankNameError:false}); onAccountType=(e)=>this.setState({accountType:e.target.value,typeError:false}); onAccountNumber=(e)=>this.setState({accountNumber:e.target.value});
+  onBalance=(e)=>this.setState({balance:e.target.value});
+  save=()=>{ const bankNameError=!this.state.bankName.trim(); const typeError=!this.state.accountType.trim();
+    if(bankNameError||typeError){ this.setState({bankNameError,typeError}); return; }
+    this.setState(s=>{
+      let accounts;
+      if(s.editingId){ accounts = s.accounts.map(a=>a.id===s.editingId?{...a,method:s.method,bankName:s.bankName.trim(),accountType:s.accountType.trim(),accountNumber:s.accountNumber.trim()||'—',balance:parseFloat(s.balance)||0}:a); }
+      else { const acc={id:Date.now(),method:s.method,bankName:s.bankName.trim(),accountType:s.accountType.trim(),accountNumber:s.accountNumber.trim()||'—',balance:parseFloat(s.balance)||0,status:'Active'}; accounts=[...s.accounts,acc]; }
+      this.persist(accounts);
+      return { accounts, modalOpen:false };
+    }); };
+  openView=(acc)=>()=>this.setState({viewOpen:true,viewingId:acc.id});
+  closeView=()=>this.setState({viewOpen:false});
+  editFromView=()=>{ const acc=this.state.accounts.find(a=>a.id===this.state.viewingId); if(acc) this.openEdit(acc)(); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px',whiteSpace:'nowrap'};
+    const smBtnBase={...btnBase,fontSize:12,padding:'4px 12px'};
+    const accounts=this.state.accounts.map(a=>({...a,methodChip:methodChip(a.method,C),statusChip:statusChip(a.status,C),balanceFmt:fmt(a.balance),
+      onEdit:this.openEdit(a),onView:this.openView(a),onToggleStatus:this.toggleStatus(a.id),
+      toggleLabel:a.status==='Active'?'Deactivate':'Activate',
+      toggleStyle:{...smBtnBase,background:'transparent',color:a.status==='Active'?C.danger:C.success,borderColor:a.status==='Active'?C.danger:C.success}}));
+    const modalTitle=this.state.editingId?'Edit Account':'Add Account';
+    const viewAcc=this.state.accounts.find(a=>a.id===this.state.viewingId)||{};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,accounts,
+      modalOpen:this.state.modalOpen,openCreate:this.openCreate,closeModal:this.closeModal,modalTitle,
+      method:this.state.method,setMethodBank:this.setMethodBank,setMethodMfs:this.setMethodMfs,setMethodCash:this.setMethodCash,
+      bankName:this.state.bankName,onBankName:this.onBankName,bankNameError:this.state.bankNameError,
+      accountType:this.state.accountType,onAccountType:this.onAccountType,typeError:this.state.typeError,
+      accountNumber:this.state.accountNumber,onAccountNumber:this.onAccountNumber,save:this.save,
+      balance:this.state.balance,onBalance:this.onBalance,balanceLabel:this.state.editingId?'Balance':'Opening balance',
+      viewOpen:this.state.viewOpen,closeView:this.closeView,editFromView:this.editFromView,
+      viewBankName:viewAcc.bankName,viewAccountType:viewAcc.accountType,viewMethod:viewAcc.method,viewStatus:viewAcc.status,
+      viewAccountNumber:viewAcc.accountNumber,viewBalance:fmt(viewAcc.balance),
+      viewMethodChip:methodChip(viewAcc.method,C),viewStatusChip:statusChip(viewAcc.status,C),
+      bankBtnStyle:{...smBtnBase,background:this.state.method==='Bank'?C.accentSoft:'transparent',color:this.state.method==='Bank'?C.inkHi:C.muted,borderColor:this.state.method==='Bank'?C.accent:C.border},
+      mfsBtnStyle:{...smBtnBase,background:this.state.method==='MFS'?C.accentSoft:'transparent',color:this.state.method==='MFS'?C.inkHi:C.muted,borderColor:this.state.method==='MFS'?C.accent:C.border},
+      cashBtnStyle:{...smBtnBase,background:this.state.method==='Cash'?C.accentSoft:'transparent',color:this.state.method==='Cash'?C.inkHi:C.muted,borderColor:this.state.method==='Cash'?C.accent:C.border},
+      rootStyle:{display:'flex',height:'100vh',overflow:'hidden',background:C.bg},sidebarMountStyle:{flexShrink:0},
+      mainColStyle:{flex:1,minWidth:0,display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'},
+      scrollAreaStyle:{flex:1,minHeight:0,display:'flex',flexDirection:'column',overflowY:'auto'},
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1200,width:'100%',boxSizing:'border-box',margin:'0 auto',flex:1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:12,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      hintTextStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'0 0 24px'},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmStyle:{...smBtnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thActionsStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`,minWidth:220},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdActionsStyle:{padding:'12px 16px',borderBottom:`1px solid ${C.border}`,display:'flex',gap:8,whiteSpace:'nowrap'},
+      radioRowStyle:{display:'flex',gap:8,marginBottom:4,flexWrap:'wrap'},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(440px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      viewSubStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'4px 0 0'},
+      viewGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:16},
+      viewValueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT}
+    };
+  }
+}
+</script>
+</body>
+</html>

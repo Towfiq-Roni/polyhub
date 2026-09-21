@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="TeamMembers.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Team Member" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="TeamMembers.dc.html" style="{{ backLinkStyle }}">← Back to Team Members</a>
+      <header style="{{ pageHeaderStyle }}">
+        <div style="{{ identityRowStyle }}"><span style="{{ avatarLgStyle }}">RU</span>
+          <div><h1 style="{{ pageTitleStyle }}">Rahim Uddin</h1><p style="{{ subTitleStyle }}">Project Manager · Engineering</p></div>
+        </div>
+        <div style="{{ actionsRowStyle }}">
+          <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><button type="button" style="{{ btnGhostStyle }}" onClick="{{ startEdit }}">Edit</button></sc-if>
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ discardEdit }}">Discard</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveEdit }}">Save</button>
+          </sc-if>
+          <button type="button" style="{{ statusBtnStyle }}" onClick="{{ toggleStatus }}">{{ statusLabel }}</button>
+        </div>
+      </header>
+      <div style="{{ tabRowStyle }}">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <button type="button" style="{{ t.style }}" onClick="{{ t.onClick }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ cardGridStyle2 }}">
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Personal Information</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Email</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ email }}" onInput="{{ onEmail }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ email }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Phone</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ phone }}" onInput="{{ onPhone }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ phone }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Address</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ address }}" onInput="{{ onAddress }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ address }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Emergency Contact</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ emergencyContact }}" onInput="{{ onEmergencyContact }}" placeholder="Name — phone"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ emergencyContactDisplay }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">National ID</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ nationalId }}" onInput="{{ onNationalId }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ nationalIdDisplay }}</p></sc-if>
+            </div>
+          </div>
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Employment Details</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Rate</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ rate }}" onInput="{{ onRate }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ rate }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Joined</label><p style="{{ valueStyle }}">2024-01-15</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Status</label><p style="{{ valueStyle }}"><span style="{{ statusChipStyle }}">{{ statusLabelPlain }}</span></p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Manager</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ manager }}" onInput="{{ onManager }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ managerDisplay }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Contract Type</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+                <select style="{{ inputStyle }}" value="{{ contractType }}" onChange="{{ onContractType }}"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Intern">Intern</option></select>
+              </sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ contractType }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Leave Balance</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ leaveBalance }}" onInput="{{ onLeaveBalance }}" placeholder="e.g. 18 days"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ leaveBalanceDisplay }}</p></sc-if>
+            </div>
+          </div>
+        </div>
+        <div style="{{ cardStyle }}">
+          <h3 style="{{ cardTitleStyle }}">Performance Summary</h3>
+          <div style="{{ kpiGridStyle }}">
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Projects Assigned</span><span style="{{ kpiValueStyle }}">{{ projectsAssignedCount }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Hours Logged (YTD)</span><span style="{{ kpiValueStyle }}">{{ hoursLogged }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Amount Earned (YTD)</span><span style="{{ kpiSuccessValueStyle }}">{{ amountEarned }}</span></div>
+            <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Outstanding Payments</span><span style="{{ kpiWarnValueStyle }}">{{ outstandingPayments }}</span></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Role</th><th style="{{ thStyle }}">Allocation</th><sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><th style="{{ thStyle }}"></th></sc-if></tr></thead>
+          <tbody>
+            <sc-for list="{{ projectAssignments }}" as="p" hint-placeholder-count="2">
+              <tr>
+                <td style="{{ tdStyle }}">{{ p.project }}</td>
+                <td style="{{ tdStyle }}">
+                  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inlineInputStyle }}" value="{{ p.role }}" onInput="{{ p.onRole }}"></input></sc-if>
+                  <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">{{ p.role }}</sc-if>
+                </td>
+                <td style="{{ tdStyle }}">
+                  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="number" style="{{ inlineNumInputStyle }}" value="{{ p.allocation }}" onInput="{{ p.onAllocation }}"></input>%</sc-if>
+                  <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">{{ p.allocation }}%</sc-if>
+                </td>
+                <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><td style="{{ tdStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ p.onRemove }}">Remove</button></td></sc-if>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+        <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ addRowStyle }}">
+            <select style="{{ inputStyle }}" value="{{ newProject }}" onChange="{{ onNewProject }}">
+              <sc-for list="{{ projectOptions }}" as="pr" hint-placeholder-count="5"><option value="{{ pr }}">{{ pr }}</option></sc-for>
+            </select>
+            <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ addProjectAssignment }}">+ Add Project</button>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ isActivity }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ activityListStyle }}">
+          <div style="{{ activityItemStyle }}"><span style="{{ activityDotStyle }}"></span><div><p style="{{ activityTextStyle }}">Logged 8h on Nova ERP Rollout</p><span style="{{ activityTimeStyle }}">2026-08-28</span></div></div>
+          <div style="{{ activityItemStyle }}"><span style="{{ activityDotStyle }}"></span><div><p style="{{ activityTextStyle }}">Marked milestone "Phase 1" complete</p><span style="{{ activityTimeStyle }}">2026-08-20</span></div></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPayments }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Period</th><th style="{{ thStyle }}">Hours</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}">Ref</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ paymentRows }}" as="p" hint-placeholder-count="5">
+              <tr><td style="{{ tdStyle }}">{{ p.date }}</td><td style="{{ tdStyle }}">{{ p.project }}</td><td style="{{ tdStyle }}">{{ p.period }}</td><td style="{{ tdStyle }}">{{ p.hours }}</td><td style="{{ tdNumStyle }}">{{ p.amount }}</td><td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td><td style="{{ tdStyle }}">{{ p.ref }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+
+      <sc-if value="{{ isAccounts }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Method</th><th style="{{ thStyle }}">Bank / Provider</th><th style="{{ thStyle }}">Account Number</th><th style="{{ thStyle }}">Status</th><sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><th style="{{ thStyle }}"></th></sc-if></tr></thead>
+          <tbody>
+            <sc-for list="{{ bankAccounts }}" as="a" hint-placeholder-count="2">
+              <tr>
+                <td style="{{ tdStyle }}">
+                  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+                    <select style="{{ inlineInputStyle }}" value="{{ a.method }}" onChange="{{ a.onMethod }}"><option value="Bank">Bank</option><option value="MFS">MFS</option></select>
+                  </sc-if>
+                  <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">{{ a.method }}</sc-if>
+                </td>
+                <td style="{{ tdStyle }}">
+                  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inlineInputStyle }}" value="{{ a.label }}" onInput="{{ a.onLabel }}"></input></sc-if>
+                  <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">{{ a.label }}</sc-if>
+                </td>
+                <td style="{{ tdStyle }}">
+                  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inlineInputStyle }}" value="{{ a.number }}" onInput="{{ a.onNumber }}"></input></sc-if>
+                  <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">{{ a.number }}</sc-if>
+                </td>
+                <td style="{{ tdStyle }}"><span style="{{ a.statusChip }}">{{ a.status }}</span></td>
+                <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><td style="{{ tdStyle }}"><button type="button" style="{{ a.toggleStyle }}" onClick="{{ a.onToggleStatus }}">{{ a.toggleLabel }}</button></td></sc-if>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+        <sc-if value="{{ noBankAccounts }}" hint-placeholder-val="{{ false }}"><p style="{{ noAccountTextStyle }}">No accounts saved yet.</p></sc-if>
+        <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ !addingAccounts }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ addRowStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAddAccounts }}">+ Add Account</button></div>
+          </sc-if>
+          <sc-if value="{{ addingAccounts }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ addAccountCardStyle }}">
+              <sc-for list="{{ drafts }}" as="d" hint-placeholder-count="1">
+                <div style="{{ addAccountRowWrapStyle }}">
+                  <div style="{{ addAccountHeaderStyle }}"><span style="{{ addAccountTitleStyle }}">{{ d.num }}.</span><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ d.onRemove }}">Remove</button></div>
+                  <div style="{{ addAccountFieldsStyle }}">
+                    <div style="{{ addAccountFieldStyle }}"><label style="{{ addAccountLabelStyle }}">Method</label><select style="{{ inputStyle }}" value="{{ d.method }}" onChange="{{ d.onMethod }}"><option value="Bank">Bank</option><option value="MFS">MFS</option></select></div>
+                    <div style="{{ addAccountFieldStyle }}"><label style="{{ addAccountLabelStyle }}">Bank / provider</label><input type="text" style="{{ inputStyle }}" value="{{ d.label }}" onInput="{{ d.onLabel }}" placeholder="e.g. Brac Bank"></input></div>
+                    <div style="{{ addAccountFieldStyle }}"><label style="{{ addAccountLabelStyle }}">Account number</label><input type="text" style="{{ inputStyle }}" value="{{ d.number }}" onInput="{{ d.onNumber }}" placeholder="Account / wallet number"></input></div>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="{{ addAccountActionsStyle }}">
+                <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ addAnotherDraft }}">+ Add Another Account</button>
+                <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveDrafts }}">Save</button>
+              </div>
+            </div>
+          </sc-if>
+        </sc-if>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+function getQueryId(){ try{ return new URLSearchParams(window.location.search).get('id'); }catch(e){ return null; } }
+function chip(status,C){ const map={Paid:C.success,Pending:C.danger}; const color=map[status]||C.muted; return {display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const PAYMENTS_SEED=[
+ {date:'2026-08-15',project:'ERP Implementation',period:'Jul 2026',hours:160,amount:'৳400,000.00',status:'Paid',ref:'TXN-2026-0815'},
+ {date:'2026-07-15',project:'ERP Implementation',period:'Jun 2026',hours:160,amount:'৳400,000.00',status:'Paid',ref:'TXN-2026-0715'},
+ {date:'2026-08-10',project:'CRM Migration',period:'Jul 2026',hours:80,amount:'৳140,000.00',status:'Pending',ref:'—'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',tab:'overview',editing:false,snapshot:null,active:true,email:'rahim@dea.bd',rate:'৳2,500.00/hr',
+    phone:'+8801711-111111',address:'House 12, Road 5, Gulshan-1, Dhaka',emergencyContact:'Rahima Khatun — +8801711-999999',nationalId:'19901234567890123',
+    manager:'Self-managed',contractType:'Full-time',leaveBalance:'18 days',hoursLogged:'1,240',amountEarned:'৳3,100,000.00',outstandingPayments:'৳250,000.00',
+    bankAccounts:[{id:1,method:'Bank',label:'City Bank',number:'2200-1188-90',status:'Active'}],
+    addingAccounts:false,drafts:[],
+    projectAssignments:[{id:1,project:'Nova ERP Rollout',role:'Lead PM',allocation:100},{id:2,project:'Delta Migration',role:'Advisor',allocation:20}],
+    newProject:'Website Redesign'};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{ const id=getQueryId(); if(id){ const list=JSON.parse(localStorage.getItem('hub-team-members'))||[]; const found=list.find(m=>String(m.id)===String(id));
+      if(found) this.setState({email:found.email,rate:found.rate}); } }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  setTab=(t)=>()=>this.setState({tab:t});
+  startEdit=()=>this.setState(s=>({editing:true,snapshot:{email:s.email,rate:s.rate,phone:s.phone,address:s.address,emergencyContact:s.emergencyContact,nationalId:s.nationalId,manager:s.manager,contractType:s.contractType,leaveBalance:s.leaveBalance,projectAssignments:JSON.parse(JSON.stringify(s.projectAssignments)),bankAccounts:JSON.parse(JSON.stringify(s.bankAccounts))}}));
+  saveEdit=()=>this.setState({editing:false,snapshot:null});
+  discardEdit=()=>this.setState(s=>({editing:false,...(s.snapshot||{}),snapshot:null}));
+  onEmail=(e)=>this.setState({email:e.target.value});
+  onRate=(e)=>this.setState({rate:e.target.value});
+  onPhone=(e)=>this.setState({phone:e.target.value});
+  onAddress=(e)=>this.setState({address:e.target.value});
+  onEmergencyContact=(e)=>this.setState({emergencyContact:e.target.value});
+  onNationalId=(e)=>this.setState({nationalId:e.target.value});
+  onManager=(e)=>this.setState({manager:e.target.value});
+  onContractType=(e)=>this.setState({contractType:e.target.value});
+  onLeaveBalance=(e)=>this.setState({leaveBalance:e.target.value});
+  toggleStatus=()=>this.setState(s=>({active:!s.active}));
+  onAccountMethod=(id)=>(e)=>this.setState(s=>({bankAccounts:s.bankAccounts.map(a=>a.id===id?{...a,method:e.target.value}:a)}));
+  onAccountLabel=(id)=>(e)=>this.setState(s=>({bankAccounts:s.bankAccounts.map(a=>a.id===id?{...a,label:e.target.value}:a)}));
+  onAccountNumber=(id)=>(e)=>this.setState(s=>({bankAccounts:s.bankAccounts.map(a=>a.id===id?{...a,number:e.target.value}:a)}));
+  toggleAccountStatus=(id)=>()=>this.setState(s=>({bankAccounts:s.bankAccounts.map(a=>a.id===id?{...a,status:a.status==='Active'?'Inactive':'Active'}:a)}));
+  openAddAccounts=()=>this.setState({addingAccounts:true,drafts:[{id:Date.now(),method:'Bank',label:'',number:''}]});
+  addAnotherDraft=()=>this.setState(s=>({drafts:[...s.drafts,{id:Date.now()+Math.random(),method:'Bank',label:'',number:''}]}));
+  removeDraft=(id)=>()=>this.setState(s=>{ const drafts=s.drafts.filter(d=>d.id!==id); return { drafts, addingAccounts: drafts.length>0 }; });
+  onDraftMethod=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,method:e.target.value}:d)}));
+  onDraftLabel=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,label:e.target.value}:d)}));
+  onDraftNumber=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,number:e.target.value}:d)}));
+  saveDrafts=()=>{ const valid=this.state.drafts.filter(d=>d.label.trim());
+    const newAccounts=valid.map(d=>({id:Date.now()+Math.random(),method:d.method,label:d.label.trim(),number:d.number.trim()||'—',status:'Active'}));
+    this.setState(s=>({bankAccounts:[...s.bankAccounts,...newAccounts],drafts:[],addingAccounts:false})); };
+  onRole=(id)=>(e)=>this.setState(s=>({projectAssignments:s.projectAssignments.map(p=>p.id===id?{...p,role:e.target.value}:p)}));
+  onAllocation=(id)=>(e)=>this.setState(s=>({projectAssignments:s.projectAssignments.map(p=>p.id===id?{...p,allocation:e.target.value}:p)}));
+  removeProject=(id)=>()=>this.setState(s=>({projectAssignments:s.projectAssignments.filter(p=>p.id!==id)}));
+  onNewProject=(e)=>this.setState({newProject:e.target.value});
+  addProjectAssignment=()=>this.setState(s=>({projectAssignments:[...s.projectAssignments,{id:Date.now(),project:s.newProject,role:'Contributor',allocation:10}]}));
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const tabDef=[['overview','Overview'],['projects','Projects'],['payments','Payments'],['accounts','Bank Accounts'],['activity','Activity']];
+    const tabs=tabDef.map(([k,label])=>({label,onClick:this.setTab(k),style:{...btnBase,whiteSpace:'nowrap',background:this.state.tab===k?C.accentSoft||'transparent':'transparent',color:this.state.tab===k?C.inkHi:C.muted,borderColor:this.state.tab===k?C.accent:'transparent',borderBottom:this.state.tab===k?`2px solid ${C.accent}`:'2px solid transparent',borderRadius:0,padding:'8px 4px'}}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,tabs,
+      isOverview:this.state.tab==='overview',isProjects:this.state.tab==='projects',isActivity:this.state.tab==='activity',isAccounts:this.state.tab==='accounts',isPayments:this.state.tab==='payments',
+      phone:this.state.phone,onPhone:this.onPhone,address:this.state.address,onAddress:this.onAddress,
+      emergencyContact:this.state.emergencyContact,onEmergencyContact:this.onEmergencyContact,emergencyContactDisplay:this.state.emergencyContact||'—',
+      nationalId:this.state.nationalId,onNationalId:this.onNationalId,nationalIdDisplay:this.state.nationalId||'—',
+      manager:this.state.manager,onManager:this.onManager,managerDisplay:this.state.manager||'—',
+      contractType:this.state.contractType,onContractType:this.onContractType,
+      leaveBalance:this.state.leaveBalance,onLeaveBalance:this.onLeaveBalance,leaveBalanceDisplay:this.state.leaveBalance||'—',
+      projectsAssignedCount:this.state.projectAssignments.length,hoursLogged:this.state.hoursLogged,amountEarned:this.state.amountEarned,outstandingPayments:this.state.outstandingPayments,
+      paymentRows:PAYMENTS_SEED.map(p=>({...p,chipStyle:chip(p.status,C)})),
+      bankAccounts:this.state.bankAccounts.map(a=>({...a,onMethod:this.onAccountMethod(a.id),onLabel:this.onAccountLabel(a.id),onNumber:this.onAccountNumber(a.id),onToggleStatus:this.toggleAccountStatus(a.id),
+        toggleLabel:a.status==='Active'?'Deactivate':'Activate',
+        statusChip:{display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color:a.status==='Active'?C.success:C.muted,border:`1px solid ${a.status==='Active'?C.success:C.muted}`},
+        toggleStyle:{...btnBase,fontSize:12,padding:'4px 12px',background:'transparent',color:a.status==='Active'?C.danger:C.success,borderColor:a.status==='Active'?C.danger:C.success}})),
+      noBankAccounts:this.state.bankAccounts.length===0,
+      projectAssignments:this.state.projectAssignments.map(p=>({...p,onRole:this.onRole(p.id),onAllocation:this.onAllocation(p.id),onRemove:this.removeProject(p.id)})),
+      projectOptions:['ERP Implementation','CRM Migration','Mobile App Development','Legacy System Cleanup','Website Redesign','Nova ERP Rollout','Delta Migration'],
+      newProject:this.state.newProject,onNewProject:this.onNewProject,addProjectAssignment:this.addProjectAssignment,
+      addingAccounts:this.state.addingAccounts,openAddAccounts:this.openAddAccounts,addAnotherDraft:this.addAnotherDraft,saveDrafts:this.saveDrafts,
+      drafts:this.state.drafts.map((d,i)=>({...d,num:i+1,onMethod:this.onDraftMethod(d.id),onLabel:this.onDraftLabel(d.id),onNumber:this.onDraftNumber(d.id),onRemove:this.removeDraft(d.id)})),
+      noAccountTextStyle:{color:C.muted,fontSize:13,fontFamily:FONT,margin:'8px 0'},
+      inlineInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,width:120,boxSizing:'border-box'},
+      inlineNumInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,width:56,boxSizing:'border-box'},
+      addRowStyle:{display:'flex',gap:8,alignItems:'center',marginTop:12},
+      addAccountCardStyle:{background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8,padding:16,marginTop:16,display:'flex',flexDirection:'column',gap:12},
+      addAccountHeaderStyle:{display:'flex',justifyContent:'space-between',alignItems:'center'},
+      addAccountRowWrapStyle:{display:'flex',flexDirection:'column',gap:12,paddingBottom:16,marginBottom:16,borderBottom:`1px solid ${C.border}`},
+      addAccountTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontWeight:600},
+      addAccountFieldsStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12},
+      addAccountFieldStyle:{display:'flex',flexDirection:'column',gap:4},
+      addAccountLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      addAccountActionsStyle:{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:8},
+      editing:this.state.editing,notEditing:!this.state.editing,startEdit:this.startEdit,saveEdit:this.saveEdit,discardEdit:this.discardEdit,
+      email:this.state.email,onEmail:this.onEmail,rate:this.state.rate,onRate:this.onRate,
+      toggleStatus:this.toggleStatus,statusLabel:this.state.active?'Deactivate':'Activate',statusLabelPlain:this.state.active?'Active':'Inactive',
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1100,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      identityRowStyle:{display:'flex',alignItems:'center',gap:16},
+      avatarLgStyle:{width:56,height:56,borderRadius:'50%',background:C.accentSoft||C.border,color:C.inkHi,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:FONT,fontWeight:600,fontSize:18},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      subTitleStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'4px 0 0'},
+      actionsRowStyle:{display:'flex',gap:8,alignItems:'center'},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      statusBtnStyle:{...btnBase,background:'transparent',color:this.state.active?C.danger:C.success,borderColor:this.state.active?C.danger:C.success},
+      tabRowStyle:{display:'flex',gap:16,borderBottom:`1px solid ${C.border}`,marginBottom:24},
+      radioRowStyle:{display:'flex',gap:8,marginBottom:4},
+      btnGhostSmStyle:{...btnBase,fontSize:12,padding:'4px 12px',background:'transparent',color:C.ink,borderColor:C.border},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginBottom:16},
+      cardGridStyle2:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:16,marginBottom:16},
+      cardTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:'0 0 12px'},
+      fieldRowStyle:{marginBottom:12},
+      kpiGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12},
+      kpiCardStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,padding:12,display:'flex',flexDirection:'column',gap:6},
+      kpiLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      kpiValueStyle:{color:C.inkHi,fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      kpiSuccessValueStyle:{color:C.success,fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      kpiWarnValueStyle:{color:'#C9A24B',fontSize:18,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:8},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      statusChipStyle:{display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color:this.state.active?C.success:C.muted,border:`1px solid ${this.state.active?C.success:C.muted}`},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},
+      activityListStyle:{display:'flex',flexDirection:'column',gap:16},
+      activityItemStyle:{display:'flex',gap:12,alignItems:'flex-start'},
+      activityDotStyle:{width:8,height:8,borderRadius:'50%',background:C.accent,marginTop:6,flexShrink:0},
+      activityTextStyle:{color:C.inkDim,fontFamily:FONT,fontSize:14,margin:0},
+      activityTimeStyle:{color:C.muted,fontFamily:FONT,fontSize:12}
+    };
+  }
+}
+</script>
+</body>
+</html>

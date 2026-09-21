@@ -1,0 +1,187 @@
+{
+  "address_map": {},
+  "description": "Ingest delta tracker. Source payloads are create-only.",
+  "sources": {
+    ".raw/captured/06ef31dc078614b9b1ecd7c3cb3f487fbce5937901bea271d9642537d6757c2a.md": {
+      "hash": "06ef31dc078614b9b1ecd7c3cb3f487fbce5937901bea271d9642537d6757c2a",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/1122ec17c08e43e44aeafbd5559a35005542de93ed622b2e3b7afddb9ed393fd.md": {
+      "hash": "1122ec17c08e43e44aeafbd5559a35005542de93ed622b2e3b7afddb9ed393fd",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/12aafb8d9508f57b7c891d01e82ed90f386e996aaca0d6ed446a9f97480b36fa.md": {
+      "hash": "12aafb8d9508f57b7c891d01e82ed90f386e996aaca0d6ed446a9f97480b36fa",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/1acb3a3a4161b6f46889a91e2fc8022fe266d7ee999f9904bb925e16b4300a56.md": {
+      "hash": "1acb3a3a4161b6f46889a91e2fc8022fe266d7ee999f9904bb925e16b4300a56",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/1c85b23d7835dc8aa77f9ee7a7ef51042a5a7f647e6f339b4172de523964da0a.md": {
+      "hash": "1c85b23d7835dc8aa77f9ee7a7ef51042a5a7f647e6f339b4172de523964da0a",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/1e1859a698275301090c9d9e09f1bb4b36e76fc62d214fccbb177d921e084d3d.md": {
+      "hash": "1e1859a698275301090c9d9e09f1bb4b36e76fc62d214fccbb177d921e084d3d",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/1f348d758470c74cf078390c5940325f371ca21264c7ee36c0e6186751e12885.md": {
+      "hash": "1f348d758470c74cf078390c5940325f371ca21264c7ee36c0e6186751e12885",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/20d435d43eed23ee0a042073d455eed83ba5cfdf3ab5473a4868e33310b8568d.md": {
+      "hash": "20d435d43eed23ee0a042073d455eed83ba5cfdf3ab5473a4868e33310b8568d",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/25e6676185952b65af8621c4af6fba60a49d7f2ae40e04f6a9b451997a44ae1f.md": {
+      "hash": "25e6676185952b65af8621c4af6fba60a49d7f2ae40e04f6a9b451997a44ae1f",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/2a8f1a47eab1f801b5068cff9483711a08f443bbae63309bd660ec2981375ee1.md": {
+      "hash": "2a8f1a47eab1f801b5068cff9483711a08f443bbae63309bd660ec2981375ee1",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/2d02f38446a95d61175056423a28ef31255d47489fc2081ae3330b1c9f0eb5d7.md": {
+      "hash": "2d02f38446a95d61175056423a28ef31255d47489fc2081ae3330b1c9f0eb5d7",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/4167f2ddf4f70fc7354e64061197027b98eef2de2bc403ded03ee23d32eeed90.md": {
+      "hash": "4167f2ddf4f70fc7354e64061197027b98eef2de2bc403ded03ee23d32eeed90",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/44205e2a62ccb96f19797fcea08d6bd9772f9e32ef4836e61f9701e609b0170d.md": {
+      "hash": "44205e2a62ccb96f19797fcea08d6bd9772f9e32ef4836e61f9701e609b0170d",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/4e1f523d8f5537b3c653711c47e654e389fcceca4c5440e44b013f755558caf9.md": {
+      "hash": "4e1f523d8f5537b3c653711c47e654e389fcceca4c5440e44b013f755558caf9",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/52d81259e54b2cf259f1d98d8472c2240e74960e5af03613691d9ac9e874f870.md": {
+      "hash": "52d81259e54b2cf259f1d98d8472c2240e74960e5af03613691d9ac9e874f870",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/5303501bf787bbcd4c1f0d8b5ea94d687889c2dda5a31d2702075ba733e7aaf8.md": {
+      "hash": "5303501bf787bbcd4c1f0d8b5ea94d687889c2dda5a31d2702075ba733e7aaf8",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/67036bf37fc2d38494a75ca091f65a9f9eded7701474c43e16d3adf233106a86.md": {
+      "hash": "67036bf37fc2d38494a75ca091f65a9f9eded7701474c43e16d3adf233106a86",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/844bed22b462bbc97503e869ef3759603528ebf0e2b108815a4760458cbf081a.md": {
+      "hash": "844bed22b462bbc97503e869ef3759603528ebf0e2b108815a4760458cbf081a",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/89b49a2fc14a76e55dd4317613788f1ac6a7f81949c185154f8a1653e2ab940b.md": {
+      "hash": "89b49a2fc14a76e55dd4317613788f1ac6a7f81949c185154f8a1653e2ab940b",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/8b0e2c3c9f252086ace960cbd8d910d0c1b01bcfa64a424d3f8770a5f521c5c7.md": {
+      "hash": "8b0e2c3c9f252086ace960cbd8d910d0c1b01bcfa64a424d3f8770a5f521c5c7",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/9a19de648cf41007fd478b27e072899fc17b73127de0012c2668b54c268bdbca.md": {
+      "hash": "9a19de648cf41007fd478b27e072899fc17b73127de0012c2668b54c268bdbca",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/a299d98429a8107973002944048e08798870b42c4d8e5ec4aa90288e19401d51.md": {
+      "hash": "a299d98429a8107973002944048e08798870b42c4d8e5ec4aa90288e19401d51",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/b703f85246928ff2f56ca249f8cb182398c65becf36e74a57ab644f1ba0e9edf.md": {
+      "hash": "b703f85246928ff2f56ca249f8cb182398c65becf36e74a57ab644f1ba0e9edf",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/b7f85699580ae9f9224751ba88e50f44e1743234d391ca47e5fc6d94427c1ba9.md": {
+      "hash": "b7f85699580ae9f9224751ba88e50f44e1743234d391ca47e5fc6d94427c1ba9",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/dd98a2da584b38e6d035302ddd5798cfe56aef14893ceac86a1bbe7e49a17f72.md": {
+      "hash": "dd98a2da584b38e6d035302ddd5798cfe56aef14893ceac86a1bbe7e49a17f72",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/e378785e4a9ed48f71ef7b6e39f0ad796d1004ef03a2ba010cbeade1f4162dff.md": {
+      "hash": "e378785e4a9ed48f71ef7b6e39f0ad796d1004ef03a2ba010cbeade1f4162dff",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/f1bfdf410df4b8f4c35d08df7cef10a25268bf012d70d3af533bd0b11c898212.md": {
+      "hash": "f1bfdf410df4b8f4c35d08df7cef10a25268bf012d70d3af533bd0b11c898212",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/f31c48c9ffbcabc06033311283e61fd9e12dbbdbb10c15101600094ac36a6e15.md": {
+      "hash": "f31c48c9ffbcabc06033311283e61fd9e12dbbdbb10c15101600094ac36a6e15",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/fc398adcc4900ddc59829db215afce36c8e99fe8937a148e680e14a9d0975437.md": {
+      "hash": "fc398adcc4900ddc59829db215afce36c8e99fe8937a148e680e14a9d0975437",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    },
+    ".raw/captured/fdfcbff6957e3e5a6e04e995eaabbfceca6c80231164be0d31eb78d923e3debc.md": {
+      "hash": "fdfcbff6957e3e5a6e04e995eaabbfceca6c80231164be0d31eb78d923e3debc",
+      "pages_created": [
+        "wiki/index.md"
+      ]
+    }
+  },
+  "version": 1
+}

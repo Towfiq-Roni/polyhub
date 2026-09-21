@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Projects.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Milestone" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="ProjectDetail.dc.html" style="{{ backLinkStyle }}">← Back to Project</a>
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Phase 2: Integrations</h1>
+        <button type="button" style="{{ statusBtnStyle }}" onClick="{{ toggleDone }}">{{ statusLabel }}</button>
+      </header>
+      <p style="{{ metaStyle }}">Due 2026-10-15 · Nova ERP Rollout</p>
+      <h2 style="{{ sectionTitleStyle }}">Deliverables</h2>
+      <div style="{{ deliverableListStyle }}">
+        <sc-for list="{{ deliverables }}" as="d" hint-placeholder-count="3">
+          <div style="{{ rowStyle }}">
+            <button type="button" style="{{ d.checkStyle }}" onClick="{{ d.onToggle }}">{{ d.checkMark }}</button>
+            <a href="DeliverableDetail.dc.html" style="{{ d.labelStyle }}">{{ d.name }}</a>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const SEED=[{id:1,name:'Payment gateway integration',done:true},{id:2,name:'Third-party API connectors',done:false},{id:3,name:'SSO configuration',done:false}];
+class Component extends DCLogic {
+  state={theme:'dark',done:false,deliverables:SEED};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  toggleDone=()=>this.setState(s=>({done:!s.done}));
+  toggleD=(id)=>()=>this.setState(s=>({deliverables:s.deliverables.map(d=>d.id===id?{...d,done:!d.done}:d)}));
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const deliverables=this.state.deliverables.map(d=>({...d,onToggle:this.toggleD(d.id),checkMark:d.done?'✓':'',
+      checkStyle:{width:20,height:20,borderRadius:4,border:`1px solid ${d.done?C.success:C.border}`,background:d.done?C.success:'transparent',color:C.bg,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',padding:0},
+      labelStyle:{color:C.ink,fontFamily:FONT,fontSize:14,textDecoration:d.done?'line-through':'none',opacity:d.done?0.6:1}}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,toggleDone:this.toggleDone,statusLabel:this.state.done?'Mark Incomplete':'Mark Complete',deliverables,
+      statusBtnStyle:{...btnBase,background:this.state.done?C.success:'transparent',color:this.state.done?(this.state.theme==='light'?'#fff':'#010101'):C.success,borderColor:C.success},
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:900,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:8,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      metaStyle:{color:C.muted,fontFamily:FONT,fontSize:13,margin:'0 0 32px'},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:15,fontWeight:600,margin:'0 0 12px'},
+      deliverableListStyle:{display:'flex',flexDirection:'column',gap:12},
+      rowStyle:{display:'flex',alignItems:'center',gap:12,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:12}
+    };
+  }
+}
+</script>
+</body>
+</html>

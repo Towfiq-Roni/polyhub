@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone Detail · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item" href="team-members.html" data-label="Team Members">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item" href="clients.html" data-label="Clients">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item active" href="projects.html" data-label="Projects" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item" href="accounts.html" data-label="Accounts">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Milestone Detail</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="breadcrumbs" style="margin-block-end:var(--space-md)"><a href="project-detail.html">← Back to Project</a></div>
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title" id="msName">Phase 2: Integrations</h2>
+            <p class="page-subtitle" id="msProject">Nova ERP Rollout</p>
+          </div>
+          <div class="page-actions">
+            <label for="msStatusSelect" class="meta" style="align-self:center">Work Status</label>
+            <select class="select" id="msStatusSelect" aria-label="Milestone status">
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Milestone Info</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Due Date</label><p id="msDue">2026-10-15</p></div>
+              <div class="field"><label>Receivable Amount</label><p id="msReceivable">৳600,000.00</p></div>
+            </div>
+          </div>
+          <div class="card">
+            <!-- ponytail: display-only payment record; work status (above) and payment status (below) are independent machines per CLAUDE.md #5; no editable amount/balance input here -->
+            <div class="card-header"><h3 class="card-title">Payment Record</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Invoiced</label><p id="msInvoiced">৳600,000.00</p></div>
+              <div class="field"><label>Received</label><p id="msPaymentReceived">৳0.00</p></div>
+              <div class="field"><label>Payment Status</label><p><span class="chip-pay chip-pay--neutral" id="msPaymentChip">Unpaid</span></p></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="margin-block:var(--space-lg) var(--space-sm)">Deliverables</h3>
+        <div class="attention-list" id="deliverableList"></div>
+        <div class="empty-state" id="noDeliverablesEmpty" hidden>
+          <h3>No deliverables yet</h3>
+          <p>This milestone has no deliverables attached.</p>
+        </div>
+
+        <h3 class="card-title" style="margin-block:var(--space-lg) var(--space-sm)">Comments</h3>
+        <div class="attention-list" id="commentList" style="margin-block-end:var(--space-md)"></div>
+        <div class="field">
+          <label for="newCommentInput">Add a comment</label>
+          <textarea class="input" id="newCommentInput" rows="3" placeholder="Add a comment..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-primary btn-sm" id="addCommentBtn">Comment</button>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function getQueryId() {
+      try { return new URLSearchParams(location.search).get('id'); } catch (e) { return null; }
+    }
+
+    var MILESTONES = {
+      1: { name: 'Discovery & Scoping', project: 'Nova ERP Rollout', due: '2026-06-15', receivable: 0, invoiced: 0, received: 0, workStatus: 'Completed' },
+      2: { name: 'Phase 1: Core Modules', project: 'Nova ERP Rollout', due: '2026-09-01', receivable: 800000, invoiced: 800000, received: 800000, workStatus: 'Completed' },
+      3: { name: 'Phase 2: Integrations', project: 'Nova ERP Rollout', due: '2026-10-15', receivable: 600000, invoiced: 600000, received: 0, workStatus: 'In Progress' },
+      4: { name: 'UAT & Go-Live', project: 'Nova ERP Rollout', due: '2026-11-30', receivable: 450000, invoiced: 0, received: 0, workStatus: 'Not Started' }
+    };
+    var id = getQueryId() || '3';
+    var milestone = MILESTONES[id] || MILESTONES['3'];
+
+    var PAYMENT_CHIP = { Unpaid: 'chip-pay--neutral', Partial: 'chip-pay--warning', Paid: 'chip-pay--success', Overdue: 'chip-pay--overdue' };
+    function paymentStatus(m) {
+      if (m.received <= 0) return m.invoiced > 0 ? 'Unpaid' : 'Unpaid';
+      if (m.received < m.invoiced) return 'Partial';
+      return 'Paid';
+    }
+
+    function renderHeader() {
+      document.getElementById('msName').textContent = milestone.name;
+      document.getElementById('msProject').textContent = milestone.project;
+      document.title = milestone.name + ' · hub';
+      document.getElementById('msDue').textContent = milestone.due;
+      document.getElementById('msReceivable').textContent = fmt(milestone.receivable);
+      document.getElementById('msInvoiced').textContent = fmt(milestone.invoiced);
+      document.getElementById('msPaymentReceived').textContent = fmt(milestone.received);
+      var status = paymentStatus(milestone);
+      var chip = document.getElementById('msPaymentChip');
+      chip.textContent = status;
+      chip.className = 'chip-pay ' + (PAYMENT_CHIP[status] || 'chip-pay--neutral');
+      document.getElementById('msStatusSelect').value = milestone.workStatus;
+    }
+    document.getElementById('msStatusSelect').addEventListener('change', function (e) {
+      /* work status only; never blocks or is blocked by the payment record above (CLAUDE.md #5) */
+      milestone.workStatus = e.target.value;
+    });
+
+    /* ---- Deliverables checklist: status select per deliverable, linked to deliverable-detail.html ---- */
+    var STATUS_CHIP = { Draft: 'chip--neutral', Submitted: 'chip--info', Approved: 'chip--success', 'Changes Requested': 'chip--warning', Rejected: 'chip--danger' };
+    var STATUSES = ['Draft', 'Submitted', 'Approved', 'Changes Requested', 'Rejected'];
+    var deliverables = [
+      { id: 1, name: 'Payment gateway integration', status: 'Approved' },
+      { id: 2, name: 'Third-party API connectors', status: 'Submitted' },
+      { id: 3, name: 'SSO configuration', status: 'Draft' }
+    ];
+    var deliverableList = document.getElementById('deliverableList');
+    var noDeliverablesEmpty = document.getElementById('noDeliverablesEmpty');
+
+    function statusOptions(selected) {
+      return STATUSES.map(function (s) {
+        return '<option value="' + s + '"' + (s === selected ? ' selected' : '') + '>' + s + '</option>';
+      }).join('');
+    }
+
+    function renderDeliverables() {
+      deliverableList.innerHTML = deliverables.map(function (d) {
+        return '<div class="attention-item" data-deliverable-id="' + d.id + '">' +
+          '<span class="chip ' + (STATUS_CHIP[d.status] || 'chip--neutral') + '">' + escapeHtml(d.status) + '</span>' +
+          '<div class="attention-text-wrap"><a class="link attention-title" href="deliverable-detail.html?id=' + d.id + '">' + escapeHtml(d.name) + '</a></div>' +
+          '<div class="attention-actions"><select class="select" data-deliverable-status="' + d.id + '">' + statusOptions(d.status) + '</select></div>' +
+        '</div>';
+      }).join('');
+      noDeliverablesEmpty.hidden = deliverables.length !== 0;
+    }
+    deliverableList.addEventListener('change', function (e) {
+      var select = e.target.closest('[data-deliverable-status]');
+      if (!select) return;
+      var dId = Number(select.getAttribute('data-deliverable-status'));
+      deliverables.forEach(function (d) { if (d.id === dId) d.status = select.value; });
+      renderDeliverables();
+    });
+
+    /* ---- Comments thread ---- */
+    var comments = [
+      { author: 'Rahim Uddin', text: 'Please prioritize the payments connector first.', time: '2026-08-20 10:15' }
+    ];
+    var commentList = document.getElementById('commentList');
+    function renderComments() {
+      commentList.innerHTML = comments.map(function (c) {
+        return '<div class="attention-item"><div class="attention-text-wrap">' +
+          '<div class="attention-title">' + escapeHtml(c.author) + ' <span class="meta">· ' + escapeHtml(c.time) + '</span></div>' +
+          '<p style="color:var(--ink-dim);margin:4px 0 0;font-size:var(--text-body)">' + escapeHtml(c.text) + '</p>' +
+        '</div></div>';
+      }).join('');
+    }
+    document.getElementById('addCommentBtn').addEventListener('click', function () {
+      var input = document.getElementById('newCommentInput');
+      var text = input.value.trim();
+      if (!text) return;
+      comments.push({ author: 'You', text: text, time: new Date().toISOString().slice(0, 16).replace('T', ' ') });
+      input.value = '';
+      renderComments();
+    });
+
+    renderHeader();
+    renderDeliverables();
+    renderComments();
+  })();
+</script>
+</body>
+</html>

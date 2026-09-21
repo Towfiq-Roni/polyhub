@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Settings.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Settings" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <h1 style="{{ pageTitleStyle }}">Settings</h1>
+      <section style="{{ sectionStyle }}">
+        <h2 style="{{ sectionTitleStyle }}">Company Profile</h2>
+        <label style="{{ labelStyle }}">Company name</label>
+        <input type="text" style="{{ inputStyle }}" value="{{ companyName }}" onInput="{{ onCompanyName }}"></input>
+        <label style="{{ labelStyle }}">Currency</label>
+        <select style="{{ inputStyle }}" value="{{ currency }}" onChange="{{ onCurrency }}"><option value="BDT">BDT — Bangladeshi Taka</option><option value="USD">USD — US Dollar</option></select>
+      </section>
+      <section style="{{ sectionStyle }}">
+        <h2 style="{{ sectionTitleStyle }}">Appearance</h2>
+        <div style="{{ toggleRowStyle }}"><span style="{{ toggleLabelStyle }}">Dark mode</span>
+          <button type="button" style="{{ switchTrackStyle }}" onClick="{{ toggleTheme }}"><span style="{{ switchThumbStyle }}"></span></button>
+        </div>
+      </section>
+      <section style="{{ sectionStyle }}">
+        <h2 style="{{ sectionTitleStyle }}">Notifications</h2>
+        <div style="{{ toggleRowStyle }}"><span style="{{ toggleLabelStyle }}">Email me on new leads</span>
+          <button type="button" style="{{ leadsSwitchStyle }}" onClick="{{ toggleLeadNotif }}"><span style="{{ leadsThumbStyle }}"></span></button>
+        </div>
+        <div style="{{ toggleRowStyle }}"><span style="{{ toggleLabelStyle }}">Email me on overdue invoices</span>
+          <button type="button" style="{{ invoiceSwitchStyle }}" onClick="{{ toggleInvoiceNotif }}"><span style="{{ invoiceThumbStyle }}"></span></button>
+        </div>
+      </section>
+      <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ save }}">{{ saveLabel }}</button>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+function switchStyle(on,C){ return {width:36,height:20,borderRadius:10,border:`1px solid ${C.border}`,background:on?C.accent:'transparent',position:'relative',cursor:'pointer',padding:0}; }
+function thumbStyle(on,C){ return {position:'absolute',top:1,left:on?17:1,width:16,height:16,borderRadius:'50%',background:on?C.accentInk:C.muted,transition:'left 120ms'}; }
+class Component extends DCLogic {
+  state={theme:'dark',companyName:'DEA Ltd.',currency:'BDT',leadNotif:true,invoiceNotif:true,saved:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onCompanyName=(e)=>this.setState({companyName:e.target.value}); onCurrency=(e)=>this.setState({currency:e.target.value});
+  toggleLeadNotif=()=>this.setState(s=>({leadNotif:!s.leadNotif})); toggleInvoiceNotif=()=>this.setState(s=>({invoiceNotif:!s.invoiceNotif}));
+  save=()=>{ this.setState({saved:true}); setTimeout(()=>this.setState({saved:false}),1500); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,companyName:this.state.companyName,onCompanyName:this.onCompanyName,currency:this.state.currency,onCurrency:this.onCurrency,
+      toggleLeadNotif:this.toggleLeadNotif,toggleInvoiceNotif:this.toggleInvoiceNotif,save:this.save,saveLabel:this.state.saved?'Saved':'Save Changes',
+      switchTrackStyle:switchStyle(this.state.theme==='dark',C),switchThumbStyle:thumbStyle(this.state.theme==='dark',C),
+      leadsSwitchStyle:switchStyle(this.state.leadNotif,C),leadsThumbStyle:thumbStyle(this.state.leadNotif,C),
+      invoiceSwitchStyle:switchStyle(this.state.invoiceNotif,C),invoiceThumbStyle:thumbStyle(this.state.invoiceNotif,C),
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:640,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:'0 0 24px'},
+      sectionStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:24,marginBottom:16,display:'flex',flexDirection:'column',gap:10},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:'0 0 4px'},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      toggleRowStyle:{display:'flex',alignItems:'center',justifyContent:'space-between'},
+      toggleLabelStyle:{color:C.inkDim,fontFamily:FONT,fontSize:14},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk}
+    };
+  }
+}
+</script>
+</body>
+</html>

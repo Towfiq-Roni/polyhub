@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounts · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item" href="team-members.html" data-label="Team Members">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item" href="clients.html" data-label="Clients">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item" href="projects.html" data-label="Projects">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item active" href="accounts.html" data-label="Accounts" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Accounts</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Accounts</h2>
+            <p class="page-subtitle">Your organization's cash, bank, and MFS accounts, used as the "our account" side of every payment entry.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="addAccountBtn">Add Account</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Bank / Provider</th>
+                <th>Account Name / Type</th>
+                <th>Account Number</th>
+                <th class="num">Balance</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="accountsBody"></tbody>
+          </table>
+        </div>
+        <p class="hint" style="margin-block-start:var(--space-xs)"><!-- ponytail: static display-only balance for this Phase 0 mockup → Phase 2+ upgrade path: compute live as opening + ΣIN − ΣOUT per account (CLAUDE.md #2), never a stored mutable field -->Balance is always computed (opening balance plus all posted transactions). It can never be edited directly.</p>
+        <div class="empty-state" id="accountsEmpty" hidden>
+          <h3>No accounts yet</h3>
+          <p>Add your first cash, bank, or MFS account to get started.</p>
+        </div>
+
+        <div class="modal" id="addAccountModal" hidden>
+          <div class="modal-scrim" data-close-modal="add"></div>
+          <div class="modal-card" role="dialog" aria-label="Add account">
+            <div class="modal-header"><h2 class="modal-title">Add Account</h2></div>
+            <div class="modal-body">
+              <div class="field">
+                <label>Method</label>
+                <div class="page-actions" role="group" aria-label="Method" id="addMethodGroup">
+                  <button type="button" class="btn btn-primary btn-sm" data-method="Bank">Bank</button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-method="MFS">MFS</button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-method="Cash">Cash</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="addBankName">Bank / provider name</label>
+                <input type="text" class="input" id="addBankName" placeholder="e.g. HSBC, bKash, Petty Cash">
+              </div>
+              <div class="error-text" id="addBankNameError" hidden>Bank / provider name is required.</div>
+              <div class="field">
+                <label for="addAccountType">Account name / type</label>
+                <input type="text" class="input" id="addAccountType" placeholder="e.g. Current, Payroll, Merchant">
+              </div>
+              <div class="error-text" id="addAccountTypeError" hidden>Distinguish this account with a name or type.</div>
+              <div class="field">
+                <label for="addAccountNumber">Account number</label>
+                <input type="text" class="input" id="addAccountNumber" placeholder="Account / wallet number">
+              </div>
+              <div class="field">
+                <label for="addOpeningBalance">Opening balance (৳)</label>
+                <input type="number" class="input" id="addOpeningBalance" placeholder="0">
+              </div>
+              <p class="hint">Opening balance is set once, at creation. Every balance shown afterward is computed, never edited.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-ghost" data-close-modal="add">Cancel</button>
+              <button type="button" class="btn btn-primary" id="submitAddAccountBtn">Save Account</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" id="editAccountModal" hidden>
+          <div class="modal-scrim" data-close-modal="edit"></div>
+          <div class="modal-card" role="dialog" aria-label="Edit account">
+            <div class="modal-header"><h2 class="modal-title">Edit Account</h2></div>
+            <div class="modal-body">
+              <div class="field">
+                <label>Method</label>
+                <div class="page-actions" role="group" aria-label="Method" id="editMethodGroup">
+                  <button type="button" class="btn btn-ghost btn-sm" data-method="Bank">Bank</button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-method="MFS">MFS</button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-method="Cash">Cash</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="editBankName">Bank / provider name</label>
+                <input type="text" class="input" id="editBankName" placeholder="e.g. HSBC, bKash, Petty Cash">
+              </div>
+              <div class="error-text" id="editBankNameError" hidden>Bank / provider name is required.</div>
+              <div class="field">
+                <label for="editAccountType">Account name / type</label>
+                <input type="text" class="input" id="editAccountType" placeholder="e.g. Current, Payroll, Merchant">
+              </div>
+              <div class="error-text" id="editAccountTypeError" hidden>Distinguish this account with a name or type.</div>
+              <div class="field">
+                <label for="editAccountNumber">Account number</label>
+                <input type="text" class="input" id="editAccountNumber" placeholder="Account / wallet number">
+              </div>
+              <div class="field">
+                <label>Balance</label>
+                <p class="amount" id="editBalanceDisplay" style="margin:0">৳0.00</p>
+                <p class="hint">Computed as opening balance plus all posted transactions; not editable here (Phase 2+: opening + ΣIN − ΣOUT).</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-ghost" data-close-modal="edit">Cancel</button>
+              <button type="button" class="btn btn-primary" id="submitEditAccountBtn">Save Account</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" id="viewAccountModal" hidden>
+          <div class="modal-scrim" data-close-modal="view"></div>
+          <div class="modal-card" role="dialog" aria-label="Account details">
+            <div class="modal-header">
+              <h2 class="modal-title" id="viewBankName">-</h2>
+            </div>
+            <div class="modal-body">
+              <p class="hint" id="viewAccountType" style="margin:0 0 var(--space-sm)">-</p>
+              <div class="grid grid-2">
+                <div class="field"><label>Method</label><p style="margin:0" id="viewMethod">-</p></div>
+                <div class="field"><label>Status</label><p style="margin:0" id="viewStatus">-</p></div>
+                <div class="field"><label>Account Number</label><p style="margin:0" id="viewAccountNumber">-</p></div>
+                <div class="field"><label>Balance</label><p class="amount" style="margin:0" id="viewBalance">-</p></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-ghost" data-close-modal="view">Close</button>
+              <button type="button" class="btn btn-primary" id="editFromViewBtn">Edit Account</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    var METHOD_CHIP = { Bank: 'chip--info', MFS: 'chip--success', Cash: 'chip--neutral' };
+    var STATUS_CHIP = { Active: 'chip--success', Inactive: 'chip--neutral' };
+
+    var SEED = [
+      { id: 1, method: 'Bank', bankName: 'HSBC', accountType: 'Current', accountNumber: '0011-223344-01', openingBalance: 12500000, balance: 12500000, status: 'Active' },
+      { id: 2, method: 'Bank', bankName: 'Dutch-Bangla', accountType: 'Savings', accountNumber: '0022-556677-02', openingBalance: 4200000, balance: 4200000, status: 'Active' },
+      { id: 3, method: 'Cash', bankName: 'Petty Cash', accountType: 'Cash', accountNumber: '-', openingBalance: 85000, balance: 85000, status: 'Active' },
+      { id: 4, method: 'MFS', bankName: 'bKash', accountType: 'Merchant', accountNumber: '01711-000111', openingBalance: 320000, balance: 320000, status: 'Active' },
+      { id: 5, method: 'MFS', bankName: 'Nagad', accountType: 'Merchant', accountNumber: '01911-222333', openingBalance: 0, balance: 0, status: 'Active' },
+      { id: 6, method: 'Bank', bankName: 'Old City Bank', accountType: 'Current', accountNumber: '0099-112233-00', openingBalance: 0, balance: 0, status: 'Inactive' }
+    ];
+
+    var accounts = SEED;
+    try {
+      var saved = JSON.parse(localStorage.getItem('hub-bank-accounts'));
+      if (Array.isArray(saved) && saved.length) accounts = saved;
+    } catch (e) {}
+
+    function persist() {
+      try { localStorage.setItem('hub-bank-accounts', JSON.stringify(accounts)); } catch (e) {}
+    }
+
+    function renderAccounts() {
+      var body = document.getElementById('accountsBody');
+      body.innerHTML = accounts.map(function (a) {
+        return '<tr>' +
+          '<td><span class="chip ' + (METHOD_CHIP[a.method] || 'chip--neutral') + '">' + a.method + '</span></td>' +
+          '<td>' + escapeHtml(a.bankName) + '</td>' +
+          '<td>' + escapeHtml(a.accountType) + '</td>' +
+          '<td>' + escapeHtml(a.accountNumber) + '</td>' +
+          '<td class="num data">' + fmt(a.balance) + '</td>' +
+          '<td><span class="chip ' + (STATUS_CHIP[a.status] || 'chip--neutral') + '">' + a.status + '</span></td>' +
+          '<td>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-view="' + a.id + '">View</button> ' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-edit="' + a.id + '">Edit</button> ' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-toggle="' + a.id + '">' + (a.status === 'Active' ? 'Deactivate' : 'Activate') + '</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+      document.getElementById('accountsEmpty').hidden = accounts.length > 0;
+
+      body.querySelectorAll('[data-view]').forEach(function (btn) {
+        btn.addEventListener('click', function () { openView(parseInt(btn.dataset.view, 10)); });
+      });
+      body.querySelectorAll('[data-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () { openEdit(parseInt(btn.dataset.edit, 10)); });
+      });
+      body.querySelectorAll('[data-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function () { toggleStatus(parseInt(btn.dataset.toggle, 10)); });
+      });
+    }
+
+    function toggleStatus(id) {
+      accounts = accounts.map(function (a) {
+        return a.id === id ? Object.assign({}, a, { status: a.status === 'Active' ? 'Inactive' : 'Active' }) : a;
+      });
+      persist();
+      renderAccounts();
+    }
+
+    function setupMethodGroup(groupEl, onSelect) {
+      groupEl.querySelectorAll('button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          groupEl.querySelectorAll('button').forEach(function (b) { b.className = 'btn btn-ghost btn-sm'; });
+          btn.className = 'btn btn-primary btn-sm';
+          onSelect(btn.dataset.method);
+        });
+      });
+    }
+    function selectMethod(groupEl, method) {
+      groupEl.querySelectorAll('button').forEach(function (b) {
+        b.className = 'btn ' + (b.dataset.method === method ? 'btn-primary' : 'btn-ghost') + ' btn-sm';
+      });
+    }
+
+    var addMethodGroup = document.getElementById('addMethodGroup');
+    var addMethod = 'Bank';
+    setupMethodGroup(addMethodGroup, function (m) { addMethod = m; });
+
+    var editMethodGroup = document.getElementById('editMethodGroup');
+    var editMethod = 'Bank';
+    var editingId = null;
+    setupMethodGroup(editMethodGroup, function (m) { editMethod = m; });
+
+    var addAccountModal = document.getElementById('addAccountModal');
+    var editAccountModal = document.getElementById('editAccountModal');
+    var viewAccountModal = document.getElementById('viewAccountModal');
+    var viewingId = null;
+
+    document.getElementById('addAccountBtn').addEventListener('click', function () {
+      addMethod = 'Bank';
+      selectMethod(addMethodGroup, 'Bank');
+      document.getElementById('addBankName').value = '';
+      document.getElementById('addAccountType').value = '';
+      document.getElementById('addAccountNumber').value = '';
+      document.getElementById('addOpeningBalance').value = '';
+      document.getElementById('addBankNameError').hidden = true;
+      document.getElementById('addAccountTypeError').hidden = true;
+      addAccountModal.hidden = false;
+    });
+    addAccountModal.querySelectorAll('[data-close-modal="add"]').forEach(function (el) {
+      el.addEventListener('click', function () { addAccountModal.hidden = true; });
+    });
+    document.getElementById('submitAddAccountBtn').addEventListener('click', function () {
+      var bankName = document.getElementById('addBankName').value.trim();
+      var accountType = document.getElementById('addAccountType').value.trim();
+      var bankNameError = !bankName;
+      var typeError = !accountType;
+      document.getElementById('addBankNameError').hidden = !bankNameError;
+      document.getElementById('addAccountTypeError').hidden = !typeError;
+      if (bankNameError || typeError) return;
+      var opening = parseFloat(document.getElementById('addOpeningBalance').value) || 0;
+      accounts = accounts.concat([{
+        id: Date.now(),
+        method: addMethod,
+        bankName: bankName,
+        accountType: accountType,
+        accountNumber: document.getElementById('addAccountNumber').value.trim() || '-',
+        openingBalance: opening,
+        balance: opening,
+        status: 'Active'
+      }]);
+      persist();
+      addAccountModal.hidden = true;
+      renderAccounts();
+    });
+
+    function openEdit(id) {
+      var a = accounts.find(function (x) { return x.id === id; });
+      if (!a) return;
+      editingId = id;
+      editMethod = a.method;
+      selectMethod(editMethodGroup, a.method);
+      document.getElementById('editBankName').value = a.bankName;
+      document.getElementById('editAccountType').value = a.accountType;
+      document.getElementById('editAccountNumber').value = a.accountNumber === '-' ? '' : a.accountNumber;
+      document.getElementById('editBalanceDisplay').textContent = fmt(a.balance);
+      document.getElementById('editBankNameError').hidden = true;
+      document.getElementById('editAccountTypeError').hidden = true;
+      viewAccountModal.hidden = true;
+      editAccountModal.hidden = false;
+    }
+    editAccountModal.querySelectorAll('[data-close-modal="edit"]').forEach(function (el) {
+      el.addEventListener('click', function () { editAccountModal.hidden = true; });
+    });
+    document.getElementById('submitEditAccountBtn').addEventListener('click', function () {
+      var bankName = document.getElementById('editBankName').value.trim();
+      var accountType = document.getElementById('editAccountType').value.trim();
+      var bankNameError = !bankName;
+      var typeError = !accountType;
+      document.getElementById('editBankNameError').hidden = !bankNameError;
+      document.getElementById('editAccountTypeError').hidden = !typeError;
+      if (bankNameError || typeError) return;
+      accounts = accounts.map(function (a) {
+        if (a.id !== editingId) return a;
+        return Object.assign({}, a, {
+          method: editMethod,
+          bankName: bankName,
+          accountType: accountType,
+          accountNumber: document.getElementById('editAccountNumber').value.trim() || '-'
+        });
+      });
+      persist();
+      editAccountModal.hidden = true;
+      renderAccounts();
+    });
+
+    function openView(id) {
+      var a = accounts.find(function (x) { return x.id === id; });
+      if (!a) return;
+      viewingId = id;
+      document.getElementById('viewBankName').textContent = a.bankName;
+      document.getElementById('viewAccountType').textContent = a.accountType;
+      document.getElementById('viewMethod').innerHTML = '<span class="chip ' + (METHOD_CHIP[a.method] || 'chip--neutral') + '">' + a.method + '</span>';
+      document.getElementById('viewStatus').innerHTML = '<span class="chip ' + (STATUS_CHIP[a.status] || 'chip--neutral') + '">' + a.status + '</span>';
+      document.getElementById('viewAccountNumber').textContent = a.accountNumber;
+      document.getElementById('viewBalance').textContent = fmt(a.balance);
+      viewAccountModal.hidden = false;
+    }
+    viewAccountModal.querySelectorAll('[data-close-modal="view"]').forEach(function (el) {
+      el.addEventListener('click', function () { viewAccountModal.hidden = true; });
+    });
+    document.getElementById('editFromViewBtn').addEventListener('click', function () {
+      viewAccountModal.hidden = true;
+      openEdit(viewingId);
+    });
+
+    renderAccounts();
+  })();
+</script>
+</body>
+</html>

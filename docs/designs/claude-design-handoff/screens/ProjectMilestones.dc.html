@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="ProjectMilestones.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Milestones" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Milestones</h1></header>
+      <label style="{{ labelStyle }}">Project</label>
+      <select style="{{ selectStyle }}" value="{{ selectedProject }}" onChange="{{ onSelectProject }}">
+        <option value="">Select a project…</option>
+        <sc-for list="{{ projectOptions }}" as="p" hint-placeholder-count="5"><option value="{{ p }}">{{ p }}</option></sc-for>
+      </select>
+
+      <sc-if value="{{ !selectedProject }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ emptyStateStyle }}">
+          <h2 style="{{ emptyTitleStyle }}">No project selected</h2>
+          <p style="{{ emptyTextStyle }}">Choose a project above to see and manage its milestones, due dates, and receivable amounts.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ selectedProject }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ progressWrapStyle }}"><div style="{{ progressLabelRowStyle }}"><span>Overall Progress</span><span>{{ progress }}%</span></div>
+          <div style="{{ barTrackStyle }}"><div style="{{ barFillStyle }}"></div></div>
+        </div>
+
+        <div style="{{ milestoneListStyle }}">
+          <sc-for list="{{ milestoneRows }}" as="m" hint-placeholder-count="4">
+            <div style="{{ milestoneRowStyle }}">
+              <sc-if value="{{ !m.editing }}" hint-placeholder-val="{{ true }}">
+                <button type="button" style="{{ m.checkStyle }}" onClick="{{ m.onToggle }}">{{ m.checkMark }}</button>
+                <span style="{{ m.labelStyle }}">{{ m.name }}</span>
+                <span style="{{ amountStyle }}">{{ m.receivableFmt }}</span>
+                <span style="{{ dueStyle }}">{{ m.due }}</span>
+                <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onEdit }}">Edit</button>
+                <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onRemove }}">Remove</button>
+              </sc-if>
+              <sc-if value="{{ m.editing }}" hint-placeholder-val="{{ false }}">
+                <input type="text" style="{{ inlineInputStyle }}" value="{{ m.editName }}" onInput="{{ m.onEditName }}"></input>
+                <input type="date" style="{{ inlineInputStyle }}" value="{{ m.editDue }}" onInput="{{ m.onEditDue }}"></input>
+                <input type="number" style="{{ inlineNumStyle }}" value="{{ m.editReceivable }}" onInput="{{ m.onEditReceivable }}"></input>
+                <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ m.onCancelEdit }}">Cancel</button>
+                <button type="button" style="{{ btnPrimarySmStyle }}" onClick="{{ m.onSaveEdit }}">Save</button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ noMilestones }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ emptyStateStyle }}"><h2 style="{{ emptyTitleStyle }}">No milestones yet</h2><p style="{{ emptyTextStyle }}">Add the first milestone for this project below.</p></div>
+        </sc-if>
+
+        <sc-if value="{{ !addingMilestone }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ triggerWrapStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAddMilestone }}">+ Add Milestone</button></div>
+        </sc-if>
+        <sc-if value="{{ addingMilestone }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ addCardStyle }}">
+            <sc-for list="{{ drafts }}" as="d" hint-placeholder-count="1">
+              <div style="{{ draftRowWrapStyle }}">
+                <div style="{{ addCardHeaderStyle }}"><span style="{{ addCardTitleStyle }}">{{ d.num }}.</span><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ d.onRemove }}">Remove</button></div>
+                <div style="{{ addFieldsStyle }}">
+                  <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Name</label><input type="text" style="{{ inputStyle }}" value="{{ d.name }}" onInput="{{ d.onName }}" placeholder="e.g. QA Sign-off"></input></div>
+                  <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Due date</label><input type="date" style="{{ inputStyle }}" value="{{ d.due }}" onInput="{{ d.onDue }}"></input></div>
+                  <div style="{{ addFieldStyle }}"><label style="{{ addFieldLabelStyle }}">Receivable (৳)</label><input type="number" style="{{ inputStyle }}" value="{{ d.receivable }}" onInput="{{ d.onReceivable }}" placeholder="0"></input></div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="{{ addActionsStyle }}">
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ cancelAddMilestone }}">Cancel</button>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ addAnotherDraft }}">+ Add Another</button>
+              <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveMilestones }}">Add Milestone(s)</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=> n ? '৳'+n.toLocaleString('en-US',{minimumFractionDigits:2}) : '—';
+const PROJECTS=['ERP Implementation','CRM Migration','Mobile App Development','Legacy System Cleanup','Website Redesign'];
+const SEED_MILESTONES={
+  'ERP Implementation':[{id:1,name:'Discovery & Scoping',due:'2026-06-15',done:true,receivable:0},{id:2,name:'Phase 1: Core Modules',due:'2026-09-01',done:true,receivable:800000},{id:3,name:'Phase 2: Integrations',due:'2026-10-15',done:false,receivable:600000},{id:4,name:'UAT & Go-Live',due:'2026-11-30',done:false,receivable:450000}],
+  'CRM Migration':[{id:5,name:'Data Mapping',due:'2026-08-10',done:true,receivable:200000},{id:6,name:'Migration & Testing',due:'2026-09-20',done:false,receivable:400000}],
+  'Mobile App Development':[{id:7,name:'Wireframes',due:'2026-07-01',done:true,receivable:150000},{id:8,name:'Beta Build',due:'2026-10-01',done:false,receivable:350000}],
+  'Legacy System Cleanup':[{id:9,name:'Audit',due:'2026-06-01',done:true,receivable:100000},{id:10,name:'Decommission',due:'2026-07-15',done:true,receivable:200000}],
+  'Website Redesign':[{id:11,name:'Design Approval',due:'2026-09-30',done:false,receivable:120000}]
+};
+class Component extends DCLogic {
+  state={theme:'dark',selectedProject:'',milestonesByProject:JSON.parse(JSON.stringify(SEED_MILESTONES)),
+    editingId:null,editName:'',editDue:'',editReceivable:'',
+    addingMilestone:false,drafts:[]};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSelectProject=(e)=>this.setState({selectedProject:e.target.value,addingMilestone:false,editingId:null});
+  currentList(s){ return s.milestonesByProject[s.selectedProject]||[]; }
+  updateList=(fn)=>this.setState(s=>{ const list=fn(this.currentList(s)); return { milestonesByProject:{...s.milestonesByProject,[s.selectedProject]:list} }; });
+  toggleMilestone=(id)=>()=>this.updateList(list=>list.map(m=>m.id===id?{...m,done:!m.done}:m));
+  removeMilestone=(id)=>()=>this.updateList(list=>list.filter(m=>m.id!==id));
+  startEdit=(m)=>()=>this.setState({editingId:m.id,editName:m.name,editDue:m.due,editReceivable:m.receivable});
+  cancelEdit=()=>this.setState({editingId:null});
+  onEditName=(e)=>this.setState({editName:e.target.value}); onEditDue=(e)=>this.setState({editDue:e.target.value}); onEditReceivable=(e)=>this.setState({editReceivable:e.target.value});
+  saveEdit=()=>{ const s=this.state; this.updateList(list=>list.map(m=>m.id===s.editingId?{...m,name:s.editName,due:s.editDue,receivable:parseFloat(s.editReceivable)||0}:m)); this.setState({editingId:null}); };
+  openAddMilestone=()=>this.setState({addingMilestone:true,drafts:[{id:Date.now(),name:'',due:'',receivable:''}]});
+  cancelAddMilestone=()=>this.setState({addingMilestone:false,drafts:[]});
+  addAnotherDraft=()=>this.setState(s=>({drafts:[...s.drafts,{id:Date.now()+Math.random(),name:'',due:'',receivable:''}]}));
+  removeDraft=(id)=>()=>this.setState(s=>({drafts:s.drafts.filter(d=>d.id!==id)}));
+  onDraftName=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,name:e.target.value}:d)}));
+  onDraftDue=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,due:e.target.value}:d)}));
+  onDraftReceivable=(id)=>(e)=>this.setState(s=>({drafts:s.drafts.map(d=>d.id===id?{...d,receivable:e.target.value}:d)}));
+  saveMilestones=()=>{ const valid=this.state.drafts.filter(d=>d.name.trim());
+    const newOnes=valid.map(d=>({id:Date.now()+Math.random(),name:d.name.trim(),due:d.due||'—',done:false,receivable:parseFloat(d.receivable)||0}));
+    this.updateList(list=>[...list,...newOnes]); this.setState({addingMilestone:false,drafts:[]}); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK; const s=this.state;
+    const list=this.currentList(s);
+    const progress=list.length ? Math.round(list.filter(m=>m.done).length/list.length*100) : 0;
+    const milestoneRows=list.map(m=>({...m,receivableFmt:fmt(m.receivable),checkMark:m.done?'✓':'',
+      editing:s.editingId===m.id,editName:s.editName,onEditName:this.onEditName,editDue:s.editDue,onEditDue:this.onEditDue,editReceivable:s.editReceivable,onEditReceivable:this.onEditReceivable,
+      onToggle:this.toggleMilestone(m.id),onEdit:this.startEdit(m),onCancelEdit:this.cancelEdit,onSaveEdit:this.saveEdit,onRemove:this.removeMilestone(m.id),
+      checkStyle:{width:20,height:20,borderRadius:4,border:`1px solid ${m.done?C.success:C.border}`,background:m.done?C.success:'transparent',color:C.bg,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',padding:0},
+      labelStyle:{color:C.ink,fontFamily:FONT,fontSize:14,textDecoration:m.done?'line-through':'none',opacity:m.done?0.6:1,flex:1}}));
+    const btnBase={display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:s.theme,toggleTheme:this.toggleTheme,selectedProject:s.selectedProject,onSelectProject:this.onSelectProject,projectOptions:PROJECTS,
+      progress,milestoneRows,noMilestones:milestoneRows.length===0,
+      addingMilestone:s.addingMilestone,openAddMilestone:this.openAddMilestone,cancelAddMilestone:this.cancelAddMilestone,
+      addAnotherDraft:this.addAnotherDraft,saveMilestones:this.saveMilestones,
+      drafts:s.drafts.map((d,i)=>({...d,num:i+1,onName:this.onDraftName(d.id),onDue:this.onDraftDue(d.id),onReceivable:this.onDraftReceivable(d.id),onRemove:this.removeDraft(d.id)})),
+      rootStyle:{display:'flex',height:'100vh',overflow:'hidden',background:C.bg},sidebarMountStyle:{flexShrink:0},
+      mainColStyle:{flex:1,minWidth:0,display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'},
+      scrollAreaStyle:{flex:1,minHeight:0,display:'flex',flexDirection:'column',overflowY:'auto'},
+      contentStyle:{padding:'32px 24px 64px',maxWidth:900,width:'100%',boxSizing:'border-box',margin:'0 auto',flex:1},
+      pageHeaderStyle:{marginBottom:16},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:8},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,marginBottom:24,minWidth:280},
+      emptyStateStyle:{color:C.muted,textAlign:'center',padding:'64px 24px',fontFamily:FONT,background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8},
+      emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px',fontSize:16},
+      emptyTextStyle:{margin:'0 auto',fontSize:14,maxWidth:400},
+      progressWrapStyle:{marginBottom:24}, progressLabelRowStyle:{display:'flex',justifyContent:'space-between',color:C.muted,fontFamily:FONT,fontSize:12,marginBottom:8},
+      barTrackStyle:{width:'100%',height:8,borderRadius:4,background:C.border}, barFillStyle:{width:progress+'%',height:8,borderRadius:4,background:C.accent},
+      milestoneListStyle:{display:'flex',flexDirection:'column',gap:12,marginBottom:16},
+      milestoneRowStyle:{display:'flex',alignItems:'center',gap:12,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:12,flexWrap:'wrap'},
+      amountStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontVariantNumeric:'tabular-nums'},
+      dueStyle:{color:C.muted,fontFamily:FONT,fontSize:12},
+      inlineInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,boxSizing:'border-box',flex:1,minWidth:100},
+      inlineNumStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 8px',color:C.ink,fontFamily:FONT,fontSize:13,boxSizing:'border-box',width:100},
+      btnGhostSmStyle:{...btnBase,fontSize:12,padding:'4px 12px',background:'transparent',color:C.ink,borderColor:C.border},
+      btnPrimarySmStyle:{...btnBase,fontSize:12,padding:'4px 12px',background:C.accent,color:C.accentInk},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      triggerWrapStyle:{marginTop:4},
+      addCardStyle:{background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8,padding:16,marginTop:4,display:'flex',flexDirection:'column',gap:12},
+      addCardHeaderStyle:{display:'flex',justifyContent:'space-between',alignItems:'center'},
+      addCardTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:13,fontWeight:600},
+      draftRowWrapStyle:{display:'flex',flexDirection:'column',gap:12,paddingBottom:16,marginBottom:16,borderBottom:`1px solid ${C.border}`},
+      addFieldsStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12},
+      addFieldStyle:{display:'flex',flexDirection:'column',gap:4},
+      addFieldLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,boxSizing:'border-box',width:'100%'},
+      addActionsStyle:{display:'flex',justifyContent:'flex-end',gap:8,flexWrap:'wrap'}
+    };
+  }
+}
+</script>
+</body>
+</html>

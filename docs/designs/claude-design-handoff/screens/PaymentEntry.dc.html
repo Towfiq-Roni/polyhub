@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="PaymentEntry.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Payment Entry" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Payment Entry</h1></header>
+      <sc-if value="{{ !submitted }}" hint-placeholder-val="{{ true }}">
+        <section style="{{ sectionStyle }}">
+          <h2 style="{{ sectionTitleStyle }}">Direction</h2>
+          <div style="{{ radioRowStyle }}">
+            <button type="button" style="{{ incomeBtnStyle }}" onClick="{{ setIncome }}">Money In</button>
+            <button type="button" style="{{ expenseBtnStyle }}" onClick="{{ setExpense }}">Money Out</button>
+          </div>
+          <a href="{{ ledgerLink }}" style="{{ manageLinkStyle }}">{{ ledgerLinkLabel }} →</a>
+        </section>
+
+        <section style="{{ sectionStyle }}">
+          <h2 style="{{ sectionTitleStyle }}">{{ methodSectionTitle }}</h2>
+          <div style="{{ radioRowStyle }}">
+            <sc-for list="{{ methods }}" as="mtd" hint-placeholder-count="3">
+              <button type="button" style="{{ mtd.style }}" onClick="{{ mtd.onClick }}">{{ mtd.label }}</button>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="{{ sectionStyle }}">
+          <h2 style="{{ sectionTitleStyle }}">Entry Type</h2>
+          <div style="{{ radioRowStyle }}">
+            <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+              <button type="button" style="{{ c.style }}" onClick="{{ c.onClick }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ isProjectReceipt }}" hint-placeholder-val="{{ false }}">
+            <label style="{{ labelStyle }}">Project</label>
+            <select style="{{ inputStyle }}" value="{{ project }}" onChange="{{ onProject }}">
+              <sc-for list="{{ projectOptions }}" as="p" hint-placeholder-count="5"><option value="{{ p }}">{{ p }}</option></sc-for>
+            </select>
+            <label style="{{ labelStyle }}">Milestone</label>
+            <select style="{{ inputStyle }}" value="{{ milestone }}" onChange="{{ onMilestone }}">
+              <sc-for list="{{ milestoneOptions }}" as="m" hint-placeholder-count="3"><option value="{{ m.name }}">{{ m.label }}</option></sc-for>
+            </select>
+            <sc-if value="{{ milestoneComplete }}" hint-placeholder-val="{{ false }}"><p style="{{ milestoneOkStyle }}">✓ Milestone complete — safe to invoice.</p></sc-if>
+            <sc-if value="{{ milestoneIncomplete }}" hint-placeholder-val="{{ false }}"><p style="{{ milestoneWarnStyle }}">This milestone is not marked complete yet.</p></sc-if>
+          </sc-if>
+          <sc-if value="{{ isTeamPayment }}" hint-placeholder-val="{{ false }}">
+            <label style="{{ labelStyle }}">Team member</label>
+            <select style="{{ inputStyle }}" value="{{ teamMember }}" onChange="{{ onTeamMember }}">
+              <sc-for list="{{ memberOptions }}" as="m" hint-placeholder-count="8"><option value="{{ m }}">{{ m }}</option></sc-for>
+            </select>
+            <label style="{{ labelStyle }}">Pay period (optional)</label>
+            <input type="text" style="{{ inputStyle }}" value="{{ payPeriod }}" onInput="{{ onPayPeriod }}" placeholder="e.g. August 2026"></input>
+          </sc-if>
+        </section>
+
+        <sc-if value="{{ isCash }}" hint-placeholder-val="{{ false }}">
+          <section style="{{ sectionStyle }}">
+            <h2 style="{{ sectionTitleStyle }}">Amount &amp; Notes</h2>
+            <label style="{{ labelStyle }}">Amount (৳)</label>
+            <input type="number" style="{{ inputStyle }}" value="{{ amount }}" onInput="{{ onAmount }}" placeholder="0"></input>
+            <sc-if value="{{ amountError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter an amount greater than 0.</div></sc-if>
+            <label style="{{ labelStyle }}">Payment date</label>
+            <input type="date" style="{{ inputStyle }}" value="{{ date }}" onInput="{{ onDate }}"></input>
+            <label style="{{ labelStyle }}">Description</label>
+            <input type="text" style="{{ inputStyle }}" value="{{ desc }}" onInput="{{ onDesc }}" placeholder="{{ descPlaceholder }}"></input>
+            <sc-if value="{{ descError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Description is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Notes (optional)</label>
+            <textarea style="{{ textareaStyle }}" value="{{ notes }}" onInput="{{ onNotes }}" placeholder="Any extra detail..."></textarea>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ !isCash }}" hint-placeholder-val="{{ true }}">
+          <section style="{{ sectionStyle }}">
+            <h2 style="{{ sectionTitleStyle }}">Accounts</h2>
+            <label style="{{ labelStyle }}">{{ ourAccountLabel }}</label>
+            <select style="{{ inputStyle }}" value="{{ accountId }}" onChange="{{ onAccountId }}">
+              <sc-for list="{{ accountOptions }}" as="a" hint-placeholder-count="3"><option value="{{ a.id }}">{{ a.text }}</option></sc-for>
+            </select>
+            <sc-if value="{{ noAccountsForMethod }}" hint-placeholder-val="{{ false }}"><p style="{{ noAccountTextStyle }}">No {{ method }} accounts yet.</p></sc-if>
+            <a href="BankAccounts.dc.html" style="{{ manageLinkStyle }}">Manage our accounts →</a>
+
+            <sc-if value="{{ showCounterparty }}" hint-placeholder-val="{{ false }}">
+              <label style="{{ labelStyle }}">{{ counterpartyLabel }} ({{ allowedMethodsText }})</label>
+              <sc-if value="{{ hasCounterpartyAccounts }}" hint-placeholder-val="{{ false }}">
+                <select style="{{ inputStyle }}" value="{{ counterpartyAccountId }}" onChange="{{ onCounterpartyAccount }}">
+                  <sc-for list="{{ counterpartyAccountOptions }}" as="a" hint-placeholder-count="2"><option value="{{ a.id }}">{{ a.text }}</option></sc-for>
+                </select>
+              </sc-if>
+              <sc-if value="{{ !hasCounterpartyAccounts }}" hint-placeholder-val="{{ true }}">
+                <p style="{{ noAccountTextStyle }}">No {{ allowedMethodsText }} account saved yet for {{ counterpartyName }}.</p>
+              </sc-if>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAccountModal }}">Manage {{ counterpartyName }}'s accounts</button>
+            </sc-if>
+
+            <sc-if value="{{ isOther }}" hint-placeholder-val="{{ false }}">
+              <label style="{{ labelStyle }}">{{ otherPartyLabel }}</label>
+              <input type="text" style="{{ inputStyle }}" value="{{ otherParty }}" onInput="{{ onOtherParty }}" placeholder="{{ otherPartyPlaceholder }}"></input>
+              <label style="{{ labelStyle }}">Account number (optional)</label>
+              <input type="text" style="{{ inputStyle }}" value="{{ otherAccountNumber }}" onInput="{{ onOtherAccountNumber }}" placeholder="Account / wallet number"></input>
+              <label style="{{ labelStyle }}">Chart of Accounts (transaction type)</label>
+              <select style="{{ inputStyle }}" value="{{ chartAccountCode }}" onChange="{{ onChartAccountCode }}">
+                <option value="">Select an account code…</option>
+                <sc-for list="{{ chartAccountOptions }}" as="a" hint-placeholder-count="6"><option value="{{ a.code }}">{{ a.code }} — {{ a.name }}</option></sc-for>
+              </select>
+              <p style="{{ noAccountTextStyle }}">Classifies this entry for the books — see the full list on the Accounting page.</p>
+            </sc-if>
+          </section>
+
+          <section style="{{ sectionStyle }}">
+            <h2 style="{{ sectionTitleStyle }}">Amount &amp; Notes</h2>
+            <label style="{{ labelStyle }}">Amount (৳)</label>
+            <input type="number" style="{{ inputStyle }}" value="{{ amount }}" onInput="{{ onAmount }}" placeholder="0"></input>
+            <sc-if value="{{ amountError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter an amount greater than 0.</div></sc-if>
+            <label style="{{ labelStyle }}">Description</label>
+            <input type="text" style="{{ inputStyle }}" value="{{ desc }}" onInput="{{ onDesc }}" placeholder="{{ descPlaceholder }}"></input>
+            <sc-if value="{{ descError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Description is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Date</label>
+            <input type="date" style="{{ inputStyle }}" value="{{ date }}" onInput="{{ onDate }}"></input>
+            <label style="{{ labelStyle }}">Transaction ID (optional)</label>
+            <input type="text" style="{{ inputStyle }}" value="{{ txnId }}" onInput="{{ onTxnId }}" placeholder="e.g. bank/MFS reference number"></input>
+            <label style="{{ labelStyle }}">Notes (optional)</label>
+            <textarea style="{{ textareaStyle }}" value="{{ notes }}" onInput="{{ onNotes }}" placeholder="Any extra detail for this entry..."></textarea>
+          </section>
+        </sc-if>
+
+        <div style="{{ formActionsStyle }}">
+          <a href="Transactions.dc.html" style="{{ btnGhostLinkStyle }}">Cancel</a>
+          <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submit }}">Record Entry</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ successCardStyle }}">
+          <h2 style="{{ successTitleStyle }}">Entry recorded</h2>
+          <p style="{{ successTextStyle }}">{{ summaryLine }}</p>
+          <div style="{{ successActionsStyle }}">
+            <a href="{{ ledgerLink }}" style="{{ btnPrimaryLinkStyle }}">{{ ledgerLinkLabel }}</a>
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ addAnother }}">Add Another Entry</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ accountModalOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeAccountModal }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Manage accounts">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">{{ counterpartyName }}'s Accounts</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <sc-for list="{{ modalAccountRows }}" as="a" hint-placeholder-count="2">
+              <div style="{{ modalAccountRowStyle }}"><span style="{{ modalAccountTextStyle }}">{{ a.text }}</span></div>
+            </sc-for>
+            <sc-if value="{{ modalNoAccounts }}" hint-placeholder-val="{{ false }}"><p style="{{ noAccountTextStyle }}">No accounts saved yet.</p></sc-if>
+            <label style="{{ labelStyle }}">Add new account</label>
+            <select style="{{ modalInputStyle }}" value="{{ newCpMethod }}" onChange="{{ onNewCpMethod }}">
+              <sc-for list="{{ allowedCpMethodOptions }}" as="m" hint-placeholder-count="2"><option value="{{ m }}">{{ m }}</option></sc-for>
+            </select>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newCpLabel }}" onInput="{{ onNewCpLabel }}" placeholder="e.g. Brac Bank"></input>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newCpNumber }}" onInput="{{ onNewCpNumber }}" placeholder="Account / wallet number"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeAccountModal }}">Close</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveCounterpartyAccount }}">Save Account</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)', success:'#63A583', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+const PROJECTS=['ERP Implementation','CRM Migration','Mobile App Development','Legacy System Cleanup','Website Redesign'];
+const PROJECT_CLIENTS={'ERP Implementation':'Acme Corp','CRM Migration':'Bayzid Group','Mobile App Development':'Delta Tech','Legacy System Cleanup':'Ekushey Solutions','Website Redesign':'Futura Ltd'};
+const MEMBERS=['Rahim Uddin','Karim Ali','Farida Akter','Nadia Rahman','Mahmudul Islam','Tasnim Ahmed','Rahima Khatun','Kamal Hossain'];
+const PROJECT_MILESTONES={
+  'ERP Implementation':[{name:'Discovery & Scoping',complete:true},{name:'Phase 1: Core Modules',complete:true},{name:'Phase 2: Integrations',complete:false},{name:'UAT & Go-Live',complete:false}],
+  'CRM Migration':[{name:'Data Mapping',complete:true},{name:'Migration & Testing',complete:false}],
+  'Mobile App Development':[{name:'Wireframes',complete:true},{name:'Beta Build',complete:false}],
+  'Legacy System Cleanup':[{name:'Audit',complete:true},{name:'Decommission',complete:true}],
+  'Website Redesign':[{name:'Design Approval',complete:false}]
+};
+const CATS=[['project','Client Payment'],['team','Team Payment'],['other','Other']];
+const METHODS=['Cash','Bank','MFS'];
+const ALLOWED_CP_METHODS={Bank:['Bank','Card','MFS'],MFS:['MFS','Bank','Card']};
+const CHART_OF_ACCOUNTS=[
+  {code:'1000',name:'Cash',type:'Asset'},{code:'1010',name:'Bank',type:'Asset'},{code:'1020',name:'MFS',type:'Asset'},
+  {code:'1100',name:'Accounts Receivable',type:'Asset'},{code:'2000',name:'Accounts Payable',type:'Liability'},
+  {code:'3000',name:"Owner's Equity",type:'Equity'},{code:'4000',name:'Service Revenue',type:'Revenue'},{code:'4100',name:'Interest Income',type:'Revenue'},
+  {code:'5000',name:'Salaries Expense',type:'Expense'},{code:'5100',name:'Office Expense',type:'Expense'},{code:'5200',name:'BDS Commission Expense',type:'Expense'},
+  {code:'5300',name:'Marketing Expense',type:'Expense'},{code:'5400',name:'Utilities Expense',type:'Expense'},{code:'5500',name:'Depreciation Expense',type:'Expense'}
+];
+const today=()=>new Date().toISOString().slice(0,10);
+let seq=100;
+const INTERNAL_ACCOUNTS=[
+  {id:1,method:'Bank',label:'HSBC — Current',number:'0011-223344-01'},
+  {id:2,method:'Bank',label:'Dutch-Bangla — Savings',number:'0022-556677-02'},
+  {id:3,method:'MFS',label:'bKash — Merchant',number:'01711-000111'},
+  {id:4,method:'MFS',label:'Nagad — Merchant',number:'01911-222333'}
+];
+function loadInternalAccounts(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('hub-bank-accounts'));
+    if(Array.isArray(saved)&&saved.length){
+      return saved.filter(a=>a.status!=='Inactive').map(a=>({id:a.id,method:a.method,label:`${a.bankName} — ${a.accountType}`,number:a.accountNumber}));
+    }
+  }catch(e){}
+  return INTERNAL_ACCOUNTS.slice();
+}
+const COUNTERPARTY_ACCOUNTS={
+  'team:Karim Ali':[{id:11,method:'Bank',label:'Brac Bank',number:'1500-2233-44'},{id:12,method:'MFS',label:'bKash Personal',number:'01812-345678'}],
+  'team:Rahim Uddin':[{id:13,method:'Bank',label:'City Bank',number:'2200-1188-90'}],
+  'client:Acme Corp':[{id:21,method:'Bank',label:'Standard Chartered',number:'3300-9911-22'},{id:22,method:'MFS',label:'Nagad Business',number:'01611-778899'}],
+  'client:Bayzid Group':[{id:23,method:'Bank',label:'EBL Current',number:'4400-5566-77'}]
+};
+class Component extends DCLogic {
+  state={theme:'dark',method:'Bank',category:'project',type:'Income',accountId:1,
+    desc:'',amount:'',date:today(),notes:'',txnId:'',
+    project:PROJECTS[0],milestone:(PROJECT_MILESTONES[PROJECTS[0]]||[])[0]?.name||'',teamMember:MEMBERS[0],payPeriod:'',vendor:'',otherParty:'',otherAccountNumber:'',chartAccountCode:'',
+    descError:false,amountError:false,submitted:false,lastEntry:null,
+    internalAccounts:loadInternalAccounts(),
+    counterpartyAccounts:JSON.parse(JSON.stringify(COUNTERPARTY_ACCOUNTS)),counterpartyAccountId:11,
+    accountModalOpen:false,newCpMethod:'Bank',newCpLabel:'',newCpNumber:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    const internalAccounts=loadInternalAccounts();
+    const first=internalAccounts.find(a=>a.method===this.state.method);
+    this.setState({internalAccounts,accountId:first?first.id:null}); }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  counterpartyKey(state){ if(state.category==='team') return 'team:'+state.teamMember; if(state.category==='project') return 'client:'+(PROJECT_CLIENTS[state.project]||''); return null; }
+  setMethod=(m)=>()=>this.setState(s=>{ const first=s.internalAccounts.find(a=>a.method===m); return {method:m,accountId:first?first.id:null}; });
+  setCategory=(cat)=>()=>this.setState(s=>{ const type=(cat==='team')?'Expense':'Income'; const next={...s,category:cat,type}; const key=this.counterpartyKey(next); const list=key&&next.counterpartyAccounts[key]||[]; return {category:cat,type,counterpartyAccountId:list[0]?list[0].id:null}; });
+  setIncome=()=>this.setState({type:'Income'}); setExpense=()=>this.setState({type:'Expense'});
+  onAccountId=(e)=>this.setState({accountId:parseInt(e.target.value,10)});
+  onDesc=(e)=>this.setState({desc:e.target.value,descError:false}); onAmount=(e)=>this.setState({amount:e.target.value,amountError:false});
+  onDate=(e)=>this.setState({date:e.target.value}); onNotes=(e)=>this.setState({notes:e.target.value}); onTxnId=(e)=>this.setState({txnId:e.target.value});
+  onProject=(e)=>this.setState(s=>{ const key='client:'+(PROJECT_CLIENTS[e.target.value]||''); const list=s.counterpartyAccounts[key]||[]; const ms=PROJECT_MILESTONES[e.target.value]||[]; return {project:e.target.value,counterpartyAccountId:list[0]?list[0].id:null,milestone:ms[0]?ms[0].name:''}; });
+  onMilestone=(e)=>this.setState({milestone:e.target.value});
+  onTeamMember=(e)=>this.setState(s=>{ const key='team:'+e.target.value; const list=s.counterpartyAccounts[key]||[]; return {teamMember:e.target.value,counterpartyAccountId:list[0]?list[0].id:null}; });
+  onPayPeriod=(e)=>this.setState({payPeriod:e.target.value}); onVendor=(e)=>this.setState({vendor:e.target.value});
+  onOtherParty=(e)=>this.setState({otherParty:e.target.value});
+  onOtherAccountNumber=(e)=>this.setState({otherAccountNumber:e.target.value});
+  onChartAccountCode=(e)=>this.setState({chartAccountCode:e.target.value});
+  onCounterpartyAccount=(e)=>this.setState({counterpartyAccountId:parseInt(e.target.value,10)});
+  openAccountModal=()=>this.setState(s=>({accountModalOpen:true,newCpMethod:(ALLOWED_CP_METHODS[s.method]||['Bank'])[0],newCpLabel:'',newCpNumber:''}));
+  closeAccountModal=()=>this.setState({accountModalOpen:false});
+  onNewCpMethod=(e)=>this.setState({newCpMethod:e.target.value}); onNewCpLabel=(e)=>this.setState({newCpLabel:e.target.value}); onNewCpNumber=(e)=>this.setState({newCpNumber:e.target.value});
+  saveCounterpartyAccount=()=>{ if(!this.state.newCpLabel.trim())return; const key=this.counterpartyKey(this.state); if(!key)return;
+    const acc={id:++seq,method:this.state.newCpMethod,label:this.state.newCpLabel.trim(),number:this.state.newCpNumber.trim()||'—'};
+    this.setState(s=>{ const list=s.counterpartyAccounts[key]||[]; return {counterpartyAccounts:{...s.counterpartyAccounts,[key]:[...list,acc]},counterpartyAccountId:acc.id,newCpLabel:'',newCpNumber:''}; }); };
+  submit=()=>{ const amt=parseFloat(this.state.amount); const descErr = this.state.method!=='Cash' ? !this.state.desc.trim() : !this.state.desc.trim(); const amtErr=!(amt>0);
+    if(descErr||amtErr){ this.setState({descError:descErr,amountError:amtErr}); return; }
+    this.setState({submitted:true,lastEntry:{...this.state}}); };
+  addAnother=()=>this.setState({submitted:false,desc:'',amount:'',notes:'',descError:false,amountError:false});
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK; const s=this.state;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const smBtnBase={...btnBase,fontSize:12,padding:'6px 12px'};
+    const catBtnBase={...btnBase,fontSize:13,padding:'6px 14px',whiteSpace:'nowrap'};
+    const isCash = s.method==='Cash';
+    const methods=METHODS.map(m=>({label:m,onClick:this.setMethod(m),
+      style:{...catBtnBase,background:s.method===m?C.accentSoft:'transparent',color:s.method===m?C.inkHi:C.muted,borderColor:s.method===m?C.accent:C.border}}));
+    const categories=CATS.map(([k,label])=>({label,onClick:this.setCategory(k),
+      style:{...catBtnBase,background:s.category===k?C.accentSoft:'transparent',color:s.category===k?C.inkHi:C.muted,borderColor:s.category===k?C.accent:C.border}}));
+    const accountsForMethod = s.internalAccounts.filter(a=>a.method===s.method);
+    const accountOptions=accountsForMethod.map(a=>({id:a.id,text:`${a.label} — ${a.number}`}));
+    const allowedCpMethods = ALLOWED_CP_METHODS[s.method] || [];
+    const key=this.counterpartyKey(s);
+    const cpListAll = key ? (s.counterpartyAccounts[key]||[]) : [];
+    const cpList = cpListAll.filter(a=>allowedCpMethods.includes(a.method));
+    const counterpartyAccountOptions=cpList.map(a=>({id:a.id,text:`${a.method} — ${a.label} (${a.number})`}));
+    const modalAccountRows = cpListAll.map(a=>({text:`${a.method} — ${a.label} (${a.number})`}));
+    const counterpartyName = s.category==='team' ? s.teamMember : (PROJECT_CLIENTS[s.project]||'');
+    const descPlaceholders={project:'e.g. Invoice payment - '+s.project,team:'e.g. Salary - '+s.teamMember,other:'e.g. Office rent'};
+    let summaryLine='';
+    if(s.lastEntry){ const e=s.lastEntry; const amt=fmt(parseFloat(e.amount)||0);
+      if(e.method==='Cash') summaryLine=`${e.type} of ${amt} in cash — ${e.desc}.`;
+      else { const acc=e.internalAccounts.find(a=>a.id===e.accountId); const accTxt=acc?acc.label:'account';
+        if(e.category==='project') summaryLine=`Received ${amt} from ${e.project} into ${accTxt}.`;
+        else if(e.category==='team') summaryLine=`Paid ${amt} to ${e.teamMember}${e.payPeriod?' for '+e.payPeriod:''} from ${accTxt}.`;
+        else summaryLine=`${e.type} of ${amt} logged to ${accTxt}.`;
+        if(e.txnId) summaryLine += ` (Txn ID: ${e.txnId})`;
+      }
+    }
+    return {
+      theme:s.theme,toggleTheme:this.toggleTheme,methods,method:s.method,isCash,categories,
+      isProjectReceipt:s.category==='project',isTeamPayment:s.category==='team',isOther:s.category==='other',
+      otherParty:s.otherParty,onOtherParty:this.onOtherParty,
+      otherPartyLabel: s.type==='Income' ? 'Received From' : 'Paid To',
+      otherPartyPlaceholder: s.type==='Income' ? 'e.g. Walk-in client' : 'e.g. Office landlord',
+      otherAccountNumber:s.otherAccountNumber,onOtherAccountNumber:this.onOtherAccountNumber,
+      chartAccountCode:s.chartAccountCode,onChartAccountCode:this.onChartAccountCode,
+      chartAccountOptions:CHART_OF_ACCOUNTS.filter(a=>s.type==='Income'?(a.type==='Revenue'||a.type==='Asset'):(a.type==='Expense'||a.type==='Liability')),
+      project:s.project,onProject:this.onProject,projectOptions:PROJECTS,
+      milestone:s.milestone,onMilestone:this.onMilestone,
+      milestoneOptions:(PROJECT_MILESTONES[s.project]||[]).map(m=>({name:m.name,label:(m.complete?'✓ ':'') + m.name})),
+      milestoneComplete: !!(PROJECT_MILESTONES[s.project]||[]).find(m=>m.name===s.milestone && m.complete),
+      milestoneIncomplete: !!(PROJECT_MILESTONES[s.project]||[]).find(m=>m.name===s.milestone && !m.complete),
+      milestoneOkStyle:{color:C.success,fontFamily:FONT,fontSize:12,margin:'2px 0 0'},
+      milestoneWarnStyle:{color:C.danger,fontFamily:FONT,fontSize:12,margin:'2px 0 0'},
+      teamMember:s.teamMember,onTeamMember:this.onTeamMember,memberOptions:MEMBERS,payPeriod:s.payPeriod,onPayPeriod:this.onPayPeriod,
+      accountOptions,accountId:s.accountId,onAccountId:this.onAccountId,noAccountsForMethod:accountOptions.length===0,
+      methodSectionTitle: s.type==='Income' ? 'Getting Paid Through' : 'Paying Through',
+      ourAccountLabel: (s.type==='Income' ? 'Our receiving account' : 'Our paying account') + ' (' + s.method + ')',
+      ledgerLink: s.type==='Income' ? 'Receivables.dc.html' : 'Payables.dc.html',
+      ledgerLinkLabel: s.type==='Income' ? 'View Receivables' : 'View Payables',
+
+      manageLinkStyle:{color:C.accent,fontFamily:FONT,fontSize:12,textDecoration:'none',display:'inline-block',marginTop:2},
+      showCounterparty: s.category==='team' || s.category==='project',
+      counterpartyLabel: s.category==='team' ? 'Payout account (team member)' : 'Receiving account (client)',
+      allowedMethodsText: allowedCpMethods.join(' / '),
+      hasCounterpartyAccounts: counterpartyAccountOptions.length>0,
+      counterpartyAccountOptions, counterpartyAccountId:s.counterpartyAccountId, onCounterpartyAccount:this.onCounterpartyAccount, counterpartyName,
+      accountModalOpen:s.accountModalOpen, openAccountModal:this.openAccountModal, closeAccountModal:this.closeAccountModal,
+      modalAccountRows, modalNoAccounts:modalAccountRows.length===0, allowedCpMethodOptions:allowedCpMethods,
+      newCpMethod:s.newCpMethod, onNewCpMethod:this.onNewCpMethod, newCpLabel:s.newCpLabel, onNewCpLabel:this.onNewCpLabel, newCpNumber:s.newCpNumber, onNewCpNumber:this.onNewCpNumber, saveCounterpartyAccount:this.saveCounterpartyAccount,
+      desc:s.desc,onDesc:this.onDesc,descPlaceholder:descPlaceholders[s.category]||'',
+      amount:s.amount,onAmount:this.onAmount,date:s.date,onDate:this.onDate,notes:s.notes,onNotes:this.onNotes,txnId:s.txnId,onTxnId:this.onTxnId,
+      descError:s.descError,amountError:s.amountError,setIncome:this.setIncome,setExpense:this.setExpense,submit:this.submit,submitted:s.submitted,addAnother:this.addAnother,summaryLine,
+      incomeBtnStyle:{...catBtnBase,background:s.type==='Income'?C.accentSoft:'transparent',color:s.type==='Income'?C.inkHi:C.muted,borderColor:s.type==='Income'?C.accent:C.border},
+      expenseBtnStyle:{...catBtnBase,background:s.type==='Expense'?C.accentSoft:'transparent',color:s.type==='Expense'?C.inkHi:C.muted,borderColor:s.type==='Expense'?C.accent:C.border},
+      rootStyle:{display:'flex',height:'100vh',overflow:'hidden',background:C.bg},sidebarMountStyle:{flexShrink:0},
+      mainColStyle:{flex:1,minWidth:0,display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'},
+      scrollAreaStyle:{flex:1,minHeight:0,display:'flex',flexDirection:'column',overflowY:'auto'},
+      contentStyle:{padding:'32px 24px 64px',maxWidth:720,width:'100%',boxSizing:'border-box',margin:'0 auto',flex:1},
+      pageHeaderStyle:{marginBottom:24},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      sectionStyle:{display:'flex',flexDirection:'column',gap:12,marginBottom:24,paddingBottom:24,borderBottom:`1px solid ${C.border}`},
+      sectionTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:'0 0 4px'},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      radioRowStyle:{display:'flex',gap:8,flexWrap:'wrap',marginBottom:8},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      textareaStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box',minHeight:64,resize:'vertical'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT},
+      noAccountTextStyle:{color:C.muted,fontSize:13,fontFamily:FONT,margin:'2px 0 4px'},
+      btnGhostSmStyle:{...smBtnBase,background:'transparent',color:C.ink,borderColor:C.border,alignSelf:'flex-start',marginTop:2},
+      formActionsStyle:{display:'flex',justifyContent:'flex-end',gap:8,marginTop:12},
+      btnGhostLinkStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border,textDecoration:'none'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      btnPrimaryLinkStyle:{...btnBase,background:C.accent,color:C.accentInk,textDecoration:'none'},
+      successCardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:32,textAlign:'center'},
+      successTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:'0 0 8px'},
+      successTextStyle:{color:C.inkDim,fontFamily:FONT,fontSize:14,margin:'0 0 20px'},
+      successActionsStyle:{display:'flex',justifyContent:'center',gap:8},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalAccountRowStyle:{padding:'8px 12px',background:C.bg,border:`1px solid ${C.border}`,borderRadius:4},
+      modalAccountTextStyle:{color:C.inkDim,fontFamily:FONT,fontSize:13},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'}
+    };
+  }
+}
+</script>
+</body>
+</html>

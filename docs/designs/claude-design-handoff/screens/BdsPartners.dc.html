@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="BdsPartners.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="BDS Partners" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">BDS Partners</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Partner</button>
+      </header>
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search partners..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option><option value="Active">Active</option><option value="Inactive">Inactive</option>
+        </select>
+      </div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Partner</th><th style="{{ thStyle }}">Email</th><th style="{{ thStyle }}">Phone</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}">Commission</th><th style="{{ thStyle }}">Leads</th><th style="{{ thNumStyle }}">Outstanding</th><th style="{{ thStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="p" hint-placeholder-count="4">
+              <tr>
+                <td style="{{ tdStyle }}"><a href="{{ p.detailHref }}" style="{{ linkStyle }}">{{ p.name }}</a></td>
+                <td style="{{ tdStyle }}">{{ p.email }}</td><td style="{{ tdStyle }}">{{ p.phone }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td>
+                <td style="{{ tdStyle }}">{{ p.commission }}</td><td style="{{ tdStyle }}">{{ p.leads }}</td>
+                <td style="{{ tdNumStyle }}">{{ p.outstanding }}</td>
+                <td style="{{ tdStyle }}"><a href="{{ p.detailHref }}" style="{{ btnGhostSmLinkStyle }}">View</a></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}"><div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No BDS partners found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div></sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add partner">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Partner</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Farid Uddin"></input>
+            <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Email</label>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@bds.bd"></input>
+            <label style="{{ labelStyle }}">Phone</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newPhone }}" onInput="{{ onNewPhone }}" placeholder="+880 1XXX-XXXXXX"></input>
+            <label style="{{ labelStyle }}">Commission rate (%)</label>
+            <input type="number" style="{{ modalInputStyle }}" value="{{ newRate }}" onInput="{{ onNewRate }}" placeholder="5"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Partner</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', neutral:'#6F7E8F', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', neutral:'#5A6675', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+function chip(status,C){ const color=status==='Active'?C.success:C.neutral; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,name:'Rahim Hassan',email:'rahim.hassan@bds.bd',phone:'+8801711-111111',status:'Active',commission:'5%',leads:12,outstanding:310000},
+ {id:2,name:'Karim Ali',email:'karim.ali@bds.bd',phone:'+8801812-222222',status:'Active',commission:'4%',leads:8,outstanding:180000},
+ {id:3,name:'Salma Begum',email:'salma.begum@bds.bd',phone:'+8801913-333333',status:'Active',commission:'3.5%',leads:5,outstanding:90000},
+ {id:4,name:'Farid Uddin',email:'farid.uddin@bds.bd',phone:'+8801614-444444',status:'Inactive',commission:'3%',leads:2,outstanding:0}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',statusFilter:'',partners:SEED,createOpen:false,newName:'',newEmail:'',newPhone:'',newRate:'',nameError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} this.persist(); }
+  persist(){ try{ localStorage.setItem('hub-bds-partners', JSON.stringify(this.state.partners)); }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value}); onStatusFilter=(e)=>this.setState({statusFilter:e.target.value});
+  openCreate=()=>this.setState({createOpen:true,newName:'',newEmail:'',newPhone:'',newRate:'',nameError:false}); closeCreate=()=>this.setState({createOpen:false});
+  onNewName=(e)=>this.setState({newName:e.target.value}); onNewEmail=(e)=>this.setState({newEmail:e.target.value}); onNewPhone=(e)=>this.setState({newPhone:e.target.value}); onNewRate=(e)=>this.setState({newRate:e.target.value});
+  submitCreate=()=>{ if(!this.state.newName.trim()){this.setState({nameError:true});return;}
+    const p={id:Date.now(),name:this.state.newName.trim(),email:this.state.newEmail.trim()||'—',phone:this.state.newPhone.trim()||'—',status:'Active',commission:(this.state.newRate||'5')+'%',leads:0,outstanding:0};
+    this.setState(s=>({partners:[p,...s.partners],createOpen:false}), ()=>this.persist()); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=this.state.partners.filter(p=>(!this.state.search||p.name.toLowerCase().includes(this.state.search.toLowerCase()))&&(!this.state.statusFilter||p.status===this.state.statusFilter));
+    const pageRows=filtered.map(p=>({...p,outstanding:fmt(p.outstanding),chipStyle:chip(p.status,C),detailHref:'BdsPartnerDetail.dc.html?id='+p.id}));
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,statusFilter:this.state.statusFilter,onSearch:this.onSearch,onStatusFilter:this.onStatusFilter,
+      pageRows,noResults:pageRows.length===0,createOpen:this.state.createOpen,openCreate:this.openCreate,closeCreate:this.closeCreate,
+      newName:this.state.newName,newEmail:this.state.newEmail,newPhone:this.state.newPhone,newRate:this.state.newRate,nameError:this.state.nameError,onNewName:this.onNewName,onNewEmail:this.onNewEmail,onNewPhone:this.onNewPhone,onNewRate:this.onNewRate,submitCreate:this.submitCreate,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmLinkStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',textDecoration:'none'},
+      linkStyle:{color:C.ink,textDecoration:'none'},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      emptyStyle:{color:C.muted,textAlign:'center',padding:48,fontFamily:FONT},emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px'},emptyTextStyle:{margin:0,fontSize:14},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:12},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT}
+    };
+  }
+}
+</script>
+</body>
+</html>

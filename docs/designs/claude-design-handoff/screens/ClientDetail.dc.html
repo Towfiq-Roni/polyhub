@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;} a{color:inherit;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Clients.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="{{ company }}" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <a href="Clients.dc.html" style="{{ backLinkStyle }}">← Back to Clients</a>
+      <header style="{{ pageHeaderStyle }}">
+        <div><h1 style="{{ pageTitleStyle }}">{{ company }}</h1><div style="{{ statusRowStyle }}"><span style="{{ statusChipStyle }}">{{ status }}</span></div></div>
+        <div style="{{ actionsRowStyle }}">
+          <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><button type="button" style="{{ btnGhostStyle }}" onClick="{{ startEdit }}">Edit Client</button></sc-if>
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ discardEdit }}">Discard</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveEdit }}">Save</button>
+          </sc-if>
+          <a href="ProjectDetail.dc.html" style="{{ btnPrimaryLinkStyle }}">New Project</a>
+        </div>
+      </header>
+      <div style="{{ tabRowStyle }}">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <button type="button" style="{{ t.style }}" onClick="{{ t.onClick }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ cardGridStyle }}">
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Contact Information</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Stakeholder</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ stakeholder }}" onInput="{{ onStakeholder }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ stakeholder }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Email</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="email" style="{{ inputStyle }}" value="{{ email }}" onInput="{{ onEmail }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}"><a href="{{ mailto }}" style="{{ linkStyle }}">{{ email }}</a></p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Phone</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ phone }}" onInput="{{ onPhone }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ phone }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Address</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ address }}" onInput="{{ onAddress }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ address }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">BDS Partner</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ bdsPartner }}" onInput="{{ onBdsPartner }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ bdsPartnerDisplay }}</p></sc-if>
+            </div>
+          </div>
+          <div style="{{ cardStyle }}">
+            <h3 style="{{ cardTitleStyle }}">Company Information</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Registration</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ registration }}" onInput="{{ onRegistration }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ registrationDisplay }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Tax ID</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ taxId }}" onInput="{{ onTaxId }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ taxIdDisplay }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Industry</label>
+              <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><input type="text" style="{{ inputStyle }}" value="{{ industry }}" onInput="{{ onIndustry }}"></input></sc-if>
+              <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="{{ valueStyle }}">{{ industry }}</p></sc-if>
+            </div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Client Since</label><p style="{{ valueStyle }}">{{ since }}</p></div>
+          </div>
+        </div>
+        <div style="{{ kpiGridStyle }}">
+          <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Active Projects</span><span style="{{ kpiValueStyle }}">{{ activeProjects }}</span></div>
+          <div style="{{ kpiCardStyle }}"><span style="{{ kpiLabelStyle }}">Total Contract Value</span><span style="{{ kpiValueStyle }}">{{ contractValue }}</span></div>
+          <div style="{{ kpiCardStyle }}"><span style="{{ kpiWarnStyle }}">Outstanding</span><span style="{{ kpiValueDangerStyle }}">{{ outstanding }}</span></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Project</th><th style="{{ thStyle }}">Status</th><th style="{{ thStyle }}">Milestones</th><th style="{{ thStyle }}">Next Due</th><th style="{{ thNumStyle }}">Value</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+              <tr><td style="{{ tdStyle }}"><a href="ProjectDetail.dc.html" style="{{ linkStyle }}">{{ p.name }}</a></td><td style="{{ tdStyle }}"><span style="{{ p.chipStyle }}">{{ p.status }}</span></td><td style="{{ tdStyle }}">{{ p.milestones }}</td><td style="{{ tdStyle }}">{{ p.nextDue }}</td><td style="{{ tdNumStyle }}">{{ p.value }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+
+      <sc-if value="{{ isFinance }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ cardGridStyle }}">
+          <div style="{{ cardStyle }}"><h3 style="{{ cardTitleStyle }}">Receivables</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Received</label><p style="{{ successValueStyle }}">{{ recvReceived }}</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Due</label><p style="{{ warningValueStyle }}">{{ recvDue }}</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Not Due</label><p style="{{ valueStyle }}">{{ recvNotDue }}</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Overdue</label><p style="{{ dangerValueStyle }}">{{ recvOverdue }}</p></div>
+          </div>
+          <div style="{{ cardStyle }}"><h3 style="{{ cardTitleStyle }}">Payables (attributed)</h3>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Team</label><p style="{{ valueStyle }}">{{ payTeam }}</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">BDS</label><p style="{{ valueStyle }}">{{ payBds }}</p></div>
+            <div style="{{ fieldRowStyle }}"><label style="{{ labelStyle }}">Other</label><p style="{{ valueStyle }}">{{ payOther }}</p></div>
+          </div>
+        </div>
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Date</th><th style="{{ thStyle }}">Type</th><th style="{{ thStyle }}">Ref</th><th style="{{ thNumStyle }}">Amount</th><th style="{{ thStyle }}">Status</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ financeRows }}" as="f" hint-placeholder-count="4">
+              <tr><td style="{{ tdStyle }}">{{ f.date }}</td><td style="{{ tdStyle }}">{{ f.type }}</td><td style="{{ tdStyle }}">{{ f.ref }}</td><td style="{{ tdNumStyle }}">{{ f.amount }}</td><td style="{{ tdStyle }}"><span style="{{ f.chipStyle }}">{{ f.status }}</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </sc-if>
+
+      <sc-if value="{{ isResources }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ resourceListStyle }}">
+          <sc-for list="{{ resources }}" as="r" hint-placeholder-count="2">
+            <div style="{{ resourceRowStyle }}">
+              <span style="{{ resourceTypeChip }}">{{ r.type }}</span>
+              <sc-if value="{{ r.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ r.url }}" target="_blank" style="{{ resourceLinkStyle }}">{{ r.label }}</a></sc-if>
+              <sc-if value="{{ r.isFile }}" hint-placeholder-val="{{ true }}"><a href="{{ r.fileUrl }}" target="_blank" style="{{ resourceLinkStyle }}">{{ r.label }}</a></sc-if>
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ r.onRemove }}">Remove</button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ noResources }}" hint-placeholder-val="{{ false }}"><p style="{{ noAccountTextStyle }}">No resources yet.</p></sc-if>
+        <sc-if value="{{ !addingResource }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ triggerWrapStyle }}"><button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAddResource }}">+ Add Resource</button></div>
+        </sc-if>
+        <sc-if value="{{ addingResource }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ addResourceCardStyle }}">
+            <label style="{{ labelStyle }}">Upload file (optional)</label>
+            <div style="{{ fileUploadRowStyle }}">
+              <label style="{{ fileUploadBtnStyle }}">Choose File<input type="file" style="{{ hiddenFileInputStyle }}" onChange="{{ onNewResourceFile }}"></input></label>
+              <span style="{{ fileNameDisplayStyle }}">{{ fileNameDisplay }}</span>
+            </div>
+            <label style="{{ labelStyle }}">Link URL (optional)</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newResourceUrl }}" onInput="{{ onNewResourceUrl }}" placeholder="https://..."></input>
+            <label style="{{ labelStyle }}">Link label (optional)</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newResourceLabel }}" onInput="{{ onNewResourceLabel }}" placeholder="e.g. Shared Drive"></input>
+            <sc-if value="{{ resourceError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle2 }}">Upload a file or provide a link URL.</div></sc-if>
+            <div style="{{ addActionsRowStyle }}">
+              <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ cancelAddResource }}">Cancel</button>
+              <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveResource }}">Add Resource</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ isAccounts }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ tableWrapStyle }}"><table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Method</th><th style="{{ thStyle }}">Bank / Provider</th><th style="{{ thStyle }}">Account Number</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ bankAccounts }}" as="a" hint-placeholder-count="2">
+              <tr><td style="{{ tdStyle }}">{{ a.method }}</td><td style="{{ tdStyle }}">{{ a.label }}</td><td style="{{ tdStyle }}">{{ a.number }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+        <sc-if value="{{ noBankAccounts }}" hint-placeholder-val="{{ false }}"><p style="{{ noAccountTextStyle }}">No accounts saved yet.</p></sc-if>
+        <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ openAccountModal }}">+ Add Account</button>
+      </sc-if>
+
+      <sc-if value="{{ accountModalOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeAccountModal }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add account">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Bank / MFS Account</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Method</label>
+            <div style="{{ radioRowStyle }}">
+              <button type="button" style="{{ bankBtnStyle }}" onClick="{{ setNewMethodBank }}">Bank</button>
+              <button type="button" style="{{ mfsBtnStyle }}" onClick="{{ setNewMethodMfs }}">MFS</button>
+            </div>
+            <label style="{{ labelStyle }}">Bank / provider name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newLabel }}" onInput="{{ onNewLabel }}" placeholder="e.g. Standard Chartered"></input>
+            <label style="{{ labelStyle }}">Account number</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newNumber }}" onInput="{{ onNewNumber }}" placeholder="Account / wallet number"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeAccountModal }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveAccount }}">Save Account</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+function getQueryId(){ try{ return new URLSearchParams(window.location.search).get('id'); }catch(e){ return null; } }
+const DEFAULT_EXTRA = { address:'123 Gulshan Ave, Dhaka', bdsPartner:'Rahim Hassan', registration:'RJSC-2021-4521', taxId:'1234567890', industry:'Manufacturing', since:'2021-03-15' };
+const PROJECTS_SEED = [
+  {name:'ERP Implementation', status:'Active', milestones:'3/5', nextDue:'2026-09-15', value:'৳1,820,000.00'},
+  {name:'CRM Migration', status:'Planning', milestones:'0/4', nextDue:'2026-10-01', value:'৳1,250,000.00'}
+];
+const FINANCE_SEED = [
+  {date:'2026-08-10', type:'Payment', ref:'INV-2026-045', amount:'৳520,000.00', status:'Paid'},
+  {date:'2026-08-05', type:'Invoice', ref:'INV-2026-042', amount:'৳380,000.00', status:'Overdue'},
+  {date:'2026-07-28', type:'Payment', ref:'INV-2026-038', amount:'৳840,000.00', status:'Paid'},
+  {date:'2026-07-01', type:'Invoice', ref:'INV-2026-035', amount:'৳840,000.00', status:'Pending'}
+];
+const RESOURCES_SEED = [
+  {file:'requirements-v2.pdf', type:'PDF', milestone:'M1', uploaded:'2026-08-10'},
+  {file:'design-system.fig', type:'Figma', milestone:'M2', uploaded:'2026-08-08'},
+  {file:'api-spec.yaml', type:'YAML', milestone:'M2', uploaded:'2026-08-05'},
+  {file:'test-plan.xlsx', type:'Excel', milestone:'M4', uploaded:'2026-08-01'}
+];
+function statusChip(status,C){ const map={Active:C.success,Overdue:C.warning,Planning:C.neutral,Paid:C.success,Pending:C.warning,'On Hold':C.warning,Completed:C.success}; const color=map[status]||C.neutral; return {display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+class Component extends DCLogic {
+  state={theme:'dark',tab:'overview',editing:false,snapshot:null,
+    company:'Acme Corp',status:'Active',stakeholder:'Rahim Uddin',email:'rahim@acme.bd',phone:'+8801711-123456',address:DEFAULT_EXTRA.address,
+    bdsPartner:DEFAULT_EXTRA.bdsPartner,registration:DEFAULT_EXTRA.registration,taxId:DEFAULT_EXTRA.taxId,industry:DEFAULT_EXTRA.industry,since:DEFAULT_EXTRA.since,
+    activeProjects:4,contractValue:'৳4,860,000.00',outstanding:'৳1,230,000.00',
+    bankAccounts:[{id:1,method:'Bank',label:'Standard Chartered',number:'3300-9911-22'},{id:2,method:'MFS',label:'Nagad Business',number:'01611-778899'}],
+    accountModalOpen:false,newMethod:'Bank',newLabel:'',newNumber:'',
+    resources:[],addingResource:false,newResourceFile:'',newResourceUrl:'',newResourceLabel:'',resourceError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{
+      const id=getQueryId();
+      if(id){ const list=JSON.parse(localStorage.getItem('hub-clients'))||[]; const found=list.find(c=>String(c.id)===String(id));
+        if(found) this.setState({company:found.company,status:found.status,stakeholder:found.name,email:found.email,phone:found.phone,outstanding:found.outstanding}); }
+    }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  setTab=(t)=>()=>this.setState({tab:t});
+  startEdit=()=>this.setState(s=>({editing:true,snapshot:{stakeholder:s.stakeholder,email:s.email,phone:s.phone,address:s.address,industry:s.industry,registration:s.registration,taxId:s.taxId,bdsPartner:s.bdsPartner}}));
+  saveEdit=()=>this.setState({editing:false,snapshot:null});
+  discardEdit=()=>this.setState(s=>({editing:false,...(s.snapshot||{}),snapshot:null}));
+  onStakeholder=(e)=>this.setState({stakeholder:e.target.value}); onEmail=(e)=>this.setState({email:e.target.value});
+  onPhone=(e)=>this.setState({phone:e.target.value}); onAddress=(e)=>this.setState({address:e.target.value}); onIndustry=(e)=>this.setState({industry:e.target.value});
+  onRegistration=(e)=>this.setState({registration:e.target.value});
+  onTaxId=(e)=>this.setState({taxId:e.target.value});
+  onBdsPartner=(e)=>this.setState({bdsPartner:e.target.value});
+  openAccountModal=()=>this.setState({accountModalOpen:true,newMethod:'Bank',newLabel:'',newNumber:''});
+  closeAccountModal=()=>this.setState({accountModalOpen:false});
+  setNewMethodBank=()=>this.setState({newMethod:'Bank'}); setNewMethodMfs=()=>this.setState({newMethod:'MFS'});
+  onNewLabel=(e)=>this.setState({newLabel:e.target.value}); onNewNumber=(e)=>this.setState({newNumber:e.target.value});
+  saveAccount=()=>{ if(!this.state.newLabel.trim())return; const acc={id:Date.now(),method:this.state.newMethod,label:this.state.newLabel.trim(),number:this.state.newNumber.trim()||'—'};
+    this.setState(s=>({bankAccounts:[...s.bankAccounts,acc],accountModalOpen:false})); };
+  openAddResource=()=>this.setState({addingResource:true,newResourceFile:'',newResourceFileUrl:'',newResourceUrl:'',newResourceLabel:'',resourceError:false});
+  cancelAddResource=()=>this.setState({addingResource:false});
+  onNewResourceFile=(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f){ this.setState({newResourceFile:'',newResourceFileUrl:'',resourceError:false}); return; }
+    const url=URL.createObjectURL(f); this.setState({newResourceFile:f.name,newResourceFileUrl:url,resourceError:false}); };
+  onNewResourceUrl=(e)=>this.setState({newResourceUrl:e.target.value,resourceError:false});
+  onNewResourceLabel=(e)=>this.setState({newResourceLabel:e.target.value});
+  removeResource=(id)=>()=>this.setState(s=>({resources:s.resources.filter(r=>r.id!==id)}));
+  saveResource=()=>{ const s=this.state; const file=s.newResourceFile.trim(); const url=s.newResourceUrl.trim();
+    if(!file && !url){ this.setState({resourceError:true}); return; }
+    const r = url ? {id:Date.now(),type:'Link',isLink:true,isFile:false,url,label:s.newResourceLabel.trim()||url} : {id:Date.now(),type:'File',isLink:false,isFile:true,label:file,fileUrl:s.newResourceFileUrl};
+    this.setState(st=>({resources:[...st.resources,r],addingResource:false})); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px',whiteSpace:'nowrap'};
+    const smBtnBase={...btnBase,fontSize:12,padding:'4px 12px'};
+    const tabDef=[['overview','Overview'],['projects','Projects'],['finance','Finance'],['resources','Resources'],['accounts','Accounts']];
+    const tabs=tabDef.map(([k,label])=>({label,onClick:this.setTab(k),style:{...smBtnBase,whiteSpace:'nowrap',background:'transparent',color:this.state.tab===k?C.inkHi:C.muted,borderColor:'transparent',borderBottom:this.state.tab===k?`2px solid ${C.accent}`:'2px solid transparent',borderRadius:0,padding:'8px 4px'}}));
+    const projects=PROJECTS_SEED.map(p=>({...p,chipStyle:statusChip(p.status,C)}));
+    const financeRows=FINANCE_SEED.map(f=>({...f,chipStyle:statusChip(f.status,C)}));
+    const resourceRows=RESOURCES_SEED.map(r=>({...r,action:'View',onAction:()=>{}}));
+    const resources=this.state.resources.map(r=>({...r,onRemove:this.removeResource(r.id)}));
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,tabs,
+      isOverview:this.state.tab==='overview',isProjects:this.state.tab==='projects',isFinance:this.state.tab==='finance',isResources:this.state.tab==='resources',isAccounts:this.state.tab==='accounts',
+      company:this.state.company,status:this.state.status,statusChipStyle:statusChip(this.state.status,C),
+      editing:this.state.editing,notEditing:!this.state.editing,startEdit:this.startEdit,saveEdit:this.saveEdit,discardEdit:this.discardEdit,
+      stakeholder:this.state.stakeholder,onStakeholder:this.onStakeholder,email:this.state.email,onEmail:this.onEmail,mailto:'mailto:'+this.state.email,
+      phone:this.state.phone,onPhone:this.onPhone,address:this.state.address,onAddress:this.onAddress,bdsPartner:this.state.bdsPartner,onBdsPartner:this.onBdsPartner,bdsPartnerDisplay:this.state.bdsPartner||'—',
+      registration:this.state.registration,onRegistration:this.onRegistration,registrationDisplay:this.state.registration||'—',
+      taxId:this.state.taxId,onTaxId:this.onTaxId,taxIdDisplay:this.state.taxId||'—',
+      industry:this.state.industry,onIndustry:this.onIndustry,since:this.state.since,
+      activeProjects:this.state.activeProjects,contractValue:this.state.contractValue,outstanding:this.state.outstanding,
+      projects,financeRows,resourceRows,
+      recvReceived:'৳3,630,000.00',recvDue:'৳840,000.00',recvNotDue:'৳2,410,000.00',recvOverdue:'৳380,000.00',
+      payTeam:'৳820,000.00',payBds:'৳310,000.00',payOther:'৳140,000.00',
+      bankAccounts:this.state.bankAccounts,noBankAccounts:this.state.bankAccounts.length===0,
+      resources,noResources:resources.length===0,
+      addingResource:this.state.addingResource,openAddResource:this.openAddResource,cancelAddResource:this.cancelAddResource,saveResource:this.saveResource,
+      newResourceFile:this.state.newResourceFile,onNewResourceFile:this.onNewResourceFile,newResourceUrl:this.state.newResourceUrl,onNewResourceUrl:this.onNewResourceUrl,
+      newResourceLabel:this.state.newResourceLabel,onNewResourceLabel:this.onNewResourceLabel,resourceError:this.state.resourceError,
+      resourceListStyle:{display:'flex',flexDirection:'column',gap:8,marginBottom:8},
+      resourceRowStyle:{display:'flex',alignItems:'center',gap:12,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:'10px 12px'},
+      resourceTypeChip:{display:'inline-flex',padding:'2px 8px',borderRadius:999,fontSize:11,fontWeight:500,fontFamily:FONT,color:C.muted,border:`1px solid ${C.border}`,flexShrink:0},
+      resourceLinkStyle:{color:C.accent,fontFamily:FONT,fontSize:14,textDecoration:'none',flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      resourceLabelStyle:{color:C.ink,fontFamily:FONT,fontSize:14,flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      fileNameDisplay:this.state.newResourceFile||'No file selected',
+      fileUploadRowStyle:{display:'flex',alignItems:'center',gap:8},
+      fileUploadBtnStyle:{display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:13,padding:'8px 12px',cursor:'pointer',flexShrink:0},
+      hiddenFileInputStyle:{display:'none'},
+      fileNameDisplayStyle:{color:C.muted,fontFamily:FONT,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'},
+      addResourceCardStyle:{background:C.surface,border:`1px dashed ${C.border}`,borderRadius:8,padding:16,marginTop:8,display:'flex',flexDirection:'column',gap:8},
+      addActionsRowStyle:{display:'flex',justifyContent:'flex-end',gap:8,marginTop:8},
+      errorTextStyle2:{color:C.danger,fontSize:12,fontFamily:FONT},
+      accountModalOpen:this.state.accountModalOpen,openAccountModal:this.openAccountModal,closeAccountModal:this.closeAccountModal,
+      newMethod:this.state.newMethod,setNewMethodBank:this.setNewMethodBank,setNewMethodMfs:this.setNewMethodMfs,
+      newLabel:this.state.newLabel,onNewLabel:this.onNewLabel,newNumber:this.state.newNumber,onNewNumber:this.onNewNumber,saveAccount:this.saveAccount,
+      bankBtnStyle:{...smBtnBase,background:this.state.newMethod==='Bank'?C.accent+'22':'transparent',color:this.state.newMethod==='Bank'?C.inkHi:C.muted,borderColor:this.state.newMethod==='Bank'?C.accent:C.border},
+      mfsBtnStyle:{...smBtnBase,background:this.state.newMethod==='MFS'?C.accent+'22':'transparent',color:this.state.newMethod==='MFS'?C.inkHi:C.muted,borderColor:this.state.newMethod==='MFS'?C.accent:C.border},
+      noAccountTextStyle:{color:C.muted,fontSize:13,fontFamily:FONT,margin:'8px 0'},
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1100,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      backLinkStyle:{color:C.muted,fontFamily:FONT,fontSize:13,textDecoration:'none',display:'inline-block',marginBottom:16},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:16,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,margin:0},
+      statusRowStyle:{marginTop:8}, actionsRowStyle:{display:'flex',gap:8,alignItems:'center'},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      btnPrimaryLinkStyle:{...btnBase,background:C.accent,color:C.accentInk,textDecoration:'none'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmStyle:{...smBtnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      triggerWrapStyle:{marginTop:8},
+      tabRowStyle:{display:'flex',gap:16,borderBottom:`1px solid ${C.border}`,marginBottom:24,flexWrap:'wrap'},
+      cardGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:16,marginBottom:24},
+      cardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16},
+      cardTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,fontWeight:600,margin:'0 0 12px'},
+      fieldRowStyle:{marginBottom:12}, labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT,display:'block',marginBottom:4},
+      valueStyle:{color:C.inkHi,fontFamily:FONT,fontSize:14,margin:0}, linkStyle:{color:C.accent,textDecoration:'none'},
+      successValueStyle:{color:C.success,fontFamily:FONT,fontSize:14,margin:0,fontWeight:500},
+      warningValueStyle:{color:C.warning,fontFamily:FONT,fontSize:14,margin:0,fontWeight:500},
+      dangerValueStyle:{color:C.danger,fontFamily:FONT,fontSize:14,margin:0,fontWeight:500},
+      inputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'6px 10px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      kpiGridStyle:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:16,marginBottom:24},
+      kpiCardStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:16,display:'flex',flexDirection:'column',gap:6},
+      kpiLabelStyle:{color:C.muted,fontSize:12,fontFamily:FONT}, kpiWarnStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      kpiValueStyle:{color:C.inkHi,fontSize:20,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      kpiValueDangerStyle:{color:C.danger,fontSize:20,fontWeight:600,fontFamily:FONT,fontVariantNumeric:'tabular-nums'},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8,marginBottom:16},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      radioRowStyle:{display:'flex',gap:8,marginBottom:4},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'}
+    };
+  }
+}
+</script>
+</body>
+</html>

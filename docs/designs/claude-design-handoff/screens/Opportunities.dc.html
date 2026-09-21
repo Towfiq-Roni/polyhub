@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Opportunities.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Opportunities" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Opportunities</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Opportunity</button>
+      </header>
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search opportunities..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ stageFilter }}" onChange="{{ onStageFilter }}">
+          <option value="">All Stages</option><option value="Discovery">Discovery</option><option value="Qualification">Qualification</option><option value="Proposal">Proposal</option><option value="Negotiation">Negotiation</option><option value="Won">Won</option><option value="Lost">Lost</option>
+        </select>
+      </div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thSortStyle }}" onClick="{{ sortByCode }}">Opportunity{{ sortMark }}</th><th style="{{ thStyle }}">Client</th><th style="{{ thStyle }}">Stage</th><th style="{{ thNumStyle }}">Est. Value</th><th style="{{ thStyle }}">Expected Close</th><th style="{{ thStyle }}">Owner</th><th style="{{ thStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="o" hint-placeholder-count="8">
+              <tr>
+                <td style="{{ tdStyle }}">{{ o.code }}</td><td style="{{ tdStyle }}">{{ o.client }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ o.chipStyle }}">{{ o.stage }}</span></td>
+                <td style="{{ tdNumStyle }}">{{ o.value }}</td><td style="{{ tdStyle }}">{{ o.closeDate }}</td><td style="{{ tdStyle }}">{{ o.owner }}</td>
+                <td style="{{ tdStyle }}"><a href="{{ o.detailHref }}" style="{{ btnGhostSmLinkStyle }}">View</a></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}"><div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No opportunities found</h3><p style="{{ emptyTextStyle }}">Try adjusting your search or filters.</p></div></sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add opportunity">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Add Opportunity</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Client</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newClient }}" onInput="{{ onNewClient }}" placeholder="e.g. Acme Corp"></input>
+            <sc-if value="{{ clientError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Client is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Est. value (৳)</label>
+            <input type="number" style="{{ modalInputStyle }}" value="{{ newValue }}" onInput="{{ onNewValue }}" placeholder="0"></input>
+            <label style="{{ labelStyle }}">Expected close date</label>
+            <input type="date" style="{{ modalInputStyle }}" value="{{ newCloseDate }}" onInput="{{ onNewCloseDate }}"></input>
+            <label style="{{ labelStyle }}">Owner</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newOwner }}" onInput="{{ onNewOwner }}" placeholder="e.g. Rahim Uddin"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Opportunity</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', info:'#6C86AD', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E', neutral:'#6F7E8F' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', info:'#3E5C8A', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E', neutral:'#5A6675' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+function chip(stage,C){ const map={Discovery:C.neutral,Qualification:C.info,Proposal:C.warning,Negotiation:C.success,Won:C.success,Lost:C.danger}; const color=map[stage]||C.neutral; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,code:'OPP-2026-001',client:'Acme Corp',stage:'Proposal',value:1850000,closeDate:'2026-09-15',owner:'Rahim Uddin'},
+ {id:2,code:'OPP-2026-002',client:'Bayzid Group',stage:'Negotiation',value:4200000,closeDate:'2026-08-30',owner:'Karim Ali'},
+ {id:3,code:'OPP-2026-003',client:'Delta Tech',stage:'Discovery',value:850000,closeDate:'2026-10-15',owner:'Farida Akter'},
+ {id:4,code:'OPP-2026-004',client:'Ekushey Solutions',stage:'Qualification',value:2500000,closeDate:'2026-09-20',owner:'Kamal Hossain'},
+ {id:5,code:'OPP-2026-005',client:'Futura Ltd',stage:'Proposal',value:1500000,closeDate:'2026-09-10',owner:'Nadia Rahman'},
+ {id:6,code:'OPP-2026-006',client:'Greenfield Inc',stage:'Lost',value:600000,closeDate:'2026-07-15',owner:'Mahmudul Islam'},
+ {id:7,code:'OPP-2026-007',client:'Horizon Systems',stage:'Won',value:3000000,closeDate:'2026-08-01',owner:'Tasnim Ahmed'},
+ {id:8,code:'OPP-2026-008',client:'Impact Ventures',stage:'Qualification',value:2200000,closeDate:'2026-09-25',owner:'Rahima Khatun'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',stageFilter:'',sortDir:1,opportunities:SEED,createOpen:false,newClient:'',newValue:'',newCloseDate:'',newOwner:'',clientError:false};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){}
+    try{ const converted=JSON.parse(localStorage.getItem('hub-converted-leads'))||[];
+      if(converted.length){ this.setState(s=>({opportunities:[...converted,...s.opportunities]})); localStorage.removeItem('hub-converted-leads'); } }catch(e){}
+    this.persist(); }
+  persist(){ try{ localStorage.setItem('hub-opportunities', JSON.stringify(this.state.opportunities)); }catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value}); onStageFilter=(e)=>this.setState({stageFilter:e.target.value});
+  sortByCode=()=>this.setState(s=>({sortDir:-s.sortDir}));
+  onNewClient=(e)=>this.setState({newClient:e.target.value}); onNewValue=(e)=>this.setState({newValue:e.target.value});
+  onNewCloseDate=(e)=>this.setState({newCloseDate:e.target.value}); onNewOwner=(e)=>this.setState({newOwner:e.target.value});
+  openCreate=()=>this.setState({createOpen:true,newClient:'',newValue:'',newCloseDate:'',newOwner:'',clientError:false}); closeCreate=()=>this.setState({createOpen:false});
+  submitCreate=()=>{ if(!this.state.newClient.trim()){this.setState({clientError:true});return;} const v=parseFloat(this.state.newValue)||0;
+    const o={id:Date.now(),code:'OPP-2026-'+String(this.state.opportunities.length+1).padStart(3,'0'),client:this.state.newClient.trim(),stage:'Discovery',value:v,closeDate:this.state.newCloseDate||'—',owner:this.state.newOwner.trim()||'—'};
+    this.setState(s=>({opportunities:[o,...s.opportunities],createOpen:false}), ()=>this.persist()); };
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    let filtered=this.state.opportunities.filter(o=>(!this.state.search||o.client.toLowerCase().includes(this.state.search.toLowerCase()))&&(!this.state.stageFilter||o.stage===this.state.stageFilter));
+    filtered=filtered.slice().sort((a,b)=>a.code.localeCompare(b.code)*this.state.sortDir);
+    const pageRows=filtered.map(o=>({...o,value:fmt(o.value),chipStyle:chip(o.stage,C),detailHref:'OpportunityDetail.dc.html?id='+o.id}));
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,stageFilter:this.state.stageFilter,onSearch:this.onSearch,onStageFilter:this.onStageFilter,
+      sortByCode:this.sortByCode,sortMark:this.state.sortDir===1?' ▲':' ▼',
+      pageRows,noResults:pageRows.length===0,createOpen:this.state.createOpen,openCreate:this.openCreate,closeCreate:this.closeCreate,
+      newClient:this.state.newClient,newValue:this.state.newValue,newCloseDate:this.state.newCloseDate,newOwner:this.state.newOwner,clientError:this.state.clientError,onNewClient:this.onNewClient,onNewValue:this.onNewValue,onNewCloseDate:this.onNewCloseDate,onNewOwner:this.onNewOwner,submitCreate:this.submitCreate,
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnGhostSmLinkStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',textDecoration:'none'},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      selectStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thSortStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`,cursor:'pointer'},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      emptyStyle:{color:C.muted,textAlign:'center',padding:48,fontFamily:FONT},emptyTitleStyle:{color:C.inkHi,fontFamily:FONT,margin:'0 0 8px'},emptyTextStyle:{margin:0,fontSize:14},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(420px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:12},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      errorTextStyle:{color:C.danger,fontSize:12,fontFamily:FONT}
+    };
+  }
+}
+</script>
+</body>
+</html>

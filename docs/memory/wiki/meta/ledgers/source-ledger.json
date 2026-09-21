@@ -1,0 +1,576 @@
+{
+  "schema": "claude-obsidian.source-ledger.v1",
+  "generated_at": "2026-09-07T21:05:36Z",
+  "sources": {
+    "src-c70cfd30449cd9baefef": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/44205e2a62ccb96f19797fcea08d6bd9772f9e32ef4836e61f9701e609b0170d.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Hub Design System (living)",
+      "content_sha256": "44205e2a62ccb96f19797fcea08d6bd9772f9e32ef4836e61f9701e609b0170d",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-297817b1e104c641db3f": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/89b49a2fc14a76e55dd4317613788f1ac6a7f81949c185154f8a1653e2ab940b.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Hub README",
+      "content_sha256": "89b49a2fc14a76e55dd4317613788f1ac6a7f81949c185154f8a1653e2ab940b",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-70c0b95dca05f859f158": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/2d02f38446a95d61175056423a28ef31255d47489fc2081ae3330b1c9f0eb5d7.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Tasks",
+      "content_sha256": "2d02f38446a95d61175056423a28ef31255d47489fc2081ae3330b1c9f0eb5d7",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-9b4ff0c161901ca14f93": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/e378785e4a9ed48f71ef7b6e39f0ad796d1004ef03a2ba010cbeade1f4162dff.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Hub Development Pipeline",
+      "content_sha256": "e378785e4a9ed48f71ef7b6e39f0ad796d1004ef03a2ba010cbeade1f4162dff",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-c270f1815792362cbeae": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/fdfcbff6957e3e5a6e04e995eaabbfceca6c80231164be0d31eb78d923e3debc.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Deployment Plan",
+      "content_sha256": "fdfcbff6957e3e5a6e04e995eaabbfceca6c80231164be0d31eb78d923e3debc",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-f0ec38502f4fc25ba976": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/2a8f1a47eab1f801b5068cff9483711a08f443bbae63309bd660ec2981375ee1.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Development Plan",
+      "content_sha256": "2a8f1a47eab1f801b5068cff9483711a08f443bbae63309bd660ec2981375ee1",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-aebb42d2eb119720fc8b": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/25e6676185952b65af8621c4af6fba60a49d7f2ae40e04f6a9b451997a44ae1f.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Requirement Gaps",
+      "content_sha256": "25e6676185952b65af8621c4af6fba60a49d7f2ae40e04f6a9b451997a44ae1f",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-5484aa401d412aa0f06e": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/1122ec17c08e43e44aeafbd5559a35005542de93ed622b2e3b7afddb9ed393fd.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Requirements Analysis",
+      "content_sha256": "1122ec17c08e43e44aeafbd5559a35005542de93ed622b2e3b7afddb9ed393fd",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-004884de939423c9b89c": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/f31c48c9ffbcabc06033311283e61fd9e12dbbdbb10c15101600094ac36a6e15.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Task Breakdown",
+      "content_sha256": "f31c48c9ffbcabc06033311283e61fd9e12dbbdbb10c15101600094ac36a6e15",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-b693429a6a9bc2d89c28": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/52d81259e54b2cf259f1d98d8472c2240e74960e5af03613691d9ac9e874f870.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0000: Record Architecture Decisions",
+      "content_sha256": "52d81259e54b2cf259f1d98d8472c2240e74960e5af03613691d9ac9e874f870",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-b45236b941ef5d328d6d": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/fc398adcc4900ddc59829db215afce36c8e99fe8937a148e680e14a9d0975437.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0001: Frontend Stack",
+      "content_sha256": "fc398adcc4900ddc59829db215afce36c8e99fe8937a148e680e14a9d0975437",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-1466c5dac2a1564f9d11": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/b7f85699580ae9f9224751ba88e50f44e1743234d391ca47e5fc6d94427c1ba9.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0002: Backend Stack",
+      "content_sha256": "b7f85699580ae9f9224751ba88e50f44e1743234d391ca47e5fc6d94427c1ba9",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-c22b572422a455ac529c": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/67036bf37fc2d38494a75ca091f65a9f9eded7701474c43e16d3adf233106a86.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0003: Single-VM Deployment Topology",
+      "content_sha256": "67036bf37fc2d38494a75ca091f65a9f9eded7701474c43e16d3adf233106a86",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-9cc47b9cc9fd8c55f921": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/4e1f523d8f5537b3c653711c47e654e389fcceca4c5440e44b013f755558caf9.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0004: JWT + Argon2id Auth",
+      "content_sha256": "4e1f523d8f5537b3c653711c47e654e389fcceca4c5440e44b013f755558caf9",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-d5bfbfff22bf2c8ad6fb": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/1f348d758470c74cf078390c5940325f371ca21264c7ee36c0e6186751e12885.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0005: Money as Integer Poisha",
+      "content_sha256": "1f348d758470c74cf078390c5940325f371ca21264c7ee36c0e6186751e12885",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-7c2c6a76d1db961f2baf": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/dd98a2da584b38e6d035302ddd5798cfe56aef14893ceac86a1bbe7e49a17f72.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0006: Immutable Ledger, Reversals",
+      "content_sha256": "dd98a2da584b38e6d035302ddd5798cfe56aef14893ceac86a1bbe7e49a17f72",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-47321dc90f269f5ed657": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/8b0e2c3c9f252086ace960cbd8d910d0c1b01bcfa64a424d3f8770a5f521c5c7.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0007: Allow-Only RBAC",
+      "content_sha256": "8b0e2c3c9f252086ace960cbd8d910d0c1b01bcfa64a424d3f8770a5f521c5c7",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-5c45cfc5adc4309c2ef0": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/20d435d43eed23ee0a042073d455eed83ba5cfdf3ab5473a4868e33310b8568d.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0008: Unified Resource Model",
+      "content_sha256": "20d435d43eed23ee0a042073d455eed83ba5cfdf3ab5473a4868e33310b8568d",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-c2cb62a277b672f2ae12": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/12aafb8d9508f57b7c891d01e82ed90f386e996aaca0d6ed446a9f97480b36fa.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0009: Universal Export Architecture",
+      "content_sha256": "12aafb8d9508f57b7c891d01e82ed90f386e996aaca0d6ed446a9f97480b36fa",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-eb3701e3208e6f4f786f": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/4167f2ddf4f70fc7354e64061197027b98eef2de2bc403ded03ee23d32eeed90.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0010: Enriched Error Envelope",
+      "content_sha256": "4167f2ddf4f70fc7354e64061197027b98eef2de2bc403ded03ee23d32eeed90",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-754c9b5423646f81b854": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/844bed22b462bbc97503e869ef3759603528ebf0e2b108815a4760458cbf081a.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR-0011: Derived Chart-of-Accounts Reporting",
+      "content_sha256": "844bed22b462bbc97503e869ef3759603528ebf0e2b108815a4760458cbf081a",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-90f1854494479f73c183": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/5303501bf787bbcd4c1f0d8b5ea94d687889c2dda5a31d2702075ba733e7aaf8.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "ADR Index",
+      "content_sha256": "5303501bf787bbcd4c1f0d8b5ea94d687889c2dda5a31d2702075ba733e7aaf8",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-cf519e75d5224c7d7c56": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/b703f85246928ff2f56ca249f8cb182398c65becf36e74a57ab644f1ba0e9edf.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Agentic Development Procedures",
+      "content_sha256": "b703f85246928ff2f56ca249f8cb182398c65becf36e74a57ab644f1ba0e9edf",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-cd6b0228657503b1d03d": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/f1bfdf410df4b8f4c35d08df7cef10a25268bf012d70d3af533bd0b11c898212.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Design Docs Index",
+      "content_sha256": "f1bfdf410df4b8f4c35d08df7cef10a25268bf012d70d3af533bd0b11c898212",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-9edd7ce6cb30786ffbc8": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/06ef31dc078614b9b1ecd7c3cb3f487fbce5937901bea271d9642537d6757c2a.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "REQ-32: Design Restrictions, Exports, Errors, Loop-Guardian",
+      "content_sha256": "06ef31dc078614b9b1ecd7c3cb3f487fbce5937901bea271d9642537d6757c2a",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-bef54e40884e2c846a12": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/9a19de648cf41007fd478b27e072899fc17b73127de0012c2668b54c268bdbca.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "REQ-33: Derived Chart-of-Accounts Reporting",
+      "content_sha256": "9a19de648cf41007fd478b27e072899fc17b73127de0012c2668b54c268bdbca",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-ecc12a3925d0ad884819": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/1c85b23d7835dc8aa77f9ee7a7ef51042a5a7f647e6f339b4172de523964da0a.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Merged Design Skill Workflow",
+      "content_sha256": "1c85b23d7835dc8aa77f9ee7a7ef51042a5a7f647e6f339b4172de523964da0a",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-410158f88629e8d6ea11": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/a299d98429a8107973002944048e08798870b42c4d8e5ec4aa90288e19401d51.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Hub Design System (SUPERSEDED)",
+      "content_sha256": "a299d98429a8107973002944048e08798870b42c4d8e5ec4aa90288e19401d51",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-52cc2ad77910de7dd691": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/1acb3a3a4161b6f46889a91e2fc8022fe266d7ee999f9904bb925e16b4300a56.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Phase 0 Redesign Handoff Plan",
+      "content_sha256": "1acb3a3a4161b6f46889a91e2fc8022fe266d7ee999f9904bb925e16b4300a56",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    },
+    "src-7ee923d5ce9a7e984823": {
+      "origin": {
+        "kind": "file",
+        "locator": ".raw/captured/1e1859a698275301090c9d9e09f1bb4b36e76fc62d214fccbb177d921e084d3d.md"
+      },
+      "content_kind": "document",
+      "authority": "primary",
+      "review_status": "active",
+      "title": "Original Client Spec",
+      "content_sha256": "1e1859a698275301090c9d9e09f1bb4b36e76fc62d214fccbb177d921e084d3d",
+      "ingested_at": "2026-09-07",
+      "retrieved_at": "2026-09-07",
+      "refresh_due": "2026-12-07",
+      "pages": [
+        "wiki/index.md"
+      ],
+      "independence_key": null,
+      "supersedes": null
+    }
+  }
+}

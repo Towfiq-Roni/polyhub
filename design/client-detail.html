@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Detail · hub</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dea-loading">DEA</div>
+
+<div class="app-shell">
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-header-row">
+      <div class="sidebar-brand" title="Hub">
+        <span class="brand-mark">DEA</span>
+        <span class="brand-name">Hub</span>
+      </div>
+      <button type="button" id="sidebarCollapse" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline><polyline points="9 18 3 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <a class="nav-item" href="dashboard.html" data-label="Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Organization</span>
+        <a class="nav-item" href="teams.html" data-label="Teams">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span class="nav-item-label">Teams</span>
+        </a>
+        <a class="nav-item" href="team-members.html" data-label="Team Members">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a5 5 0 0 0-3-4.6"></path></svg>
+          <span class="nav-item-label">Team Members</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">CRM</span>
+        <a class="nav-item active" href="clients.html" data-label="Clients" aria-current="page">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Clients</span>
+        </a>
+        <a class="nav-item" href="leads.html" data-label="Leads">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Leads</span>
+        </a>
+        <a class="nav-item" href="opportunities.html" data-label="Opportunities">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span class="nav-item-label">Opportunities</span>
+        </a>
+        <a class="nav-item" href="bds-partners.html" data-label="BDS Partners">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8a4 4 0 0 0-7-2.5L12 6.6l-1-1.1A4 4 0 0 0 4 8c0 5 8 11 8 11s8-6 8-11z"></path></svg>
+          <span class="nav-item-label">BDS Partners</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Projects</span>
+        <a class="nav-item" href="projects.html" data-label="Projects">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Projects</span>
+        </a>
+        <a class="nav-item" href="project-milestones.html" data-label="Milestones">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <span class="nav-item-label">Milestones</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Finance</span>
+        <a class="nav-item" href="finance-dashboard.html" data-label="Finance Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.8 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"></path></svg>
+          <span class="nav-item-label">Finance Dashboard</span>
+        </a>
+        <a class="nav-item" href="accounts.html" data-label="Accounts">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="10" rx="2"></rect><path d="M3 10l9-6 9 6"></path><line x1="9" y1="14" x2="9" y2="16"></line><line x1="15" y1="14" x2="15" y2="16"></line></svg>
+          <span class="nav-item-label">Accounts</span>
+        </a>
+        <a class="nav-item" href="transactions.html" data-label="Transactions">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span class="nav-item-label">Transactions</span>
+        </a>
+        <a class="nav-item" href="receivables.html" data-label="Receivables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span class="nav-item-label">Receivables</span>
+        </a>
+        <a class="nav-item" href="payables.html" data-label="Payables">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path></svg>
+          <span class="nav-item-label">Payables</span>
+        </a>
+        <a class="nav-item" href="payment-entry.html" data-label="Payment Entry">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+          <span class="nav-item-label">Payment Entry</span>
+        </a>
+        <a class="nav-item" href="project-costs.html" data-label="Project Costs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="nav-item-label">Project Costs</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-label">Admin</span>
+        <a class="nav-item" href="users.html" data-label="Users">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="nav-item-label">Users</span>
+        </a>
+        <a class="nav-item" href="roles.html" data-label="Roles">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <a class="nav-item" href="audit-logs.html" data-label="Audit Logs">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l6 6"></path><path d="M6 18V5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v13"></path></svg>
+          <span class="nav-item-label">Audit Logs</span>
+        </a>
+        <a class="nav-item" href="settings.html" data-label="Settings">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 15.09H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span class="nav-item-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <a class="nav-item" href="reports.html" data-label="Reports">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <h1 class="topbar-title">Client Detail</h1>
+
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" placeholder="Search projects, clients, transactions…" aria-label="Global search">
+        <div class="search-dropdown" hidden></div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="notif-wrap">
+          <button type="button" class="icon-btn" aria-label="Notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="notif-badge-dot"></span>
+          </button>
+          <div class="notif-dropdown" hidden></div>
+        </div>
+
+        <div class="user-menu">
+          <button type="button" class="user-trigger" aria-haspopup="true">
+            <span class="user-avatar">RU</span>
+            <span class="user-name">Rahim Uddin</span>
+            <span class="user-role">Finance Manager</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="user-dropdown" hidden>
+            <div class="user-info">
+              <div class="user-info-name">Rahim Uddin</div>
+              <div class="user-info-role">Finance Manager</div>
+            </div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="settings.html">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      <main class="content">
+        <div class="breadcrumbs" style="margin-block-end:var(--space-md)"><a href="clients.html">← Back to Clients</a></div>
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title" id="clientCompany">Acme Corp</h2>
+            <p class="page-subtitle"><span class="chip chip--success" id="clientStatusChip">Active</span></p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="editBtn">Edit Client</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="discardBtn" hidden>Discard</button>
+            <button type="button" class="btn btn-primary btn-sm" id="saveBtn" hidden>Save</button>
+            <span class="success" id="savedFlash" hidden>Saved</span>
+          </div>
+        </div>
+
+        <div class="tab-nav" role="tablist">
+          <button type="button" class="tab-btn active" id="overview-tab" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+          <button type="button" class="tab-btn" id="projects-tab" role="tab" aria-selected="false" data-tab="projects">Projects</button>
+          <button type="button" class="tab-btn" id="finance-tab" role="tab" aria-selected="false" data-tab="finance">Finance</button>
+          <button type="button" class="tab-btn" id="resources-tab" role="tab" aria-selected="false" data-tab="resources">Resources</button>
+          <button type="button" class="tab-btn" id="accounts-tab" role="tab" aria-selected="false" data-tab="accounts">Accounts</button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="overview-panel" role="tabpanel">
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Contact Information</h3></div>
+                <div class="card-body">
+                  <div class="field">
+                    <label for="cd-stakeholder-input">Stakeholder</label>
+                    <p id="cd-stakeholder-display">Rahim Uddin</p>
+                    <input type="text" class="input" id="cd-stakeholder-input" value="Rahim Uddin" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-email-input">Email</label>
+                    <p id="cd-email-display"><a class="link" href="mailto:rahim@acme.bd" id="cd-email-link">rahim@acme.bd</a></p>
+                    <input type="email" class="input" id="cd-email-input" value="rahim@acme.bd" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-phone-input">Phone</label>
+                    <p id="cd-phone-display">+8801711-123456</p>
+                    <input type="text" class="input" id="cd-phone-input" value="+8801711-123456" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-address-input">Address</label>
+                    <p id="cd-address-display">123 Gulshan Ave, Dhaka</p>
+                    <input type="text" class="input" id="cd-address-input" value="123 Gulshan Ave, Dhaka" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-bds-select">BDS Partner</label>
+                    <p id="cd-bds-display">Rahim Hassan</p>
+                    <select class="select" id="cd-bds-select" hidden></select>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Company Information</h3></div>
+                <div class="card-body">
+                  <div class="field">
+                    <label for="cd-registration-input">Registration</label>
+                    <p id="cd-registration-display">RJSC-2021-4521</p>
+                    <input type="text" class="input" id="cd-registration-input" value="RJSC-2021-4521" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-taxid-input">Tax ID</label>
+                    <p id="cd-taxid-display">1234567890</p>
+                    <input type="text" class="input" id="cd-taxid-input" value="1234567890" hidden>
+                  </div>
+                  <div class="field">
+                    <label for="cd-industry-input">Industry</label>
+                    <p id="cd-industry-display">Manufacturing</p>
+                    <input type="text" class="input" id="cd-industry-input" value="Manufacturing" hidden>
+                  </div>
+                  <div class="field">
+                    <label>Client Since</label>
+                    <p>2021-03-15</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Active Projects</div>
+                <div class="kpi-value" id="kpiActiveProjects">4</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Total Contract Value</div>
+                <div class="kpi-value" id="kpiContractValue">৳4,860,000.00</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Outstanding</div>
+                <div class="kpi-value" id="kpiOutstanding">৳1,230,000.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="projects-panel" role="tabpanel" hidden>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Project</th><th>Status</th><th>Milestones</th><th>Next Due</th><th class="num">Value</th></tr></thead>
+                <tbody id="clientProjectsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="finance-panel" role="tabpanel" hidden>
+            <!-- ponytail: read-only summary only; this tab must never expose an editable balance/received field (CLAUDE.md #2); Phase 2+ wires these to real receivables/payables aggregate queries -->
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Receivables</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Received</label><p class="success">৳3,630,000.00</p></div>
+                  <div class="field"><label>Due</label><p class="warning">৳840,000.00</p></div>
+                  <div class="field"><label>Not Due</label><p>৳2,410,000.00</p></div>
+                  <div class="field"><label>Overdue</label><p class="danger">৳380,000.00</p></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3 class="card-title">Payables (attributed)</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Team</label><p>৳820,000.00</p></div>
+                  <div class="field"><label>BDS</label><p>৳310,000.00</p></div>
+                  <div class="field"><label>Other</label><p>৳140,000.00</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Type</th><th>Ref</th><th class="num">Amount</th><th>Status</th></tr></thead>
+                <tbody id="clientFinanceBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="resources-panel" role="tabpanel" hidden>
+            <div class="filter-bar">
+              <select class="select" id="resourceMilestoneFilter" aria-label="Filter by milestone">
+                <option value="">All Milestones</option>
+                <option value="M1">M1 - Discovery</option>
+                <option value="M2">M2 - Design</option>
+                <option value="M3">M3 - Build</option>
+                <option value="M4">M4 - Launch</option>
+              </select>
+              <div class="chips" id="resourceTagChips">
+                <button type="button" class="chip chip--neutral" data-tag="" aria-pressed="true">All Tags</button>
+                <button type="button" class="chip chip--info" data-tag="PDF" aria-pressed="false">PDF</button>
+                <button type="button" class="chip chip--info" data-tag="Design" aria-pressed="false">Design</button>
+                <button type="button" class="chip chip--info" data-tag="Spec" aria-pressed="false">Spec</button>
+                <button type="button" class="chip chip--info" data-tag="Link" aria-pressed="false">Link</button>
+              </div>
+            </div>
+
+            <div class="attention-list" id="resourceList"></div>
+            <div class="empty-state" id="resourceEmpty" hidden>
+              <h3>No resources found</h3>
+              <p>Try a different filter, or add one below.</p>
+            </div>
+
+            <div id="addResourceTrigger" style="margin-block-start:var(--space-md)">
+              <button type="button" class="btn btn-ghost btn-sm" id="openAddResourceBtn">+ Add Resource</button>
+            </div>
+            <div class="card" id="addResourceCard" hidden style="margin-block-start:var(--space-md)">
+              <div class="card-body">
+                <div class="file-upload-row">
+                  <input type="file" class="file-upload-input" id="resourceFileInput">
+                  <label for="resourceFileInput" class="file-upload-btn">Choose File</label>
+                  <span class="file-upload-name" id="resourceFileName">No file chosen</span>
+                </div>
+                <div class="field">
+                  <label for="resourceUrlInput">Link URL (optional)</label>
+                  <input type="text" class="input" id="resourceUrlInput" placeholder="https://...">
+                </div>
+                <div class="field">
+                  <label for="resourceLabelInput">Link label (optional)</label>
+                  <input type="text" class="input" id="resourceLabelInput" placeholder="e.g. Shared Drive">
+                </div>
+                <div class="field">
+                  <label for="resourceMilestoneInput">Milestone (optional)</label>
+                  <select class="select" id="resourceMilestoneInput">
+                    <option value="">None</option>
+                    <option value="M1">M1 - Discovery</option>
+                    <option value="M2">M2 - Design</option>
+                    <option value="M3">M3 - Build</option>
+                    <option value="M4">M4 - Launch</option>
+                  </select>
+                </div>
+                <div class="error-text" id="resourceError" hidden>Upload a file or provide a link URL.</div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn-ghost btn-sm" id="cancelAddResourceBtn">Cancel</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="saveResourceBtn">Add Resource</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="accounts-panel" role="tabpanel" hidden>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Method</th><th>Bank / Provider</th><th>Account Number</th></tr></thead>
+                <tbody id="clientAccountsBody"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="accountsEmpty" hidden>
+              <h3>No accounts saved yet</h3>
+              <p>Add a bank or MFS account for this client.</p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" id="openAccountModalBtn" style="margin-block-start:var(--space-md)">+ Add Account</button>
+          </div>
+        </div>
+
+        <div class="modal" id="addAccountModal" hidden>
+          <div class="modal-scrim" data-close-modal></div>
+          <div class="modal-card" role="dialog" aria-label="Add account">
+            <div class="modal-header"><h2 class="modal-title">Add Bank / MFS Account</h2></div>
+            <div class="modal-body">
+              <div class="field">
+                <label>Method</label>
+                <div class="page-actions">
+                  <button type="button" class="btn btn-ghost btn-sm" id="methodBankBtn" aria-pressed="true">Bank</button>
+                  <button type="button" class="btn btn-ghost btn-sm" id="methodMfsBtn" aria-pressed="false">MFS</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="accountLabelInput">Bank / provider name</label>
+                <input type="text" class="input" id="accountLabelInput" placeholder="e.g. Standard Chartered">
+              </div>
+              <div class="field">
+                <label for="accountNumberInput">Account number</label>
+                <input type="text" class="input" id="accountNumberInput" placeholder="Account / wallet number">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+              <button type="button" class="btn btn-primary" id="saveAccountBtn">Save Account</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">Powered by Deus Ex Automata (DEA)</footer>
+    </div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script src="theme.js"></script>
+<script data-page>
+  (function () {
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.confirm('Log out of Hub?')) location.href = 'login.html';
+      });
+    }
+
+    function fmt(n) { return '৳' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function getQueryId() {
+      try { return new URLSearchParams(location.search).get('id'); } catch (e) { return null; }
+    }
+
+    var STATUS_CHIP = { Active: 'chip--success', Overdue: 'chip--warning' };
+    var PROJECT_CHIP = { Active: 'chip--info', Planning: 'chip--neutral', Completed: 'chip--success', 'On Hold': 'chip--warning' };
+    var FINANCE_CHIP = { Paid: 'chip--success', Pending: 'chip--warning', Overdue: 'chip--danger' };
+    var BDS_FALLBACK = ['Rahim Hassan', 'Karim Ali', 'Salma Begum', 'Unassigned'];
+
+    var client = {
+      company: 'Acme Corp', status: 'Active',
+      stakeholder: 'Rahim Uddin', email: 'rahim@acme.bd', phone: '+8801711-123456',
+      address: '123 Gulshan Ave, Dhaka', bds: 'Rahim Hassan',
+      registration: 'RJSC-2021-4521', taxid: '1234567890', industry: 'Manufacturing'
+    };
+
+    /* §2.6 query-string + localStorage-list hydration: only overrides the fields Clients.html actually persists */
+    (function hydrate() {
+      var id = getQueryId();
+      if (!id) return;
+      try {
+        var list = JSON.parse(localStorage.getItem('hub-clients')) || [];
+        var found = list.filter(function (c) { return String(c.id) === String(id); })[0];
+        if (found) {
+          client.company = found.company || client.company;
+          client.status = found.status || client.status;
+          client.stakeholder = found.stakeholder || client.stakeholder;
+          client.email = found.email || client.email;
+          client.phone = found.phone || client.phone;
+        }
+      } catch (e) {}
+    })();
+
+    function renderHeader() {
+      document.getElementById('clientCompany').textContent = client.company;
+      var chip = document.getElementById('clientStatusChip');
+      chip.textContent = client.status;
+      chip.className = 'chip ' + (STATUS_CHIP[client.status] || 'chip--neutral');
+      document.title = client.company + ' · hub';
+    }
+
+    /* ---- tabs ---- */
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.getAttribute('data-tab');
+        tabButtons.forEach(function (b) {
+          var active = b === btn;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(function (panel) {
+          panel.hidden = panel.id !== target + '-panel';
+          panel.classList.toggle('active', panel.id === target + '-panel');
+        });
+      });
+    });
+
+    /* ---- header-level Edit/Discard/Save (§2.7): snapshot-and-revert across every Overview field ---- */
+    var FIELDS = ['stakeholder', 'email', 'phone', 'address', 'bds', 'registration', 'taxid', 'industry'];
+    var snapshot = {};
+    var editBtn = document.getElementById('editBtn');
+    var discardBtn = document.getElementById('discardBtn');
+    var saveBtn = document.getElementById('saveBtn');
+    var savedFlash = document.getElementById('savedFlash');
+
+    function fieldEls(key) {
+      return {
+        display: document.getElementById('cd-' + key + '-display'),
+        input: document.getElementById('cd-' + key + '-input') || document.getElementById('cd-' + key + '-select')
+      };
+    }
+
+    function setEditing(on) {
+      editBtn.hidden = on;
+      discardBtn.hidden = !on;
+      saveBtn.hidden = !on;
+      FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (!e.display || !e.input) return;
+        e.display.hidden = on;
+        e.input.hidden = !on;
+      });
+    }
+
+    function startEdit() {
+      FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (e.input) snapshot[key] = e.input.value;
+      });
+      setEditing(true);
+    }
+
+    function discardEdit() {
+      FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (e.input && snapshot[key] !== undefined) e.input.value = snapshot[key];
+      });
+      setEditing(false);
+    }
+
+    function saveEdit() {
+      FIELDS.forEach(function (key) {
+        var e = fieldEls(key);
+        if (!e.display || !e.input) return;
+        if (key === 'email') {
+          e.display.querySelector('a').textContent = e.input.value;
+          e.display.querySelector('a').setAttribute('href', 'mailto:' + e.input.value);
+        } else if (key === 'bds') {
+          e.display.textContent = e.input.options[e.input.selectedIndex].text;
+        } else {
+          e.display.textContent = e.input.value;
+        }
+      });
+      setEditing(false);
+      savedFlash.hidden = false;
+      setTimeout(function () { savedFlash.hidden = true; }, 1500);
+    }
+
+    editBtn.addEventListener('click', startEdit);
+    discardBtn.addEventListener('click', discardEdit);
+    saveBtn.addEventListener('click', saveEdit);
+
+    /* populate BDS Partner dropdown from bds-partners.html's persisted list, falling back to a static roster */
+    (function populateBds() {
+      var select = document.getElementById('cd-bds-select');
+      var names = BDS_FALLBACK.slice();
+      try {
+        var partners = JSON.parse(localStorage.getItem('hub-bds-partners')) || [];
+        if (partners.length) names = partners.map(function (p) { return p.name; });
+      } catch (e) {}
+      if (names.indexOf(client.bds) === -1) names.unshift(client.bds);
+      select.innerHTML = names.map(function (n) {
+        return '<option value="' + escapeHtml(n) + '"' + (n === client.bds ? ' selected' : '') + '>' + escapeHtml(n) + '</option>';
+      }).join('');
+    })();
+
+    /* ---- Projects tab ---- */
+    var PROJECTS_SEED = [
+      { name: 'ERP Implementation', status: 'Active', milestones: '3/5', nextDue: '2026-09-15', value: 1820000 },
+      { name: 'CRM Migration', status: 'Planning', milestones: '0/4', nextDue: '2026-10-01', value: 1250000 }
+    ];
+    document.getElementById('clientProjectsBody').innerHTML = PROJECTS_SEED.map(function (p) {
+      return '<tr><td>' + escapeHtml(p.name) + '</td><td><span class="chip ' + (PROJECT_CHIP[p.status] || 'chip--neutral') + '">' + escapeHtml(p.status) + '</span></td><td>' + escapeHtml(p.milestones) + '</td><td>' + escapeHtml(p.nextDue) + '</td><td class="num data">' + fmt(p.value) + '</td></tr>';
+    }).join('');
+
+    /* ---- Finance tab (read-only summary; see ponytail comment in markup) ---- */
+    var FINANCE_SEED = [
+      { date: '2026-08-10', type: 'Payment', ref: 'INV-2026-045', amount: 520000, status: 'Paid' },
+      { date: '2026-08-05', type: 'Invoice', ref: 'INV-2026-042', amount: 380000, status: 'Overdue' },
+      { date: '2026-07-28', type: 'Payment', ref: 'INV-2026-038', amount: 840000, status: 'Paid' },
+      { date: '2026-07-01', type: 'Invoice', ref: 'INV-2026-035', amount: 840000, status: 'Pending' }
+    ];
+    document.getElementById('clientFinanceBody').innerHTML = FINANCE_SEED.map(function (f) {
+      return '<tr><td>' + escapeHtml(f.date) + '</td><td>' + escapeHtml(f.type) + '</td><td>' + escapeHtml(f.ref) + '</td><td class="num data">' + fmt(f.amount) + '</td><td><span class="chip ' + (FINANCE_CHIP[f.status] || 'chip--neutral') + '">' + escapeHtml(f.status) + '</span></td></tr>';
+    }).join('');
+
+    /* ---- Resources tab: tag-chip filter + milestone-dropdown filter over a seeded + user-added list ---- */
+    var resources = [
+      { id: 1, label: 'requirements-v2.pdf', tag: 'PDF', milestone: 'M1', isLink: false, url: '#' },
+      { id: 2, label: 'design-system.fig', tag: 'Design', milestone: 'M2', isLink: false, url: '#' },
+      { id: 3, label: 'api-spec.yaml', tag: 'Spec', milestone: 'M2', isLink: false, url: '#' },
+      { id: 4, label: 'Shared Drive', tag: 'Link', milestone: 'M3', isLink: true, url: 'https://drive.example.com/client' }
+    ];
+    var activeTag = '';
+    var milestoneFilterEl = document.getElementById('resourceMilestoneFilter');
+    var tagChipsEl = document.getElementById('resourceTagChips');
+    var resourceListEl = document.getElementById('resourceList');
+    var resourceEmptyEl = document.getElementById('resourceEmpty');
+
+    function renderResources() {
+      var milestoneFilter = milestoneFilterEl.value;
+      var filtered = resources.filter(function (r) {
+        if (activeTag && r.tag !== activeTag) return false;
+        if (milestoneFilter && r.milestone !== milestoneFilter) return false;
+        return true;
+      });
+      resourceListEl.innerHTML = filtered.map(function (r) {
+        return '<div class="attention-item"><span class="chip chip--neutral">' + escapeHtml(r.tag) + '</span>' +
+          '<div class="attention-text-wrap"><a href="' + escapeHtml(r.url) + '" target="_blank" class="link">' + escapeHtml(r.label) + '</a>' +
+          '<div class="attention-meta">' + escapeHtml(r.milestone || '-') + '</div></div>' +
+          '<div class="attention-actions"><button type="button" class="btn btn-ghost btn-sm" data-remove-resource="' + r.id + '">Remove</button></div></div>';
+      }).join('');
+      resourceEmptyEl.hidden = filtered.length !== 0;
+    }
+
+    milestoneFilterEl.addEventListener('change', renderResources);
+    tagChipsEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-tag]');
+      if (!btn) return;
+      activeTag = btn.getAttribute('data-tag');
+      tagChipsEl.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      renderResources();
+    });
+    resourceListEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-remove-resource]');
+      if (!btn) return;
+      var id = Number(btn.getAttribute('data-remove-resource'));
+      resources = resources.filter(function (r) { return r.id !== id; });
+      renderResources();
+    });
+
+    var addResourceTrigger = document.getElementById('addResourceTrigger');
+    var addResourceCard = document.getElementById('addResourceCard');
+    var resourceFileInput = document.getElementById('resourceFileInput');
+    var resourceFileName = document.getElementById('resourceFileName');
+    var resourceError = document.getElementById('resourceError');
+
+    document.getElementById('openAddResourceBtn').addEventListener('click', function () {
+      addResourceTrigger.hidden = true;
+      addResourceCard.hidden = false;
+    });
+    function closeAddResource() {
+      addResourceTrigger.hidden = false;
+      addResourceCard.hidden = true;
+      resourceFileInput.value = '';
+      resourceFileName.textContent = 'No file chosen';
+      document.getElementById('resourceUrlInput').value = '';
+      document.getElementById('resourceLabelInput').value = '';
+      resourceError.hidden = true;
+    }
+    document.getElementById('cancelAddResourceBtn').addEventListener('click', closeAddResource);
+    resourceFileInput.addEventListener('change', function () {
+      resourceFileName.textContent = resourceFileInput.files[0] ? resourceFileInput.files[0].name : 'No file chosen';
+    });
+    document.getElementById('saveResourceBtn').addEventListener('click', function () {
+      var file = resourceFileInput.files[0];
+      var url = document.getElementById('resourceUrlInput').value.trim();
+      var label = document.getElementById('resourceLabelInput').value.trim();
+      var milestone = document.getElementById('resourceMilestoneInput').value;
+      if (!file && !url) { resourceError.hidden = false; return; }
+      resourceError.hidden = true;
+      var r = file
+        ? { id: Date.now(), label: file.name, tag: 'File', milestone: milestone, isLink: false, url: '#' }
+        : { id: Date.now(), label: label || url, tag: 'Link', milestone: milestone, isLink: true, url: url };
+      resources.unshift(r);
+      closeAddResource();
+      renderResources();
+    });
+
+    /* ---- Accounts tab ---- */
+    var bankAccounts = [
+      { id: 1, method: 'Bank', label: 'Standard Chartered', number: '3300-9911-22' },
+      { id: 2, method: 'MFS', label: 'Nagad Business', number: '01611-778899' }
+    ];
+    var accountsBody = document.getElementById('clientAccountsBody');
+    var accountsEmpty = document.getElementById('accountsEmpty');
+    function renderAccounts() {
+      accountsBody.innerHTML = bankAccounts.map(function (a) {
+        return '<tr><td>' + escapeHtml(a.method) + '</td><td>' + escapeHtml(a.label) + '</td><td>' + escapeHtml(a.number) + '</td></tr>';
+      }).join('');
+      accountsEmpty.hidden = bankAccounts.length !== 0;
+    }
+
+    var addAccountModal = document.getElementById('addAccountModal');
+    var methodBankBtn = document.getElementById('methodBankBtn');
+    var methodMfsBtn = document.getElementById('methodMfsBtn');
+    var newMethod = 'Bank';
+    function setMethod(m) {
+      newMethod = m;
+      methodBankBtn.setAttribute('aria-pressed', m === 'Bank' ? 'true' : 'false');
+      methodMfsBtn.setAttribute('aria-pressed', m === 'MFS' ? 'true' : 'false');
+      methodBankBtn.classList.toggle('btn-primary', m === 'Bank');
+      methodBankBtn.classList.toggle('btn-ghost', m !== 'Bank');
+      methodMfsBtn.classList.toggle('btn-primary', m === 'MFS');
+      methodMfsBtn.classList.toggle('btn-ghost', m !== 'MFS');
+    }
+    methodBankBtn.addEventListener('click', function () { setMethod('Bank'); });
+    methodMfsBtn.addEventListener('click', function () { setMethod('MFS'); });
+
+    document.getElementById('openAccountModalBtn').addEventListener('click', function () {
+      setMethod('Bank');
+      document.getElementById('accountLabelInput').value = '';
+      document.getElementById('accountNumberInput').value = '';
+      addAccountModal.hidden = false;
+    });
+    addAccountModal.querySelectorAll('[data-close-modal]').forEach(function (el) {
+      el.addEventListener('click', function () { addAccountModal.hidden = true; });
+    });
+    document.getElementById('saveAccountBtn').addEventListener('click', function () {
+      var label = document.getElementById('accountLabelInput').value.trim();
+      if (!label) return;
+      bankAccounts.push({ id: Date.now(), method: newMethod, label: label, number: document.getElementById('accountNumberInput').value.trim() || '-' });
+      addAccountModal.hidden = true;
+      renderAccounts();
+    });
+
+    renderHeader();
+    renderResources();
+    renderAccounts();
+    setMethod('Bank');
+  })();
+</script>
+</body>
+</html>

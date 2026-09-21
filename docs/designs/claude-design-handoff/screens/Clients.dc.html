@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;} a{color:inherit;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Clients.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Clients" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}">
+        <h1 style="{{ pageTitleStyle }}">Clients</h1>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ openCreate }}">Add Client</button>
+      </header>
+
+      <div style="{{ filterBarStyle }}">
+        <input type="search" style="{{ searchInputStyle }}" placeholder="Search clients..." value="{{ search }}" onInput="{{ onSearch }}"></input>
+        <select style="{{ selectStyle }}" value="{{ statusFilter }}" onChange="{{ onStatusFilter }}">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Overdue">Overdue</option>
+        </select>
+      </div>
+
+      <div style="{{ gridStyle }}">
+        <sc-for list="{{ filteredClients }}" as="c" hint-placeholder-count="5">
+          <article style="{{ cardStyle }}">
+            <header style="{{ cardHeaderStyle }}">
+              <h2 style="{{ cardTitleLinkWrap }}"><a href="{{ c.detailHref }}" style="{{ cardTitleLinkStyle }}">{{ c.company }}</a></h2>
+              <span style="{{ c.chipStyle }}">{{ c.status }}</span>
+            </header>
+            <div style="{{ cardBodyStyle }}">
+              <dl style="{{ dlStyle }}">
+                <dt style="{{ dtStyle }}">Stakeholder</dt><dd style="{{ ddStyle }}">{{ c.name }}</dd>
+                <dt style="{{ dtStyle }}">Email</dt><dd style="{{ ddStyle }}"><a href="{{ c.mailto }}" style="{{ linkStyle }}">{{ c.email }}</a></dd>
+                <dt style="{{ dtStyle }}">Phone</dt><dd style="{{ ddStyle }}">{{ c.phone }}</dd>
+                <dt style="{{ dtStyle }}">Outstanding</dt><dd style="{{ ddNumStyle }}">{{ c.outstanding }}</dd>
+              </dl>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ emptyStyle }}"><h3 style="{{ emptyTitleStyle }}">No clients found</h3><p style="{{ emptyTextStyle }}">Add your first client to get started.</p></div>
+      </sc-if>
+
+      <sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ modalScrimStyle }}" onClick="{{ closeCreate }}"></div>
+        <div style="{{ modalCardStyle }}" role="dialog" aria-label="Add client">
+          <div style="{{ modalHeaderStyle }}"><h2 style="{{ cardTitleStyle }}">Add Client</h2></div>
+          <div style="{{ modalBodyStyle }}">
+            <label style="{{ labelStyle }}">Company</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newCompany }}" onInput="{{ onNewCompany }}" placeholder="e.g. Nova Textiles Ltd."></input>
+            <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Company name is required.</div></sc-if>
+            <label style="{{ labelStyle }}">Stakeholder name</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newName }}" onInput="{{ onNewName }}" placeholder="e.g. Ayesha Begum"></input>
+            <label style="{{ labelStyle }}">Email</label>
+            <input type="email" style="{{ modalInputStyle }}" value="{{ newEmail }}" onInput="{{ onNewEmail }}" placeholder="name@company.com"></input>
+            <sc-if value="{{ emailError }}" hint-placeholder-val="{{ false }}"><div style="{{ errorTextStyle }}">Enter a valid email address.</div></sc-if>
+            <label style="{{ labelStyle }}">Phone</label>
+            <input type="text" style="{{ modalInputStyle }}" value="{{ newPhone }}" onInput="{{ onNewPhone }}" placeholder="+880 1XXX XXXXXX"></input>
+          </div>
+          <div style="{{ modalFooterStyle }}">
+            <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeCreate }}">Cancel</button>
+            <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ submitCreate }}">Add Client</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)',
+  success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)',
+  success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+function chipStyle(status, C) {
+  const color = status === 'Active' ? C.success : status === 'Overdue' ? C.warning : C.muted;
+  return { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, fontFamily: FONT, color, border: `1px solid ${color}` };
+}
+
+const SEED = [
+  { id: 1, name: 'Ayesha Begum', status: 'Active', company: 'Nova Textiles Ltd.', email: 'ayesha@novatex.com', phone: '+880 1711 234567', outstanding: '৳1,250,000.00' },
+  { id: 2, name: 'Karim Ali', status: 'Overdue', company: 'Summit Builders', email: 'karim@summitbd.com', phone: '+880 1812 345678', outstanding: '৳3,480,500.00' },
+  { id: 3, name: 'Farida Akter', status: 'Active', company: 'Lumen Foods', email: 'farida@lumenfoods.com', phone: '+880 1913 456789', outstanding: '৳0.00' },
+  { id: 4, name: 'Nadia Rahman', status: 'Active', company: 'Orbit Logistics', email: 'nadia@orbitlog.com', phone: '+880 1614 567890', outstanding: '৳875,250.00' },
+  { id: 5, name: 'Tanvir Hasan', status: 'Overdue', company: 'Crest Agro', email: 'tanvir@crestagro.com', phone: '+880 1515 678901', outstanding: '৳2,040,750.00' }
+];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+class Component extends DCLogic {
+  state = { theme: 'dark', search: '', statusFilter: '', createOpen: false, newName: '', newCompany: '', newEmail: '', newPhone: '', nameError: false, emailError: false, clients: SEED };
+
+  componentDidMount() { try { this.setState({ theme: localStorage.getItem('hub-theme') || 'dark' }); } catch (e) {}
+    try { const created = JSON.parse(localStorage.getItem('hub-created-clients')) || [];
+      if (created.length) { this.setState(s => ({ clients: [...created, ...s.clients] })); localStorage.removeItem('hub-created-clients'); } } catch (e) {}
+    this.persist(); }
+  persist(){ try{ localStorage.setItem('hub-clients', JSON.stringify(this.state.clients)); }catch(e){} }
+  toggleTheme = () => this.setState(s => { const n = s.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('hub-theme', n); } catch (e) {} return { theme: n }; });
+  onSearch = (e) => this.setState({ search: e.target.value });
+  onStatusFilter = (e) => this.setState({ statusFilter: e.target.value });
+  openCreate = () => this.setState({ createOpen: true, newName: '', newCompany: '', newEmail: '', newPhone: '', nameError: false, emailError: false });
+  closeCreate = () => this.setState({ createOpen: false });
+  onNewName = (e) => this.setState({ newName: e.target.value });
+  onNewCompany = (e) => this.setState({ newCompany: e.target.value });
+  onNewEmail = (e) => this.setState({ newEmail: e.target.value });
+  onNewPhone = (e) => this.setState({ newPhone: e.target.value });
+  submitCreate = () => {
+    const nameError = !this.state.newCompany.trim();
+    const emailError = !!this.state.newEmail && !EMAIL_RE.test(this.state.newEmail.trim());
+    if (nameError || emailError) { this.setState({ nameError, emailError }); return; }
+    const c = { id: Date.now(), name: this.state.newName.trim() || '—', status: 'Active', company: this.state.newCompany.trim(), email: this.state.newEmail.trim() || '—', phone: this.state.newPhone.trim() || '—', outstanding: '৳0.00' };
+    this.setState(s => ({ clients: [c, ...s.clients], createOpen: false }), ()=>this.persist());
+  };
+
+  renderVals() {
+    const C = this.state.theme === 'light' ? LIGHT : DARK;
+    const filtered = this.state.clients.filter(c =>
+      (!this.state.search || c.name.toLowerCase().includes(this.state.search.toLowerCase()) || c.company.toLowerCase().includes(this.state.search.toLowerCase())) &&
+      (!this.state.statusFilter || c.status === this.state.statusFilter));
+    const filteredClients = filtered.map(c => ({ ...c, chipStyle: chipStyle(c.status, C), mailto: 'mailto:' + c.email, detailHref: 'ClientDetail.dc.html?id=' + c.id }));
+
+    const btnBase = { display: 'inline-flex', alignItems: 'center', gap: 4, borderRadius: 4, border: '1px solid transparent', cursor: 'pointer', fontFamily: FONT, fontSize: 14, padding: '8px 16px' };
+
+    return {
+      theme: this.state.theme, toggleTheme: this.toggleTheme,
+      search: this.state.search, statusFilter: this.state.statusFilter, onSearch: this.onSearch, onStatusFilter: this.onStatusFilter,
+      filteredClients, noResults: filteredClients.length === 0,
+      createOpen: this.state.createOpen, openCreate: this.openCreate, closeCreate: this.closeCreate,
+      newName: this.state.newName, newCompany: this.state.newCompany, newEmail: this.state.newEmail, newPhone: this.state.newPhone,
+      nameError: this.state.nameError, emailError: this.state.emailError,
+      onNewName: this.onNewName, onNewCompany: this.onNewCompany, onNewEmail: this.onNewEmail, onNewPhone: this.onNewPhone, submitCreate: this.submitCreate,
+
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },
+      sidebarMountStyle: { flexShrink: 0 },
+      mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle: { padding: '32px 24px 64px', maxWidth: 1280, width: '100%', boxSizing: 'border-box', margin: '0 auto', flex: 1 },
+      pageHeaderStyle: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, marginBottom: 24, flexWrap: 'wrap' },
+      pageTitleStyle: { color: C.inkHi, fontSize: 20, lineHeight: '28px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      btnPrimaryStyle: { ...btnBase, background: C.accent, color: C.accentInk },
+      btnGhostStyle: { ...btnBase, background: 'transparent', color: C.ink, borderColor: C.border },
+
+      filterBarStyle: { display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 },
+      searchInputStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, minWidth: 220 },
+      selectStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14 },
+
+      gridStyle: { display: 'grid', gap: 24, gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' },
+      cardStyle: { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' },
+      cardHeaderStyle: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 24px', borderBottom: `1px solid ${C.border}` },
+      cardTitleStyle: { color: C.inkHi, fontSize: 16, lineHeight: '24px', fontWeight: 600, fontFamily: FONT, margin: 0 },
+      cardTitleLinkWrap: { margin: 0, fontSize: 16, lineHeight: '24px', fontWeight: 600, fontFamily: FONT },
+      cardTitleLinkStyle: { color: C.inkHi, textDecoration: 'none' },
+      cardBodyStyle: { padding: 24 },
+      dlStyle: { display: 'grid', gridTemplateColumns: 'max-content 1fr', gap: '8px 24px', margin: 0 },
+      dtStyle: { color: C.muted, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: FONT, alignSelf: 'center' },
+      ddStyle: { color: C.inkDim, fontFamily: FONT, fontSize: 14, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' },
+      ddNumStyle: { color: C.inkHi, fontWeight: 500, fontVariantNumeric: 'tabular-nums', fontFamily: FONT, fontSize: 14, margin: 0 },
+      linkStyle: { color: C.accent, textDecoration: 'none' },
+      emptyStyle: { color: C.muted, textAlign: 'center', padding: 48, fontFamily: FONT },
+      emptyTitleStyle: { color: C.inkHi, fontFamily: FONT, margin: '0 0 8px' },
+      emptyTextStyle: { margin: 0, fontSize: 14 },
+
+      modalScrimStyle: { position: 'fixed', inset: 0, background: 'rgba(1,1,1,0.6)', zIndex: 55 },
+      modalCardStyle: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 61, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, width: 'min(420px, 90vw)', boxShadow: '0 8px 24px rgba(0,0,0,0.55)' },
+      modalHeaderStyle: { padding: 24, borderBottom: `1px solid ${C.border}` },
+      modalBodyStyle: { padding: 24, display: 'flex', flexDirection: 'column', gap: 12 },
+      modalFooterStyle: { display: 'flex', justifyContent: 'flex-end', gap: 8, padding: 24, borderTop: `1px solid ${C.border}` },
+      labelStyle: { color: C.muted, fontSize: 12, fontFamily: FONT },
+      modalInputStyle: { background: C.bg, border: `1px solid ${C.border}`, borderRadius: 4, padding: '8px 12px', color: C.ink, fontFamily: FONT, fontSize: 14, width: '100%', boxSizing: 'border-box' },
+      errorTextStyle: { color: C.danger, fontSize: 12, fontFamily: FONT }
+    };
+  }
+}
+</script>
+</body>
+</html>

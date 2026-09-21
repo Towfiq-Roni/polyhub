@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet><style>body{margin:0;}</style></helmet>
+<div style="{{ rootStyle }}">
+  <dc-import name="Sidebar" active="Receivables.dc.html" theme="{{ theme }}" style="{{ sidebarMountStyle }}" hint-size="240px,100vh"></dc-import>
+  <div style="{{ mainColStyle }}">
+    <dc-import name="Topbar" title="Receivables" theme="{{ theme }}" on-toggle-theme="{{ toggleTheme }}" hint-size="100%,56px"></dc-import>
+    <div style="{{ scrollAreaStyle }}">
+    <main style="{{ contentStyle }}">
+      <header style="{{ pageHeaderStyle }}"><h1 style="{{ pageTitleStyle }}">Receivables</h1></header>
+      <div style="{{ filterBarStyle }}"><input type="search" style="{{ searchInputStyle }}" placeholder="Search clients..." value="{{ search }}" onInput="{{ onSearch }}"></input></div>
+      <div style="{{ tableWrapStyle }}">
+        <table style="{{ tableStyle }}">
+          <thead><tr><th style="{{ thStyle }}">Client</th><th style="{{ thStyle }}">Invoice</th><th style="{{ thStyle }}">Due Date</th><th style="{{ thNumStyle }}">Invoiced</th><th style="{{ thNumStyle }}">Received</th><th style="{{ thNumStyle }}">Outstanding</th><th style="{{ thStyle }}">Status</th><th style="{{ thActionsStyle }}"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ pageRows }}" as="r" hint-placeholder-count="6">
+              <tr>
+                <td style="{{ tdStyle }}">{{ r.client }}</td>
+                <td style="{{ tdStyle }}">{{ r.invoice }}</td>
+                <td style="{{ tdStyle }}">{{ r.due }}</td>
+                <td style="{{ tdNumStyle }}">{{ r.amount }}</td>
+                <td style="{{ tdNumStyle }}">{{ r.receivedFmt }}</td>
+                <td style="{{ r.outstandingStyle }}">{{ r.outstandingFmt }}</td>
+                <td style="{{ tdStyle }}"><span style="{{ r.chipStyle }}">{{ r.status }}</span></td>
+                <td style="{{ tdActionsStyle }}">
+                  <sc-if value="{{ r.canEdit }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" style="{{ btnGhostSmStyle }}" onClick="{{ r.onEdit }}">Edit</button>
+                    <button type="button" style="{{ r.receiveStyle }}" onClick="{{ r.onReceive }}">Mark Received</button>
+                  </sc-if>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <dc-import name="Footer" theme="{{ theme }}" hint-size="100%,40px"></dc-import>
+    </div>
+  </div>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ modalScrimStyle }}" onClick="{{ closeModal }}"></div>
+    <div style="{{ modalCardStyle }}" role="dialog" aria-label="Edit receivable">
+      <div style="{{ modalHeaderStyle }}"><h2 style="{{ modalTitleStyle }}">Edit — {{ modalClient }}</h2></div>
+      <div style="{{ modalBodyStyle }}">
+        <label style="{{ labelStyle }}">Invoice</label>
+        <input type="text" style="{{ modalInputStyle }}" value="{{ modalInvoice }}" onInput="{{ onModalInvoice }}"></input>
+        <label style="{{ labelStyle }}">Due date</label>
+        <input type="date" style="{{ modalInputStyle }}" value="{{ modalDue }}" onInput="{{ onModalDue }}"></input>
+        <label style="{{ labelStyle }}">Invoiced amount (৳)</label>
+        <input type="number" style="{{ modalInputStyle }}" value="{{ modalAmount }}" onInput="{{ onModalAmount }}"></input>
+        <label style="{{ labelStyle }}">Amount received so far (৳)</label>
+        <input type="number" style="{{ modalInputStyle }}" value="{{ modalReceived }}" onInput="{{ onModalReceived }}"></input>
+        <div style="{{ calcBoxStyle }}">
+          <div style="{{ calcRowStyle }}"><span>Outstanding</span><span style="{{ calcOutstandingStyle }}">{{ calcOutstanding }}</span></div>
+          <sc-if value="{{ isOverpaid }}" hint-placeholder-val="{{ false }}"><p style="{{ calcNoteStyle }}">Client has paid more than invoiced — the excess ({{ calcOverpaid }}) reduces what's still owed elsewhere or should be refunded.</p></sc-if>
+          <sc-if value="{{ isUnderpaid }}" hint-placeholder-val="{{ false }}"><p style="{{ calcNoteStyle }}">Partial payment — {{ calcOutstanding }} remains outstanding for this invoice.</p></sc-if>
+        </div>
+      </div>
+      <div style="{{ modalFooterStyle }}">
+        <button type="button" style="{{ btnGhostStyle }}" onClick="{{ closeModal }}">Cancel</button>
+        <button type="button" style="{{ btnPrimaryStyle }}" onClick="{{ saveModal }}">Save</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = { bg:'#010101', surface:'#080808', border:'rgba(111,126,143,0.32)', ink:'#FAFAFA', inkHi:'#FBFAFB', inkDim:'#F8F8F9', muted:'#717F91', accent:'#717F91', accentInk:'#010101', accentSoft:'rgba(113,127,145,0.14)', success:'#63A583', warning:'#C9A24B', danger:'#CD6A5E' };
+const LIGHT = { bg:'#FBFAFB', surface:'#FFFFFF', border:'rgba(111,126,143,0.30)', ink:'#121417', inkHi:'#010101', inkDim:'#3A414B', muted:'#5A6675', accent:'#4A5563', accentInk:'#FBFAFB', accentSoft:'rgba(74,85,99,0.12)', success:'#2E7D54', warning:'#9A6E1E', danger:'#B23A2E' };
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const fmt=(n)=>'৳'+n.toLocaleString('en-US',{minimumFractionDigits:2});
+function chip(status,C){ const map={'Paid':C.success,'Due':C.warning,'Overdue':C.danger}; const color=map[status]||C.muted; return {display:'inline-flex',alignItems:'center',gap:4,padding:'2px 8px',borderRadius:999,fontSize:12,fontWeight:500,fontFamily:FONT,color,border:`1px solid ${color}`}; }
+const SEED=[
+ {id:1,client:'Acme Corp',invoice:'INV-2026-014',due:'2026-09-05',amount:1500000,received:0,status:'Due'},
+ {id:2,client:'Bayzid Group',invoice:'INV-2026-013',due:'2026-08-20',amount:2250000,received:1000000,status:'Overdue'},
+ {id:3,client:'Delta Tech',invoice:'INV-2026-015',due:'2026-09-15',amount:800000,received:0,status:'Due'},
+ {id:4,client:'Ekushey Solutions',invoice:'INV-2026-011',due:'2026-08-01',amount:3500000,received:3500000,status:'Paid'},
+ {id:5,client:'Futura Ltd',invoice:'INV-2026-012',due:'2026-08-10',amount:1200000,received:0,status:'Overdue'},
+ {id:6,client:'Horizon Systems',invoice:'INV-2026-016',due:'2026-09-20',amount:1800000,received:0,status:'Due'}
+];
+class Component extends DCLogic {
+  state={theme:'dark',search:'',rows:SEED,modalOpen:false,editingId:null,modalInvoice:'',modalDue:'',modalAmount:'',modalReceived:''};
+  componentDidMount(){ try{this.setState({theme:localStorage.getItem('hub-theme')||'dark'});}catch(e){} }
+  toggleTheme=()=>this.setState(s=>{const n=s.theme==='light'?'dark':'light';try{localStorage.setItem('hub-theme',n);}catch(e){}return{theme:n};});
+  onSearch=(e)=>this.setState({search:e.target.value});
+  openModal=(r)=>()=>this.setState({modalOpen:true,editingId:r.id,modalInvoice:r.invoice,modalDue:r.due,modalAmount:r.amount,modalReceived:r.received});
+  closeModal=()=>this.setState({modalOpen:false});
+  onModalInvoice=(e)=>this.setState({modalInvoice:e.target.value});
+  onModalDue=(e)=>this.setState({modalDue:e.target.value});
+  onModalAmount=(e)=>this.setState({modalAmount:e.target.value});
+  onModalReceived=(e)=>this.setState({modalReceived:e.target.value});
+  saveModal=()=>{ const s=this.state; this.setState(st=>({rows:st.rows.map(r=>r.id===s.editingId?{...r,invoice:s.modalInvoice,due:s.modalDue,amount:parseFloat(s.modalAmount)||0,received:parseFloat(s.modalReceived)||0}:r),modalOpen:false})); };
+  markReceived=(id)=>()=>this.setState(s=>({rows:s.rows.map(r=>r.id===id?{...r,status:'Paid',received:r.amount}:r)}));
+  renderVals(){
+    const C=this.state.theme==='light'?LIGHT:DARK;
+    const filtered=this.state.rows.filter(r=>!this.state.search||r.client.toLowerCase().includes(this.state.search.toLowerCase()));
+    const pageRows=filtered.map(r=>{ const outstanding=r.amount-r.received;
+      return {...r,amount:fmt(r.amount),receivedFmt:fmt(r.received),outstandingFmt:fmt(Math.abs(outstanding))+(outstanding<0?' over':''),
+        outstandingStyle:{padding:'12px 16px',textAlign:'right',fontWeight:500,fontVariantNumeric:'tabular-nums',color:outstanding>0?C.inkHi:(outstanding<0?C.warning:C.success),borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+        chipStyle:chip(r.status,C),canEdit:r.status!=='Paid',onEdit:this.openModal(r),onReceive:this.markReceived(r.id),
+        receiveStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.success}`,background:'transparent',color:C.success,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer',whiteSpace:'nowrap'}}; });
+    const modalAmt=parseFloat(this.state.modalAmount)||0; const modalRecv=parseFloat(this.state.modalReceived)||0;
+    const calc=modalAmt-modalRecv;
+    const btnBase={display:'inline-flex',alignItems:'center',gap:4,borderRadius:4,border:'1px solid transparent',cursor:'pointer',fontFamily:FONT,fontSize:14,padding:'8px 16px'};
+    const modalClient=(this.state.rows.find(r=>r.id===this.state.editingId)||{}).client||'';
+    return {
+      theme:this.state.theme,toggleTheme:this.toggleTheme,search:this.state.search,onSearch:this.onSearch,pageRows,
+      modalOpen:this.state.modalOpen,closeModal:this.closeModal,saveModal:this.saveModal,modalClient,
+      modalInvoice:this.state.modalInvoice,onModalInvoice:this.onModalInvoice,modalDue:this.state.modalDue,onModalDue:this.onModalDue,
+      modalAmount:this.state.modalAmount,onModalAmount:this.onModalAmount,modalReceived:this.state.modalReceived,onModalReceived:this.onModalReceived,
+      calcOutstanding:fmt(Math.abs(calc)), calcOverpaid:fmt(Math.abs(calc)), isOverpaid:calc<0, isUnderpaid:calc>0,
+      calcOutstandingStyle:{fontWeight:600,color:calc>0?C.inkHi:(calc<0?C.warning:C.success)},
+      rootStyle: { display: 'flex', height: '100vh', overflow: 'hidden', background: C.bg },sidebarMountStyle:{flexShrink:0},mainColStyle: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }, scrollAreaStyle: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: 'auto' },
+      contentStyle:{padding:'32px 24px 64px',maxWidth:1280,width:'100%',boxSizing:'border-box',margin:'0 auto', flex: 1},
+      pageHeaderStyle:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,marginBottom:24,flexWrap:'wrap'},
+      pageTitleStyle:{color:C.inkHi,fontSize:20,lineHeight:'28px',fontWeight:600,fontFamily:FONT,margin:0},
+      filterBarStyle:{display:'flex',gap:12,flexWrap:'wrap',marginBottom:24},
+      searchInputStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,minWidth:220},
+      tableWrapStyle:{overflowX:'auto',border:`1px solid ${C.border}`,borderRadius:8},tableStyle:{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:FONT},
+      thStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thNumStyle:{padding:'12px 16px',textAlign:'right',color:C.muted,fontSize:12,fontWeight:500,letterSpacing:'0.04em',textTransform:'uppercase',whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`},
+      thActionsStyle:{padding:'12px 16px',textAlign:'left',color:C.muted,fontSize:12,fontWeight:500,whiteSpace:'nowrap',borderBottom:`1px solid ${C.border}`,minWidth:180},
+      tdStyle:{padding:'12px 16px',color:C.inkDim,borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},tdNumStyle:{padding:'12px 16px',color:C.inkHi,fontWeight:500,textAlign:'right',fontVariantNumeric:'tabular-nums',borderBottom:`1px solid ${C.border}`,whiteSpace:'nowrap'},
+      tdActionsStyle:{padding:'12px 16px',borderBottom:`1px solid ${C.border}`,display:'flex',gap:8,whiteSpace:'nowrap',minWidth:180},
+      btnGhostSmStyle:{display:'inline-flex',alignItems:'center',borderRadius:4,border:`1px solid ${C.border}`,background:'transparent',color:C.ink,fontFamily:FONT,fontSize:12,padding:'4px 12px',cursor:'pointer',whiteSpace:'nowrap'},
+      btnGhostStyle:{...btnBase,background:'transparent',color:C.ink,borderColor:C.border},
+      btnPrimaryStyle:{...btnBase,background:C.accent,color:C.accentInk},
+      labelStyle:{color:C.muted,fontSize:12,fontFamily:FONT},
+      modalScrimStyle:{position:'fixed',inset:0,background:'rgba(1,1,1,0.6)',zIndex:55},
+      modalCardStyle:{position:'fixed',top:'50%',left:'50%',transform:'translate(-50%,-50%)',zIndex:61,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,width:'min(440px, 90vw)',boxShadow:'0 8px 24px rgba(0,0,0,0.55)'},
+      modalHeaderStyle:{padding:24,borderBottom:`1px solid ${C.border}`},modalTitleStyle:{color:C.inkHi,fontFamily:FONT,fontSize:16,fontWeight:600,margin:0},
+      modalBodyStyle:{padding:24,display:'flex',flexDirection:'column',gap:8},modalFooterStyle:{display:'flex',justifyContent:'flex-end',gap:8,padding:24,borderTop:`1px solid ${C.border}`},
+      modalInputStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:4,padding:'8px 12px',color:C.ink,fontFamily:FONT,fontSize:14,width:'100%',boxSizing:'border-box'},
+      calcBoxStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:6,padding:12,marginTop:8,display:'flex',flexDirection:'column',gap:6},
+      calcRowStyle:{display:'flex',justifyContent:'space-between',fontFamily:FONT,fontSize:14,color:C.inkDim},
+      calcNoteStyle:{color:C.muted,fontFamily:FONT,fontSize:12,margin:0}
+    };
+  }
+}
+</script>
+</body>
+</html>
