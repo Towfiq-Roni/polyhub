@@ -9,3 +9,4 @@ These are raw .md files, not vault-ingested (no wikilinks, plain relative links 
 - [e2e-needs-shared-build-first](e2e-needs-shared-build-first.md) — Run `pnpm --filter @hub/shared build` before `pnpm --filter @hub/api test:e2e`; the shared dist is not built by default.
 - [async-agent-calls-break-sync-hooks](async-agent-calls-break-sync-hooks.md) — Never write a hook that assumes the Agent tool call has finished; Agent calls run async, so PostToolUse fires before the subagent works.
 - [Optional DTO field null → 500](optional-dto-field-null-500.md) — `@IsOptional()` skips null; use `@ValidateIf((_, v) => v !== undefined)` on PATCH DTOs.
+- [Docker build order vs prisma generate](docker-build-order-prisma-generate.md) — image build fails on Prisma.* types; make an unmodified docker build a gate (fix: #48).

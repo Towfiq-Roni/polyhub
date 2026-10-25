@@ -1,2 +1,2 @@
 [ -n "$CI" ] && exit 0
-pnpm exec commitlint --edit "$1"
+commitlint --edit "$1"

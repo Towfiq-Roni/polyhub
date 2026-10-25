@@ -28,6 +28,14 @@
     "prettier": "^3",
     "typescript-eslint": "^8"
   },
+  "//pnpm.overrides": "ponytail: multer 2.5.0 - remove when @nestjs/platform-express 11.x depends on multer >=2.5.0; js-yaml 5.5.0 - remove when @nestjs/swagger 11.x depends on js-yaml >=5.4.1; deepmerge-ts 8.0.2 - remove when @prisma/config 6.x depends on deepmerge-ts >=8",
+  "pnpm": {
+    "overrides": {
+      "multer": "2.5.0",
+      "js-yaml": "5.5.0",
+      "deepmerge-ts": "8.0.2"
+    }
+  },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [
       "eslint --max-warnings 0 --no-warn-ignored --fix",
