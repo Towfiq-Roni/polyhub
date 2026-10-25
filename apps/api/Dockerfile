@@ -2,6 +2,7 @@
 # Build context MUST be the repo root (pnpm workspace — apps/api alone
 # cannot `pnpm install`), e.g.:
 #   docker build -f apps/api/Dockerfile -t hub-api:test .
+# Default (last) stage = runtime; dev compose uses `--target dev`.
 
 FROM node:22-alpine AS base
 # Node 20.x here (any 20.x patch, alpine or glibc/slim alike) segfaults
@@ -26,8 +27,23 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 COPY . .
-RUN pnpm --filter @hub/api... run build
+# generated Prisma types must exist before tsc/nest build
 RUN pnpm --filter @hub/api exec prisma generate
+RUN pnpm --filter @hub/api... run build
+
+FROM deps AS dev
+WORKDIR /repo/apps/api
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -q -O- http://localhost:${PORT:-4000}/api/v1/health || exit 1
+# `dev` deliberately has no `COPY . .` — real source (incl. this stage's own
+# prisma/schema.prisma) only exists once docker-compose.dev.yml's `.:/repo`
+# bind mount is live at container start, which is what makes hot-reload
+# work. So `prisma generate` can't run at image build time here (there's no
+# schema to read yet) — it has to run in the start command, after the mount
+# is live. This also means editing schema.prisma on the host and restarting
+# (not rebuilding) the dev container regenerates the client — desirable,
+# since dev iterates on the schema without a rebuild loop.
+CMD ["sh", "-c", "pnpm exec prisma generate && pnpm start:dev"]
 
 FROM base AS runtime
 ENV NODE_ENV=production
@@ -56,17 +72,3 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -q -O- http://localhost:${PORT:-4000}/api/v1/health || exit 1
 
 CMD ["node", "dist/main.js"]
-
-FROM deps AS dev
-WORKDIR /repo/apps/api
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -q -O- http://localhost:${PORT:-4000}/api/v1/health || exit 1
-# `dev` deliberately has no `COPY . .` — real source (incl. this stage's own
-# prisma/schema.prisma) only exists once docker-compose.dev.yml's `.:/repo`
-# bind mount is live at container start, which is what makes hot-reload
-# work. So `prisma generate` can't run at image build time here (there's no
-# schema to read yet) — it has to run in the start command, after the mount
-# is live. This also means editing schema.prisma on the host and restarting
-# (not rebuilding) the dev container regenerates the client — desirable,
-# since dev iterates on the schema without a rebuild loop.
-CMD ["sh", "-c", "pnpm exec prisma generate && pnpm start:dev"]

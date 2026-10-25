@@ -7,4 +7,6 @@ Found by the #47 Stage C tester (2026-10-25, DEC-107): `docker build --target ru
 
 **Why:** the generated client types only exist after `prisma generate`; a clean image has none.
 
-**How to apply:** any task touching Prisma schema or `Prisma.*` types must run an unmodified `docker build --target runtime -f apps/api/Dockerfile .` (the last stage is `dev`, so `--target runtime` is required) as an empirical gate. Fix lives in task #48 (swap the two RUN lines; load `hub-deploy`).
+**Adjacent defect (found in #48 spec):** `dev` was the LAST stage and `infra/docker-compose.prod.yml` `api.build` has no `target:`, so a prod build (`make prod-build`/deploy) produced the `dev` image (no dist, no source; CMD = prisma generate + start:dev). Fixed in #48: `dev` stage moved above `runtime`, so `runtime` is the last/default stage. Dev compose still sets `target: dev`.
+
+**How to apply:** fixed by #48 (`prisma generate` now runs before `nest build`; `runtime` is the last/default stage). Rule stays: any task touching Prisma schema or `Prisma.*` types must run an unmodified `docker build -f apps/api/Dockerfile .` as an empirical gate (explicit `--target runtime` is harmless).

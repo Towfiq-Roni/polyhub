@@ -214,3 +214,10 @@ No log entry = delegated task considered FAILED and re-run by orchestrator inlin
 2026-10-25T11:18:36Z | hub-code-reviewer | Stage D #47: lockfile resolved diff, overrides, js-yaml/deepmerge/multer/zod probes, audit, jest → 0 BLOCKER/0 MAJOR, 3 suggestions
 2026-10-25T11:20:50Z | hub-gatekeeper | audit #47 Stage E: audit/prod clean, frozen install, lint/format/typecheck/58 unit/84 e2e/build green, lockfile majors only logged, scratch Dockerfile build+argon2 ok, unmodified Dockerfile fails TS2694 → PASS | test images removed
 2026-10-25T11:21:23Z | orchestrator | #47 gatekeeper PASS -> task.py done 47 (focus cleared; HUB_SKIP_TASK_GATE not used) -> next: #48 Dockerfile fix (hub-deploy)
+2026-10-25T11:22:05Z | hub-planner | #48 plan: swap generate/build in build stage; found prod compose has no target so default last stage=dev → move dev stage above runtime → spec written (1 batch, 2 files, 17 gates)
+2026-10-25T11:24:48Z | hub-implementer | #48 swap prisma generate before build, move dev above runtime, update pitfall → edited, E1-E5/E7/E8 run → all pass, prod config not renderable (needs infra/.env.prod)
+2026-10-25T11:25:53Z | hub-reviewer | #48 Stage B rule audit: S1-S4 checked vs HEAD, DEC-107/108 + pitfall + consumers grep, typecheck/lint/format → PASS, 0 violations → verdict returned
+2026-10-25T11:29:10Z | hub-tester | Stage C #48 re-run E1-E8 independently → all gates pass, HEAD fails TS2694 w/ --target runtime, fixed default=runtime → PASS
+2026-10-25T11:30:02Z | hub-code-reviewer | Stage D #48: diff vs HEAD, stage-order consumers (compose dev/prod, Makefile, deploy.sh, docs grep), DEC-107/108 vs RUNLOG, pitfall accuracy → 0 BLOCKER/0 MAJOR, 2 suggestions, 1 follow-up task
+2026-10-25T11:31:40Z | hub-gatekeeper | Stage E #48 audit: diff static, HEAD runtime TS2694, fixed no-target=runtime, dev, argon2, prisma, boot health/login/users → PASS
+2026-10-25T11:32:02Z | orchestrator | #48 gatekeeper PASS -> task.py done 48 (focus cleared; HUB_SKIP_TASK_GATE not used); nothing committed since 36a887b

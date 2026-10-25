@@ -45,8 +45,8 @@ Read ONLY the one task file you need: tasks/<id3>-<slug>.md. CLI: python3 tools/
 43|todo|2||CI/CD: GitHub Actions `ci.yml` (lint→typecheck→unit→e2e) + `deploy.yml` …|
 44|todo|2||Oracle VM live deploy: sslip.io HTTPS, backups→B2 cron, keepalive workfl…|
 46|todo|3|E-07/F-27|Login email case-insensitivity: users are lowercased on write but login …|
-48|todo|1||Fix apps/api/Dockerfile build order: run prisma generate BEFORE nest bui…|
 49|todo|3|E-07/F-27|Optional hardening: e2e that throttler + lockout key on the forwarded cl…|
+50|todo|2||Image-build gate: add an unmodified apps/api docker build step to hub-te…|
 ## Done
 1|E-07/F-27|Auth module: login, JWT access(1d)/refresh(7d), argon2id, lockout
 2|E-07/F-28|User CRUD + activate/deactivate + admin-mediated reset
@@ -54,3 +54,4 @@ Read ONLY the one task file you need: tasks/<id3>-<slug>.md. CLI: python3 tools/
 42||Prod infra: multi-stage Dockerfiles (api/web, arm64+amd64) + multi-level…
 45||Harness adoption: hooks, pitfalls, task-file backlog, changelog (items 1…
 47||Dependency security upgrade: clear pnpm audit critical/high findings (ex…
+48||Fix apps/api/Dockerfile build order: run prisma generate BEFORE nest bui…
