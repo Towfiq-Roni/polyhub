@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtAccessStrategy } from './jwt-access.strategy';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-describe('JwtAccessStrategy', () => {
+describe('JwtAccessStrategy [F-27]', () => {
   const configService = {
     getOrThrow: jest.fn().mockReturnValue('test-access-secret'),
   } as unknown as ConfigService;
@@ -39,9 +39,7 @@ describe('JwtAccessStrategy', () => {
     const findUnique = jest.fn().mockResolvedValue(null);
     const strategy = makeStrategy(findUnique);
 
-    await expect(strategy.validate({ sub: 'ghost' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'ghost' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('throws UnauthorizedException when the user is inactive', async () => {
@@ -54,8 +52,6 @@ describe('JwtAccessStrategy', () => {
     });
     const strategy = makeStrategy(findUnique);
 
-    await expect(strategy.validate({ sub: 'user-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'user-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 });

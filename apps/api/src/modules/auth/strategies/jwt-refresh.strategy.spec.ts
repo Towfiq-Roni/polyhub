@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtRefreshStrategy, refreshTokenExtractor } from './jwt-refresh.strategy';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-describe('refreshTokenExtractor', () => {
+describe('refreshTokenExtractor [F-27]', () => {
   it('reads the refresh_token cookie off the request', () => {
     const req = { cookies: { refresh_token: 'the-cookie-value' } } as any;
 
@@ -23,7 +23,7 @@ describe('refreshTokenExtractor', () => {
   });
 });
 
-describe('JwtRefreshStrategy', () => {
+describe('JwtRefreshStrategy [F-27]', () => {
   const configService = {
     getOrThrow: jest.fn().mockReturnValue('test-refresh-secret'),
   } as unknown as ConfigService;
@@ -36,7 +36,10 @@ describe('JwtRefreshStrategy', () => {
     status: 'ACTIVE',
   };
 
-  function makeStrategy(user: unknown, session: unknown): { strategy: JwtRefreshStrategy; findUniqueSession: jest.Mock } {
+  function makeStrategy(
+    user: unknown,
+    session: unknown,
+  ): { strategy: JwtRefreshStrategy; findUniqueSession: jest.Mock } {
     const findUniqueUser = jest.fn().mockResolvedValue(user);
     const findUniqueSession = jest.fn().mockResolvedValue(session);
     const prisma = {
@@ -71,17 +74,13 @@ describe('JwtRefreshStrategy', () => {
   it('throws UnauthorizedException when the user does not exist', async () => {
     const { strategy } = makeStrategy(null, null);
 
-    await expect(strategy.validate({ sub: 'ghost', sid: 'session-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'ghost', sid: 'session-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('throws UnauthorizedException when the user is inactive', async () => {
     const { strategy } = makeStrategy({ ...ACTIVE_USER, status: 'INACTIVE' }, null);
 
-    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('throws UnauthorizedException when the session does not exist (DEC-078)', async () => {
@@ -101,9 +100,7 @@ describe('JwtRefreshStrategy', () => {
     };
     const { strategy } = makeStrategy(ACTIVE_USER, session);
 
-    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('throws UnauthorizedException when the session has expired', async () => {
@@ -115,9 +112,7 @@ describe('JwtRefreshStrategy', () => {
     };
     const { strategy } = makeStrategy(ACTIVE_USER, session);
 
-    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('throws UnauthorizedException when the session belongs to a different user (defense-in-depth)', async () => {
@@ -129,8 +124,6 @@ describe('JwtRefreshStrategy', () => {
     };
     const { strategy } = makeStrategy(ACTIVE_USER, session);
 
-    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(strategy.validate({ sub: 'user-1', sid: 'session-1' })).rejects.toBeInstanceOf(UnauthorizedException);
   });
 });

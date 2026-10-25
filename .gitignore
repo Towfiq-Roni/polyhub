@@ -20,3 +20,10 @@ infra/certs/dev/
 # misc
 .DS_Store
 *.log
+
+# per-working-tree task state (not shared)
+tasks/.focus
+tasks/*.tmp
+
+# IDE
+.idea/

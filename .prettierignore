@@ -1,0 +1,15 @@
+dist
+node_modules
+coverage
+.next
+pnpm-lock.yaml
+apps/api/prisma/migrations
+design
+docs
+resources
+analysis
+planning
+infra
+.claude
+.idea
+*.md

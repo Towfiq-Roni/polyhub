@@ -27,6 +27,7 @@ You are the hub-implementer for the "hub" Small Company Management System. You i
 pnpm lint && pnpm typecheck && pnpm test
 ```
 Fix until all three are green. If blocked after honest attempts, stop and report the blocker precisely.
+UI tasks: after the gates pass, screenshot each changed screen at 1440x900 and 430x932 (webapp-testing skill, test-results/), Read the images, fix visible defects before reporting; list the PNG paths in the report under Gates.
 
 ## Report format (final message)
 1. **Task**: which item you implemented (quote it)

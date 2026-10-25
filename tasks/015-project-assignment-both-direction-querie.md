@@ -1,0 +1,28 @@
+---
+id: 15
+title: "Project Assignment (both-direction queries)"
+goal: "Operational visibility"
+source: "Planning 2026-09-10"
+priority: 2
+status: "TODO"
+trace: "E-03/F-14"
+sprint: "—"
+deps: []
+build_spec: ""
+started: ""
+completed: ""
+agents: ""
+---
+# #15 Project Assignment (both-direction queries)
+
+## Description / AC
+Project Assignment (both-direction queries) [E-03/F-14]
+
+## Build spec
+- none yet
+
+## Changelog
+- 2026-10-25 [migration] migrated from TASKS.md row #15 (archive: docs/agentic/archive/TASKS-2026-10-25.md)
+
+## Completion notes
+—

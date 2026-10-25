@@ -2,12 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } fro
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
-import {
-  AuthService,
-  buildRefreshCookieOptions,
-  REFRESH_COOKIE_NAME,
-  type RefreshCookieOptions,
-} from './auth.service';
+import { AuthService, buildRefreshCookieOptions, REFRESH_COOKIE_NAME, type RefreshCookieOptions } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseDto, RefreshResponseDto, UserViewDto } from './dto/auth-response.dto';
 import { ErrorResponseDto, ValidationErrorResponseDto } from '../../common/dto/error-response.dto';

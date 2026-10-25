@@ -1,9 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,8 +13,6 @@ function isAlreadyWrapped(value: unknown): value is { data: unknown } {
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    return next.handle().pipe(
-      map((value: unknown) => (isAlreadyWrapped(value) ? value : { data: value })),
-    );
+    return next.handle().pipe(map((value: unknown) => (isAlreadyWrapped(value) ? value : { data: value })));
   }
 }

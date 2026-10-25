@@ -90,7 +90,7 @@ export class AuthService {
       include: { userRoles: { include: { role: true } } },
     });
 
-    if (!user) {
+    if (!user || user.status !== 'ACTIVE') {
       throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
 

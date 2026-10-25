@@ -7,11 +7,12 @@ Task target: $ARGUMENTS
 
 Execute the hub implementation loop exactly:
 
-1. **Resolve task** — empty `$ARGUMENTS`: first unchecked item under Current Focus in `docs/memory/PROGRESS.md`. Otherwise match to a task in `analysis/task-breakdown.md` and confirm with me before starting.
+1. **Resolve task** — empty `$ARGUMENTS`: take the top `Next` task from `python3 tools/task.py brief` (already priority-ordered; use `tasks/INDEX.md` to check deps). Otherwise match id/slug in `tasks/INDEX.md` and confirm with me before starting. Open ONLY that one task file (`tasks/NNN-slug.md`); never read a monolithic backlog (`TASKS.md` is a retired pointer). `analysis/task-breakdown.md` is for phase ACs only.
 2. **Design precondition** — if the task traces to a design in `docs/designs/`, it must be VALIDATED with a DECISIONS entry; otherwise stop and run `/req` first.
-3. **Mark `[~]`** on the checkbox in PROGRESS.md.
 
-**Stage 0 — Plan:** delegate to `hub-planner` (task text + phase context + ACs verbatim). It reads the business/design requirements itself and returns a build spec (`docs/agentic/build-specs/<file>`) with ≤3-file batches and the DoD gates for this task. No build without this spec (Workflow.md hard rule 1.5).
+**Stage 0 — Plan:** delegate to `hub-planner` (task text + phase context + ACs verbatim). It reads the business/design requirements itself and returns a build spec (`docs/agentic/build-specs/<file>`) with ≤3-file batches and the DoD gates for this task. No build without this spec (Workflow.md hard rule 1.5). The `start` step runs here, right after the spec exists and before Stage A: run `python3 tools/task.py start <id> --spec docs/agentic/build-specs/<file>` before any product edit. The require-task hook blocks `apps/`/`packages/` edits unless the FOCUSED task (`tasks/.focus`, set only by `start`) is IN_PROGRESS with an existing build spec. `start` on a new task moves focus (the old task keeps its status); `done`/`status` on the focused task clears focus, so the next task needs its own `start`.
+
+**Changelog:** after each stage the orchestrator runs `python3 tools/task.py log <id> "<stage> <verdict>"`.
 
 **Stage A — Build:** delegate to `hub-implementer`, one spec batch at a time (task text + phase context + ACs + the planner's spec for that batch, verbatim). For a multi-batch spec, run each batch's build → audit yourself the file-exists/link/canonical-shell checks (CLAUDE.md §Delegation Rules) before starting the next batch.
 
@@ -28,6 +29,6 @@ Execute the hub implementation loop exactly:
 - REROUTE-dev → findings to implementer → Stages B–E again. Max 1 re-loop.
 - REROUTE-design / both → halt; amend docs via `/req`; restart at Stage 0.
 
-**Stage F — Close:** run `pnpm lint && pnpm typecheck && pnpm test` yourself · tick `[x]` in PROGRESS.md · Session Log row · append `DEC-###` if a new decision surfaced · record any SUGGESTIONS from Stage D as new PROGRESS items if worth keeping · report files/tests/gate trace + conventional-commit suggestion. Do not commit unless I ask.
+**Stage F — Close:** run `pnpm lint && pnpm typecheck && pnpm test` yourself · `python3 tools/task.py done <id> --gate-pass "<one-line note>"` (only after gatekeeper PASS) · update PROGRESS.md · Session Log row · append `DEC-###` if a new decision surfaced · record any SUGGESTIONS from Stage D as new PROGRESS items if worth keeping · report files/tests/gate trace + conventional-commit suggestion. Do not commit unless I ask.
 
 Rules: never edit `analysis/*` decided content during this loop; new requirements go through `/req`.

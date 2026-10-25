@@ -73,11 +73,7 @@ describe('OpenAPI document (e2e)', () => {
     return document.components?.schemas?.[name] as { properties?: Record<string, unknown> } | undefined;
   }
 
-  function responseSchemaRef(
-    path: string,
-    method: 'post' | 'get',
-    status: string,
-  ): string | undefined {
+  function responseSchemaRef(path: string, method: 'post' | 'get', status: string): string | undefined {
     const operation = document.paths[path]?.[method];
     const content = (
       operation?.responses?.[status] as { content?: Record<string, { schema?: { $ref?: string } }> } | undefined
@@ -139,5 +135,30 @@ describe('OpenAPI document (e2e)', () => {
     expect(ref).toBeDefined();
     const schema = resolveSchema(ref!);
     expect(schema?.properties?.status).toBeDefined();
+  });
+
+  it('tags every users route under "users" with a summary and typed (non-bare) responses [F-28]', () => {
+    const routes: Array<['post' | 'get' | 'patch', string, string[]]> = [
+      ['post', '/api/v1/users', ['201', '400', '401', '403', '409']],
+      ['get', '/api/v1/users', ['200', '401', '403']],
+      ['get', '/api/v1/users/{id}', ['200', '400', '401', '403', '404']],
+      ['patch', '/api/v1/users/{id}', ['200', '400', '401', '403', '404', '409']],
+      ['post', '/api/v1/users/{id}/deactivate', ['200', '400', '401', '403', '404', '422']],
+      ['post', '/api/v1/users/{id}/activate', ['200', '400', '401', '403', '404']],
+      ['post', '/api/v1/users/{id}/reset-password', ['200', '400', '401', '403', '404']],
+    ];
+
+    for (const [method, path, statuses] of routes) {
+      const operation = document.paths[path]?.[method];
+      expect(operation).toBeDefined();
+      expect(operation?.tags).toContain('users');
+      expect(operation?.summary).toBeTruthy();
+      for (const status of statuses) {
+        const response = operation?.responses?.[status] as
+          { content?: Record<string, { schema?: { $ref?: string; items?: { $ref?: string } } }> } | undefined;
+        const schema = response?.content?.['application/json']?.schema;
+        expect(`${method} ${path} ${status} ${schema?.$ref ?? schema?.items?.$ref}`).not.toMatch(/undefined$/);
+      }
+    }
   });
 });

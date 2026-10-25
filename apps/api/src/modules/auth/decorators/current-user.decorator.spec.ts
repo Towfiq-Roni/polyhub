@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { getCurrentUserFromContext } from './current-user.decorator';
 
-describe('getCurrentUserFromContext', () => {
+describe('getCurrentUserFromContext [F-27]', () => {
   function makeContext(request: unknown): ExecutionContext {
     return {
       switchToHttp: () => ({

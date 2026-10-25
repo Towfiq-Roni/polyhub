@@ -42,7 +42,7 @@ function cookiePair(setCookie: string[] | undefined, name: string): string | und
   return raw?.split(';')[0];
 }
 
-describe('Auth (e2e)', () => {
+describe('Auth (e2e) [F-27]', () => {
   let app: INestApplication;
   const prisma = new PrismaClient();
   const createdUserIds: string[] = [];
@@ -143,10 +143,7 @@ describe('Auth (e2e)', () => {
   };
 
   const login = (email: string, password: string, ip: string = nextIp()) =>
-    request(app.getHttpServer())
-      .post('/api/v1/auth/login')
-      .set('X-Forwarded-For', ip)
-      .send({ email, password });
+    request(app.getHttpServer()).post('/api/v1/auth/login').set('X-Forwarded-For', ip).send({ email, password });
 
   it('logs in with correct credentials: 200/201 body shape + httpOnly/SameSite=Lax refresh cookie (E2, E12)', async () => {
     const response = await login(adminUser.email, PASSWORD);

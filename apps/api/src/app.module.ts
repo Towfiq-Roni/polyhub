@@ -5,6 +5,7 @@ import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { HealthController } from './health/health.controller';
 import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 // HealthController is registered directly here rather than via a dedicated
 // HealthModule: it's a single controller with no service/DTOs of its own, so
@@ -23,6 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
     // the login handler (auth.controller.ts), not globally.
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 5 }]),
     AuthModule,
+    UsersModule,
   ],
   controllers: [HealthController],
 })

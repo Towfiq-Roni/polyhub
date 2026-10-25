@@ -38,3 +38,9 @@
 - RBAC is allow-only union of active role permissions (BRD FR-ADMIN-04).
 - Every sensitive write emits an audit log entry with actor + before/after (BRD NFR-04, FR-ADMIN-06).
 - ≥1 active Super Admin invariant enforced in user deactivation logic (BRD FR-ADMIN-01).
+
+## Traceability (SDD)
+
+- Every test `describe`/`it` title carries the feature ID(s) it verifies, e.g. `describe('Auth (e2e) [F-27]', ...)`. Feature IDs come from `planning/FEATURES.md`.
+- Every build spec in `docs/agentic/build-specs/` cites its `[E-##/F-##]` tags and BRD/SRS requirement IDs.
+- Run `bash docs/agentic/trace-check.sh` before closing a task: lists DONE `tasks/*.md` task files' features with no tagged test, and Features with no task (reads each task file's `trace` frontmatter; backlog index is `tasks/INDEX.md`). Report-only; the gatekeeper treats an untagged DONE feature as a finding.

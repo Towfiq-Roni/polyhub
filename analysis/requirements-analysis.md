@@ -1,5 +1,7 @@
 # Requirements Analysis — Small Company Management System
 
+> ⚠️ **SUPERSEDED (2026-10-25)** by `planning/` (BRD/SRS/ERD/FEATURES) wherever they conflict, esp. the Finance model (double-entry GL, DEC-068/ADR-0013). Historical reference only — do not build from this file.
+
 > **Source:** `resources/company_management_system_project_overview.md`
 > **Status:** Analysis complete · v1.0 · 2026-08-22
 > **Companion documents:** `requirement-gaps.md`, `development-plan.md`, `deployment-plan.md`, `task-breakdown.md`

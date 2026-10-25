@@ -1,11 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 
 // Minimal shape of what this filter needs from the response object — avoids a
 // direct dependency on @types/express (a transitive, undeclared dep here;
@@ -42,9 +35,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return;
     }
 
-    this.logger.error(
-      exception instanceof Error ? exception.stack : exception,
-    );
+    this.logger.error(exception instanceof Error ? exception.stack : exception);
 
     response
       .status(HttpStatus.INTERNAL_SERVER_ERROR)

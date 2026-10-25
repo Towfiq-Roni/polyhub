@@ -16,7 +16,7 @@ const CONFIG_VALUES: Record<string, unknown> = {
 
 const SESSION_EXP_SECONDS = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
 
-describe('AuthService', () => {
+describe('AuthService [F-27]', () => {
   let correctPasswordHash: string;
   const CORRECT_PASSWORD = 'correct horse battery staple';
 
@@ -73,7 +73,17 @@ describe('AuthService', () => {
     } as unknown as ConfigService;
 
     const service = new AuthService(prisma, jwtService, configService);
-    return { service, findUnique, update, executeRaw, signAsync, decode, sessionCreate, sessionUpdate, sessionFindUnique };
+    return {
+      service,
+      findUnique,
+      update,
+      executeRaw,
+      signAsync,
+      decode,
+      sessionCreate,
+      sessionUpdate,
+      sessionFindUnique,
+    };
   }
 
   describe('login', () => {

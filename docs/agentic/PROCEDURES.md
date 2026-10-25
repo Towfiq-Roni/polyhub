@@ -76,6 +76,14 @@
 | skill | deployment-pipeline-design | CI/CD design/debugging | pipeline stages/gates/health-check depth; vendored from wshobson/agents + single-VM overrides |
 | skill | deployment-patterns | dockerize/release readiness | strategies/Docker/checklists; vendored from affaan-m/ecc + single-VM overrides |
 | skill | workflow-blueprint | after pattern-types stabilize | distills gate-passed flows into docs/blueprints/ implementation templates; adapted from github/awesome-copilot |
+| hook | `block-git-push` | PreToolUse Bash | blocks `git push` unless same segment carries `HUB_PUSH_CONFIRMED=1` |
+| hook | `protect-paths` | PreToolUse Edit/Write | blocks `.env*` (except `*.example`), `.git/`, existing prisma migrations, root `TASKS.md` |
+| hook | `require-task` | PreToolUse Bash/Edit/Write | `apps/**`+`packages/**` writes need the one focused task (`tasks/.focus`) IN_PROGRESS with an existing build spec |
+| hook | `session-start` | SessionStart | short briefing: branch, dirty/stashes, Focus, Next, pointer to `tasks/INDEX.md` |
+| cli | `tools/task.py` | per task | backlog CLI over `tasks/NNN-slug.md` (show/start/log/done/status/new/index/brief); regenerates `tasks/INDEX.md` |
+| memory | `docs/memory/pitfalls/` | on recurrence | typed pitfall docs + `INDEX.md` (raw .md, outside the vault ingest path) |
+
+Hook escapes: `HUB_PUSH_CONFIRMED=1` (set per push command, only after explicit user confirmation) and `HUB_SKIP_TASK_GATE=1` (user-set only; each bypass auto-logged to RUNLOG). Backlog source is `tasks/*.md` (read `tasks/INDEX.md` + the one task file); root `TASKS.md` is a retired pointer.
 
 > **Dropped on Claude Code migration:** the opencode `@dietrichgebert/ponytail` plugin (`/ponytail [lite\|full\|ultra\|off]`, `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`) has no Claude Code equivalent. The minimal-code ladder it injected every turn is now carried entirely as prose in `CLAUDE.md` §Minimal Code Discipline and enforced by `hub-implementer`/`hub-reviewer` — no live plugin, no slash commands for it.
 

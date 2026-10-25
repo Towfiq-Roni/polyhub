@@ -1,5 +1,7 @@
 # Requirement Gaps & Open Questions
 
+> ⚠️ **SUPERSEDED (2026-10-25)** by `planning/` (BRD/SRS/ERD/FEATURES) wherever they conflict, esp. the Finance model (double-entry GL, DEC-068/ADR-0013). Historical reference only — do not build from this file.
+
 > **Source analyzed:** `resources/company_management_system_project_overview.md`
 > **Purpose:** Every ambiguity, contradiction, or omission found in the spec — each with severity and a suggested clarifying question or recommended default so development is never blocked.
 >

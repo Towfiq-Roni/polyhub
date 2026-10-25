@@ -42,9 +42,15 @@ for them (superseding the DEC-053 workaround, which existed only because these a
 
 ## 2. The Pipeline (every task, no exceptions)
 
+**Backlog:** one file per task (`tasks/NNN-slug.md`); `tasks/INDEX.md` is generated.
+Agents read INDEX + the ONE task file, never a monolith (`TASKS.md` is a retired pointer).
+`python3 tools/task.py start <id> --spec <spec>` sets the single focus before any product edit.
+Append changelog via `python3 tools/task.py log <id> "<note>"`; close with `task.py done`.
+
 ```
  ┌─────────────────────────────────────────────────────────────┐
- │ 0. ORCHESTRATOR: read PROGRESS.md → pick task → plan        │
+ │ 0. ORCHESTRATOR: read PROGRESS.md + tasks/INDEX.md → pick   │
+ │    task → open that one task file                           │
  │    (docs/config edits allowed; product code NOT)            │
  └──────────────────────────┬──────────────────────────────────┘
                             ▼
@@ -52,6 +58,7 @@ for them (superseding the DEC-053 workaround, which existed only because these a
  │ 1. PLAN — hub-planner: reads business + design requirements │
  │    itself, minute breakdown (≤3-file batches), sets the     │
  │    task's DoD gates, writes build-spec. No spec, no build.  │
+ │    orchestrator then runs task.py start <id> --spec <spec>  │
  └──────────────────────────┬──────────────────────────────────┘
                             ▼
  ┌─────────────────────────────────────────────────────────────┐

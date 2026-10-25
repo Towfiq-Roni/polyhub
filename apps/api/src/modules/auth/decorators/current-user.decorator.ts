@@ -15,6 +15,6 @@ export function getCurrentUserFromContext(ctx: ExecutionContext): unknown {
  * strategy's `validate()` return value is attached as (Nest/Passport
  * convention), populated by JwtAccessGuard/JwtRefreshGuard upstream.
  */
-export const CurrentUser = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext) => getCurrentUserFromContext(ctx),
+export const CurrentUser = createParamDecorator((_data: unknown, ctx: ExecutionContext) =>
+  getCurrentUserFromContext(ctx),
 );
