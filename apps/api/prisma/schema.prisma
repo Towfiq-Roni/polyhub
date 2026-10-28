@@ -14,16 +14,11 @@ enum Status {
 
 model User {
   id       String @id @default(uuid())
+  // Also protected by raw-SQL unique index users_email_lower_key ON users (lower(email)) (migration 20261026000000_users_email_lower_unique; invisible to Prisma, do not drop). App still lowercases (normalizeEmail).
   email    String @unique
   passwordHash String @map("password_hash")
   name     String
   status   Status @default(ACTIVE)
-
-  // Lockout tracking (DEC-077 ERD extension — SRS §3.7: 10 failed attempts / 15 min).
-  // Not in planning/ERD.md §3.1; that entity predates this mechanics-level detail.
-  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
-  firstFailedAttemptAt DateTime? @map("first_failed_attempt_at")
-  lockoutUntil        DateTime? @map("lockout_until")
 
   lastLoginAt DateTime? @map("last_login_at")
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -32,8 +27,25 @@ model User {
   // teamMemberId FK deferred until the TeamMember table exists (separate epic).
   userRoles UserRole[]
   sessions  Session[]
+  loginAttempts LoginAttempt[]
 
   @@map("users")
+}
+
+// Failed-login state per (user, client IP) (DEC-115, #52). Written only by raw atomic
+// upsert (sets updated_at = now()), hence no @updatedAt; Prisma callers must pass updatedAt.
+model LoginAttempt {
+  userId        String    @map("user_id")
+  ip            String
+  failedCount   Int       @map("failed_count")
+  firstFailedAt DateTime  @map("first_failed_at")
+  lockoutUntil  DateTime? @map("lockout_until")
+  updatedAt     DateTime  @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, ip])
+  @@map("login_attempts")
 }
 
 model Role {

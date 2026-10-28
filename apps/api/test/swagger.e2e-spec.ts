@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { DocumentBuilder, SwaggerModule, type OpenAPIObject } from '@nestjs/swagger';
+import { configureApp } from '../src/app.setup';
 
 // Same env-before-import requirement as the other e2e-spec files (AppModule
 // wires ConfigModule.forRoot({ validate: validateEnv }) at decoration time).
@@ -22,7 +23,7 @@ describe('OpenAPI document (e2e)', () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
 
     const app = moduleRef.createNestApplication();
-    app.setGlobalPrefix('api/v1');
+    configureApp(app);
     await app.init();
 
     const swaggerConfig = new DocumentBuilder().setTitle('Hub API').setVersion('1.0').build();

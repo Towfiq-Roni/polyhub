@@ -1,15 +1,16 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { normalizeEmail } from '@hub/shared';
 
 const trim = ({ value }: { value: unknown }): unknown => (typeof value === 'string' ? value.trim() : value);
-const trimLower = ({ value }: { value: unknown }): unknown =>
-  typeof value === 'string' ? value.trim().toLowerCase() : value;
+const normalize = ({ value }: { value: unknown }): unknown =>
+  typeof value === 'string' ? normalizeEmail(value) : value;
 
 // Password policy (assumption, no SRS policy): 12-128 chars, no complexity rules.
 export class CreateUserDto {
   @ApiProperty({ example: 'ada@example.com', description: 'Trimmed and lowercased before storage' })
-  @Transform(trimLower)
+  @Transform(normalize)
   @IsEmail()
   email!: string;
 
@@ -31,7 +32,7 @@ export class CreateUserDto {
 export class UpdateUserDto {
   @ApiPropertyOptional({ example: 'ada@example.com' })
   @ValidateIf((_, value) => value !== undefined) // not IsOptional: it also skips null
-  @Transform(trimLower)
+  @Transform(normalize)
   @IsEmail()
   email?: string;
 

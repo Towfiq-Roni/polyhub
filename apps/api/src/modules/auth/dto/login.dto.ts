@@ -1,5 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { normalizeEmail } from '@hub/shared';
 
 /**
  * class-validator DTO consumed by Nest's global ValidationPipe at the
@@ -8,7 +10,8 @@ import { ApiProperty } from '@nestjs/swagger';
  * (e.g. a future frontend), not duplication to eliminate.
  */
 export class LoginDto {
-  @ApiProperty({ example: 'ada@example.com' })
+  @ApiProperty({ example: 'ada@example.com', description: 'Trimmed and lowercased before lookup' })
+  @Transform(({ value }: { value: unknown }) => (typeof value === 'string' ? normalizeEmail(value) : value))
   @IsEmail()
   email!: string;
 

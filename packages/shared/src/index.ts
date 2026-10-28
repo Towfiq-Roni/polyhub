@@ -2,3 +2,4 @@
 export * from './enums/status';
 export * from './permissions/permission-key';
 export * from './auth/schemas';
+export * from './auth/email';

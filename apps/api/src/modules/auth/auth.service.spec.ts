@@ -1,8 +1,8 @@
 import * as argon2 from 'argon2';
-import { UnauthorizedException } from '@nestjs/common';
+import { Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AuthService, buildRefreshCookieOptions, REFRESH_COOKIE_NAME } from './auth.service';
+import { AuthService, buildRefreshCookieOptions, normalizeClientIp, REFRESH_COOKIE_NAME } from './auth.service';
 import { PrismaService } from '../../prisma/prisma.service';
 
 const CONFIG_VALUES: Record<string, unknown> = {
@@ -31,26 +31,34 @@ describe('AuthService [F-27]', () => {
       passwordHash: correctPasswordHash,
       name: 'Ada Lovelace',
       status: 'ACTIVE',
-      failedLoginAttempts: 0,
-      firstFailedAttemptAt: null,
-      lockoutUntil: null,
       lastLoginAt: null,
       userRoles: [{ role: { name: 'SUPER_ADMIN' } }],
       ...overrides,
     };
   }
 
-  function makeService(user: unknown, session: unknown = null) {
+  const IP_A = '203.0.113.9';
+  const IP_B = '203.0.113.10';
+
+  function makeService(
+    user: unknown,
+    session: unknown = null,
+    attempt: unknown = null,
+    queryRawRows: unknown[] = [{ failed_count: 1, lockout_until: null }],
+  ) {
     const findUnique = jest.fn().mockResolvedValue(user);
     const update = jest.fn().mockImplementation(({ data }) => Promise.resolve({ ...(user as object), ...data }));
-    const executeRaw = jest.fn().mockResolvedValue(1);
+    const queryRaw = jest.fn().mockResolvedValue(queryRawRows);
+    const loginAttemptFindUnique = jest.fn().mockResolvedValue(attempt);
+    const loginAttemptDeleteMany = jest.fn().mockResolvedValue({ count: 0 });
     const sessionCreate = jest.fn().mockResolvedValue(session);
     const sessionUpdate = jest.fn().mockResolvedValue(session);
     const sessionFindUnique = jest.fn().mockResolvedValue(session);
     const prisma = {
       user: { findUnique, update },
       session: { create: sessionCreate, update: sessionUpdate, findUnique: sessionFindUnique },
-      $executeRaw: executeRaw,
+      loginAttempt: { findUnique: loginAttemptFindUnique, deleteMany: loginAttemptDeleteMany },
+      $queryRaw: queryRaw,
     } as unknown as PrismaService;
 
     // Real signAsync/decode-shaped fakes: encodes secret/expiresIn/sub/sid into the
@@ -77,7 +85,9 @@ describe('AuthService [F-27]', () => {
       service,
       findUnique,
       update,
-      executeRaw,
+      queryRaw,
+      loginAttemptFindUnique,
+      loginAttemptDeleteMany,
       signAsync,
       decode,
       sessionCreate,
@@ -87,21 +97,16 @@ describe('AuthService [F-27]', () => {
   }
 
   describe('login', () => {
-    it('resets lockout fields, sets lastLoginAt, and returns access+refresh tokens on success', async () => {
-      const user = makeUser({ failedLoginAttempts: 3, firstFailedAttemptAt: new Date() });
-      const { service, update } = makeService(user);
+    it('sets lastLoginAt only (no legacy lockout keys), deletes its own (user, ip) attempt row, returns tokens on success', async () => {
+      const { service, update, loginAttemptDeleteMany } = makeService(makeUser());
 
-      const result = await service.login('ada@example.com', CORRECT_PASSWORD);
+      const result = await service.login('ada@example.com', CORRECT_PASSWORD, IP_A);
 
       expect(update).toHaveBeenCalledWith({
         where: { id: 'user-1' },
-        data: {
-          failedLoginAttempts: 0,
-          firstFailedAttemptAt: null,
-          lockoutUntil: null,
-          lastLoginAt: expect.any(Date),
-        },
+        data: { lastLoginAt: expect.any(Date) },
       });
+      expect(loginAttemptDeleteMany).toHaveBeenCalledWith({ where: { userId: 'user-1', ip: IP_A } });
       expect(result.accessToken).toBe('signed:access-secret:1d:user-1:');
       expect(result.refreshToken).toMatch(/^signed:refresh-secret:7d:user-1:/);
       expect(result.user).toEqual({
@@ -137,61 +142,204 @@ describe('AuthService [F-27]', () => {
       expect(sessionCreate).not.toHaveBeenCalled();
     });
 
-    // The lockout window state machine (reset-if-expired vs increment,
-    // trip-at-max) used to live in application code and was unit-tested here
-    // via mocked prisma.user.update() call args. It now lives entirely inside
-    // one atomic SQL UPDATE (see recordFailedAttempt's CASE expressions) so
-    // that concurrent failed logins on the same account can't lose updates to
-    // each other (see auth.e2e-spec.ts's "serializes concurrent failed
-    // logins" regression test, and E4/E5 which drive the same SQL through a
-    // real Postgres and prove the increment/reset/lockout-trip arithmetic is
-    // correct end to end). Mocking $executeRaw's SQL string here would only
-    // prove this test's own expectations, not the query's real behavior —
-    // real behavior is what the e2e tests check. This unit level only proves
-    // AuthService delegates to that one atomic statement, and nowhere does a
-    // read-then-write update of the counter.
-    it('records a wrong-password attempt via exactly one atomic $executeRaw call, never a read-then-write user.update (race-safety)', async () => {
-      const user = makeUser({ failedLoginAttempts: 2, firstFailedAttemptAt: new Date() });
-      const { service, update, executeRaw, sessionCreate } = makeService(user);
+    it('normalizes (trim + lowercase) the identifier before the user lookup', async () => {
+      const { service, findUnique } = makeService(makeUser());
 
-      await expect(service.login('ada@example.com', 'wrong-password')).rejects.toThrow(UnauthorizedException);
+      await service.login('  ADA@Example.com ', CORRECT_PASSWORD);
 
-      expect(executeRaw).toHaveBeenCalledTimes(1);
+      expect(findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { email: 'ada@example.com' } }));
+    });
+
+    it('rejects an unknown mixed-case email with the same generic message, creating no attempt state', async () => {
+      const { service, findUnique, update, queryRaw, loginAttemptFindUnique, sessionCreate } = makeService(null);
+
+      await expect(service.login('  GHOST@Example.com ', 'whatever', IP_A)).rejects.toThrow(
+        new UnauthorizedException('Invalid credentials'),
+      );
+      expect(findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { email: 'ghost@example.com' } }));
+      expect(update).not.toHaveBeenCalled();
+      expect(queryRaw).not.toHaveBeenCalled();
+      expect(loginAttemptFindUnique).not.toHaveBeenCalled();
+      expect(sessionCreate).not.toHaveBeenCalled();
+    });
+
+    it('creates no attempt state for an INACTIVE user', async () => {
+      const { service, queryRaw, loginAttemptFindUnique } = makeService(makeUser({ status: 'INACTIVE' }));
+
+      await expect(service.login('ada@example.com', 'wrong-password', IP_A)).rejects.toThrow(UnauthorizedException);
+      expect(queryRaw).not.toHaveBeenCalled();
+      expect(loginAttemptFindUnique).not.toHaveBeenCalled();
+    });
+
+    // The window state machine (reset-if-expired vs increment, trip-at-max) lives
+    // entirely inside one atomic INSERT..ON CONFLICT..RETURNING (see
+    // recordFailedAttempt) so concurrent failures cannot lose updates; auth
+    // e2e files drive it through a real Postgres. This unit level only proves
+    // delegation to that single statement keyed on (user, normalized ip).
+    it('records a wrong-password attempt via exactly one atomic $queryRaw upsert, never a read-then-write user.update (race-safety)', async () => {
+      const { service, update, queryRaw, sessionCreate } = makeService(makeUser());
+
+      await expect(service.login('ada@example.com', 'wrong-password', '::ffff:203.0.113.9')).rejects.toThrow(
+        UnauthorizedException,
+      );
+
+      expect(queryRaw).toHaveBeenCalledTimes(1);
+      const values = queryRaw.mock.calls[0].slice(1);
+      expect(values).toContain('user-1');
+      expect(values).toContain(IP_A);
       expect(update).not.toHaveBeenCalled();
       expect(sessionCreate).not.toHaveBeenCalled();
     });
 
-    it('rejects a locked account even with the correct password, without touching the lockout counter at all', async () => {
-      const user = makeUser({
-        failedLoginAttempts: 10,
-        lockoutUntil: new Date(Date.now() + 5 * 60_000), // still locked
-      });
-      const { service, update, executeRaw } = makeService(user);
+    it("prunes all users' stale attempt rows after a failure", async () => {
+      const { service, loginAttemptDeleteMany } = makeService(makeUser());
 
-      await expect(service.login('ada@example.com', CORRECT_PASSWORD)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login('ada@example.com', 'wrong-password', IP_A)).rejects.toThrow(UnauthorizedException);
+
+      expect(loginAttemptDeleteMany).toHaveBeenCalledTimes(1);
+      const arg = loginAttemptDeleteMany.mock.calls[0][0];
+      expect(arg.where).not.toHaveProperty('userId');
+      expect(arg.where.firstFailedAt).toEqual({ lt: expect.any(Date) });
+      // live-lock guard: a still-locked row (even with a stale window) must never be swept.
+      expect(arg.where.OR).toEqual([{ lockoutUntil: null }, { lockoutUntil: { lte: expect.any(Date) } }]);
+    });
+
+    // Minimal spy on argon2.hash (only way to force a hash failure) in an isolated
+    // module registry, since the dummy-hash memo is module-level state.
+    it('a rejected dummy hash neither 500s the unknown-email login nor stays memoized', async () => {
+      // isolated registry => different UnauthorizedException class; match by shape.
+      const GENERIC_401 = { name: 'UnauthorizedException', message: 'Invalid credentials' };
+      let isolatedArgon2!: typeof argon2;
+      let isolated!: typeof import('./auth.service');
+      jest.isolateModules(() => {
+        isolatedArgon2 = require('argon2');
+        isolated = require('./auth.service');
+      });
+      const hashSpy = jest.spyOn(isolatedArgon2, 'hash').mockRejectedValueOnce(new Error('hash boom'));
+      const prisma = { user: { findUnique: jest.fn().mockResolvedValue(null) } } as unknown as PrismaService;
+      const service = new isolated.AuthService(prisma, {} as JwtService, {} as ConfigService);
+
+      await expect(service.login('ghost@example.com', 'x', IP_A)).rejects.toMatchObject(GENERIC_401);
+      expect(hashSpy).toHaveBeenCalledTimes(1);
+
+      await expect(service.login('ghost@example.com', 'x', IP_A)).rejects.toMatchObject(GENERIC_401);
+      expect(hashSpy).toHaveBeenCalledTimes(2); // retried, not stuck on the rejected promise
+      await expect(service.login('ghost@example.com', 'x', IP_A)).rejects.toMatchObject(GENERIC_401);
+      expect(hashSpy).toHaveBeenCalledTimes(2); // recovered value now memoized
+      hashSpy.mockRestore();
+    });
+
+    it('rejects a (user, ip) locked row even with the correct password, without verifying or touching other IPs', async () => {
+      const attempt = { failedCount: 10, lockoutUntil: new Date(Date.now() + 5 * 60_000) };
+      const { service, update, queryRaw, loginAttemptFindUnique, loginAttemptDeleteMany } = makeService(
+        makeUser(),
+        null,
+        attempt,
+      );
+
+      await expect(service.login('ada@example.com', CORRECT_PASSWORD, IP_A)).rejects.toThrow(
+        new UnauthorizedException('Invalid credentials'),
+      );
+      expect(loginAttemptFindUnique).toHaveBeenCalledWith({
+        where: { userId_ip: { userId: 'user-1', ip: IP_A } },
+      });
       expect(update).not.toHaveBeenCalled();
-      expect(executeRaw).not.toHaveBeenCalled();
+      expect(queryRaw).not.toHaveBeenCalled();
+      expect(loginAttemptDeleteMany).not.toHaveBeenCalled();
+    });
+
+    it('same user from another IP is unaffected: lookup is keyed on that IP and succeeds', async () => {
+      // Row exists only for IP_A; lookup for IP_B returns null (as Prisma would).
+      const { service, loginAttemptFindUnique } = makeService(makeUser());
+      loginAttemptFindUnique.mockImplementation(({ where }) =>
+        Promise.resolve(
+          where.userId_ip.ip === IP_A ? { failedCount: 10, lockoutUntil: new Date(Date.now() + 60_000) } : null,
+        ),
+      );
+
+      await expect(service.login('ada@example.com', CORRECT_PASSWORD, IP_A)).rejects.toThrow(UnauthorizedException);
+      const ok = await service.login('ada@example.com', CORRECT_PASSWORD, IP_B);
+
+      expect(ok.accessToken).toBeDefined();
+      expect(loginAttemptFindUnique).toHaveBeenLastCalledWith({ where: { userId_ip: { userId: 'user-1', ip: IP_B } } });
     });
 
     it('allows login again once lockoutUntil has passed', async () => {
-      const user = makeUser({
-        failedLoginAttempts: 10,
-        lockoutUntil: new Date(Date.now() - 1000), // lockout expired 1s ago
-      });
-      const { service, update } = makeService(user);
+      const attempt = { failedCount: 10, lockoutUntil: new Date(Date.now() - 1000) };
+      const { service, update, loginAttemptDeleteMany } = makeService(makeUser(), null, attempt);
 
-      const result = await service.login('ada@example.com', CORRECT_PASSWORD);
+      const result = await service.login('ada@example.com', CORRECT_PASSWORD, IP_A);
 
       expect(result.accessToken).toBeDefined();
-      expect(update).toHaveBeenCalledWith({
-        where: { id: 'user-1' },
-        data: {
-          failedLoginAttempts: 0,
-          firstFailedAttemptAt: null,
-          lockoutUntil: null,
-          lastLoginAt: expect.any(Date),
-        },
+      expect(update).toHaveBeenCalledWith({ where: { id: 'user-1' }, data: { lastLoginAt: expect.any(Date) } });
+      expect(loginAttemptDeleteMany).toHaveBeenCalledWith({ where: { userId: 'user-1', ip: IP_A } });
+    });
+
+    describe('auth.lockout audit line', () => {
+      let logSpy: jest.SpyInstance;
+      beforeEach(() => {
+        logSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
       });
+      afterEach(() => logSpy.mockRestore());
+
+      const auditLines = () =>
+        logSpy.mock.calls
+          .filter((call) => call[1] === 'Audit' || typeof call[0] === 'string')
+          .map((call) => String(call[0]))
+          .filter((line) => line.includes('auth.lockout'));
+
+      it('emits exactly one secret-free line on the failure that reaches the threshold', async () => {
+        const { service } = makeService(makeUser(), null, null, [{ failed_count: 10, lockout_until: new Date() }]);
+
+        await expect(service.login('ada@example.com', 'wrong-password', IP_A)).rejects.toThrow(UnauthorizedException);
+
+        const lines = auditLines();
+        expect(lines).toHaveLength(1);
+        expect(JSON.parse(lines[0])).toEqual({
+          actorId: null,
+          action: 'auth.lockout',
+          entityType: 'User',
+          entityId: 'user-1',
+          ip: IP_A,
+        });
+        expect(lines[0]).not.toMatch(/password|ada@example\.com/i);
+      });
+
+      it('emits no line below the threshold', async () => {
+        const { service } = makeService(makeUser(), null, null, [{ failed_count: 3, lockout_until: null }]);
+
+        await expect(service.login('ada@example.com', 'wrong-password', IP_A)).rejects.toThrow(UnauthorizedException);
+
+        expect(auditLines()).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('normalizeClientIp', () => {
+    it.each([
+      ['::ffff:1.2.3.4', '1.2.3.4'],
+      ['2001:DB8::1', '2001:db8:0:0::/64'],
+      ['2001:0db8:85a3:0042:1111:2222:3333:4444', '2001:db8:85a3:42::/64'],
+      ['::1', '0:0:0:0::/64'],
+      ['fe80::1%eth0', 'fe80:0:0:0::/64'],
+      ['1::2:3:4:5:6:7', '1:0:2:3::/64'],
+      ['1::2:3:4:5:1.2.3.4', '1:0:2:3::/64'],
+      ['1:2:3:4:5:6:1.2.3.4', '1:2:3:4::/64'],
+      ['203.0.113.9', '203.0.113.9'],
+      [undefined, 'unknown'],
+      ['', 'unknown'],
+    ])('%s -> %s', (input, expected) => {
+      expect(normalizeClientIp(input)).toBe(expected);
+    });
+
+    it('keys addresses in one IPv6 /64 equal and an adjacent /64 differently', () => {
+      const a = normalizeClientIp('2001:db8:1:2::a');
+      expect(normalizeClientIp('2001:db8:1:2:ffff:ffff:ffff:ffff')).toBe(a);
+      expect(normalizeClientIp('2001:db8:1:3::a')).not.toBe(a);
+    });
+
+    it('caps junk at 45 characters', () => {
+      expect(normalizeClientIp('A'.repeat(100))).toHaveLength(45);
     });
   });
 

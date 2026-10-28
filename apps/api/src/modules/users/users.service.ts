@@ -40,8 +40,6 @@ const toView = ({ userRoles, ...user }: UserRow): UserAdminViewDto => ({
 
 const auditState = (u: UserRow): AuditState => ({ email: u.email, name: u.name, status: u.status });
 
-const clearLockout = { failedLoginAttempts: 0, firstFailedAttemptAt: null, lockoutUntil: null };
-
 @Injectable()
 export class UsersService {
   private readonly auditLogger = new Logger('Audit');
@@ -101,25 +99,17 @@ export class UsersService {
     const before = await this.findOrThrow(id);
     if (before.status === 'ACTIVE') {
       // Already active: activate doubles as "unlock". No-op (no write, no audit) when nothing is locked.
-      const { count } = await this.prisma.user.updateMany({
-        where: {
-          id,
-          OR: [
-            { failedLoginAttempts: { gt: 0 } },
-            { firstFailedAttemptAt: { not: null } },
-            { lockoutUntil: { not: null } },
-          ],
-        },
-        data: clearLockout,
-      });
+      const { count } = await this.prisma.loginAttempt.deleteMany({ where: { userId: id } });
       if (count > 0)
         this.audit(actorId, 'user.activate', id, auditState(before), auditState(before), { lockoutCleared: true });
       return toView(before);
     }
 
+    // Stale per-IP rows are harmless once ACTIVE but cleared for hygiene.
+    await this.prisma.loginAttempt.deleteMany({ where: { userId: id } });
     const after = await this.prisma.user.update({
       where: { id },
-      data: { status: 'ACTIVE', ...clearLockout },
+      data: { status: 'ACTIVE' },
       select: userSelect,
     });
     this.audit(actorId, 'user.activate', id, auditState(before), auditState(after));
@@ -133,10 +123,11 @@ export class UsersService {
     const after = await this.prisma.$transaction(async (tx) => {
       const updated = await tx.user.update({
         where: { id },
-        data: { passwordHash, ...clearLockout },
+        data: { passwordHash },
         select: userSelect,
       });
       await tx.session.updateMany({ where: { userId: id, revokedAt: null }, data: { revokedAt: new Date() } });
+      await tx.loginAttempt.deleteMany({ where: { userId: id } });
       return updated;
     });
     // before/after carry email/name/status only; never the password or its hash.

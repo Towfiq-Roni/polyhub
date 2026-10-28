@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
@@ -42,9 +42,9 @@ export class AuthController {
 
   // Scoped to this route only (not a global APP_GUARD) — defense-in-depth
   // alongside nginx's own 5 r/min limit on this same route
-  // (analysis/deployment-plan.md §Hardening); per-account lockout
-  // (auth.service.ts) is the separate, complementary defense against repeated
-  // attempts on ONE account regardless of source.
+  // (analysis/deployment-plan.md §Hardening); per (account, client IP) lockout
+  // (auth.service.ts, DEC-115) is the separate, complementary defense: it locks
+  // only the attacking IP out of an account, never the account's real user.
   @Post('login')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
@@ -60,7 +60,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Invalid credentials, or the account is locked',
+    description: 'Invalid credentials, or this account is temporarily locked for this client IP',
     type: ErrorResponseDto,
   })
   @ApiResponse({
@@ -70,9 +70,10 @@ export class AuthController {
   })
   async login(
     @Body() body: LoginDto,
+    @Req() req: { ip?: string },
     @Res({ passthrough: true }) res: MinimalResponse,
   ): Promise<{ accessToken: string; user: unknown }> {
-    const { accessToken, refreshToken, user } = await this.authService.login(body.email, body.password);
+    const { accessToken, refreshToken, user } = await this.authService.login(body.email, body.password, req.ip);
 
     res.cookie(REFRESH_COOKIE_NAME, refreshToken, this.cookieOptions());
 

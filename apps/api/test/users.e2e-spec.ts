@@ -1,12 +1,10 @@
 import { randomUUID } from 'crypto';
-import { INestApplication, Logger, LoggerService, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, LoggerService } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import cookieParser from 'cookie-parser';
-import request from 'supertest';
+import { http as httpApp, startApp } from './support/http';
 import { ROLE_NAMES } from '@hub/shared';
-import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
-import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
+import { configureApp } from '../src/app.setup';
 import { hashPassword } from '../src/modules/auth/auth.service';
 import { UsersService } from '../src/modules/users/users.service';
 
@@ -82,7 +80,7 @@ describe('Users (e2e) [F-28]', () => {
   };
 
   const login = (email: string, password: string = PASSWORD) =>
-    request(app.getHttpServer()).post('/api/v1/auth/login').set('X-Forwarded-For', nextIp()).send({ email, password });
+    httpApp(app).post('/api/v1/auth/login').set('X-Forwarded-For', nextIp()).send({ email, password });
 
   async function tokenFor(user: ScratchUser): Promise<string> {
     const response = await login(user.email);
@@ -91,9 +89,9 @@ describe('Users (e2e) [F-28]', () => {
   }
 
   const http = (token: string) => ({
-    get: (url: string) => request(app.getHttpServer()).get(url).set('Authorization', `Bearer ${token}`),
-    post: (url: string) => request(app.getHttpServer()).post(url).set('Authorization', `Bearer ${token}`),
-    patch: (url: string) => request(app.getHttpServer()).patch(url).set('Authorization', `Bearer ${token}`),
+    get: (url: string) => httpApp(app).get(url).set('Authorization', `Bearer ${token}`),
+    post: (url: string) => httpApp(app).post(url).set('Authorization', `Bearer ${token}`),
+    patch: (url: string) => httpApp(app).patch(url).set('Authorization', `Bearer ${token}`),
   });
 
   /**
@@ -134,13 +132,8 @@ describe('Users (e2e) [F-28]', () => {
     const { AppModule } = require('../src/app.module') as typeof import('../src/app.module');
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
-    app.use(cookieParser());
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-    app.useGlobalInterceptors(new TransformInterceptor());
-    app.useGlobalFilters(new HttpExceptionFilter());
-    app.setGlobalPrefix('api/v1');
-    app.getHttpAdapter().getInstance().set('trust proxy', 1);
-    await app.init();
+    configureApp(app);
+    await startApp(app);
 
     admin = await createScratchUser('users-e2e-admin', { superAdmin: true });
     adminToken = await tokenFor(admin);
@@ -168,7 +161,7 @@ describe('Users (e2e) [F-28]', () => {
     ];
 
     it.each(routes)('%s %s without a token is 401 [F-28]', async (method, url) => {
-      const response = await request(app.getHttpServer())[method](url).send({});
+      const response = await httpApp(app)[method](url).send({});
       expect(response.status).toBe(401);
       expect(response.body).toMatchObject({ error: { statusCode: 401 } });
     });
@@ -262,6 +255,37 @@ describe('Users (e2e) [F-28]', () => {
         expect(response.status).toBe(409);
         expect(response.body).toMatchObject({ error: { statusCode: 409, message: 'Email already in use' } });
       }
+    });
+
+    it('DB safety net: case-variant duplicate email is rejected by users_email_lower_key [F-28]', async () => {
+      const existing = await createScratchUser('users-e2e-lower');
+      const upper = existing.email.toUpperCase();
+      expect(upper).not.toBe(existing.email);
+
+      // Ids tracked up front so afterAll removes them even if the DB wrongly accepts the row.
+      const rawId = randomUUID();
+      const ormId = randomUUID();
+      createdUserIds.push(rawId, ormId);
+
+      // Clone the scratch row (all columns, so future NOT NULL columns cannot break this test), overriding id + email.
+      const rawError = await prisma.$executeRaw`
+        INSERT INTO users
+        SELECT (jsonb_populate_record(NULL::users, to_jsonb(u) || jsonb_build_object('id', ${rawId}::text, 'email', ${upper}::text))).*
+        FROM users u WHERE u.id = ${existing.id}`.then(
+        () => null,
+        (e: unknown) => e,
+      );
+      expect(rawError).toMatchObject({ code: 'P2010', meta: { code: '23505' } });
+
+      const ormError = await prisma.user
+        .create({ data: { id: ormId, email: upper, passwordHash: 'h', name: 'n' } })
+        .then(
+          () => null,
+          (e: unknown) => e,
+        );
+      expect(ormError).toMatchObject({ code: 'P2002' });
+
+      expect(await prisma.user.count({ where: { email: { equals: existing.email, mode: 'insensitive' } } })).toBe(1);
     });
 
     it('ignores extra body fields such as status [F-28]', async () => {
@@ -370,7 +394,10 @@ describe('Users (e2e) [F-28]', () => {
       const firstLogin = await login(target.email);
       const secondLogin = await login(target.email);
       const oldAccessToken = firstLogin.body.data.accessToken as string;
-      const oldCookie = cookiePair(secondLogin.headers['set-cookie'] as string[] | undefined, 'refresh_token')!;
+      const oldCookie = cookiePair(
+        secondLogin.headers['set-cookie'] as unknown as string[] | undefined,
+        'refresh_token',
+      )!;
       await login(bystander.email);
       expect(await prisma.session.count({ where: { userId: target.id, revokedAt: null } })).toBe(2);
 
@@ -386,11 +413,9 @@ describe('Users (e2e) [F-28]', () => {
       sessions.forEach((s) => expect(s.revokedAt).not.toBeNull());
       expect(await prisma.session.count({ where: { userId: bystander.id, revokedAt: null } })).toBe(1);
 
-      const me = await request(app.getHttpServer())
-        .get('/api/v1/auth/me')
-        .set('Authorization', `Bearer ${oldAccessToken}`);
+      const me = await httpApp(app).get('/api/v1/auth/me').set('Authorization', `Bearer ${oldAccessToken}`);
       expect(me.status).toBe(401);
-      const refresh = await request(app.getHttpServer()).post('/api/v1/auth/refresh').set('Cookie', oldCookie);
+      const refresh = await httpApp(app).post('/api/v1/auth/refresh').set('Cookie', oldCookie);
       expect(refresh.status).toBe(401);
     });
 
@@ -430,15 +455,22 @@ describe('Users (e2e) [F-28]', () => {
 
     it('clears lockout state; already ACTIVE is a 200 no-op; unknown id 404 [F-28]', async () => {
       const target = await createScratchUser('users-e2e-unlock');
-      for (let attempt = 0; attempt < 10; attempt += 1) await login(target.email, 'definitely-wrong-password');
-      const locked = await prisma.user.findUniqueOrThrow({ where: { id: target.id } });
-      expect(locked.lockoutUntil).not.toBeNull();
+      const now = new Date();
+      await prisma.loginAttempt.createMany({
+        data: ['203.0.113.10', '203.0.113.11'].map((ip) => ({
+          userId: target.id,
+          ip,
+          failedCount: 10,
+          firstFailedAt: now,
+          lockoutUntil: new Date(now.getTime() + 600_000),
+          updatedAt: now,
+        })),
+      });
+      expect(await prisma.loginAttempt.count({ where: { userId: target.id } })).toBe(2);
 
       const response = await http(adminToken).post(`/api/v1/users/${target.id}/activate`);
       expect(response.status).toBe(200);
-      const unlocked = await prisma.user.findUniqueOrThrow({ where: { id: target.id } });
-      expect(unlocked.lockoutUntil).toBeNull();
-      expect(unlocked.failedLoginAttempts).toBe(0);
+      expect(await prisma.loginAttempt.count({ where: { userId: target.id } })).toBe(0);
       expect([200, 201]).toContain((await login(target.email)).status);
 
       expect((await http(adminToken).post(`/api/v1/users/${target.id}/activate`)).status).toBe(200);
@@ -453,13 +485,16 @@ describe('Users (e2e) [F-28]', () => {
       const target = await createScratchUser('users-e2e-reset');
       const first = await login(target.email);
       await login(target.email);
-      const oldCookie = cookiePair(first.headers['set-cookie'] as string[] | undefined, 'refresh_token')!;
-      await prisma.user.update({
-        where: { id: target.id },
+      const oldCookie = cookiePair(first.headers['set-cookie'] as unknown as string[] | undefined, 'refresh_token')!;
+      const now = new Date();
+      await prisma.loginAttempt.create({
         data: {
-          failedLoginAttempts: 5,
-          firstFailedAttemptAt: new Date(),
-          lockoutUntil: new Date(Date.now() + 600_000),
+          userId: target.id,
+          ip: '203.0.113.12',
+          failedCount: 5,
+          firstFailedAt: now,
+          lockoutUntil: new Date(now.getTime() + 600_000),
+          updatedAt: now,
         },
       });
       const before = await prisma.user.findUniqueOrThrow({ where: { id: target.id } });
@@ -475,14 +510,12 @@ describe('Users (e2e) [F-28]', () => {
       const after = await prisma.user.findUniqueOrThrow({ where: { id: target.id } });
       expect(after.passwordHash).not.toBe(before.passwordHash);
       expect(after.passwordHash).toMatch(/^\$argon2id\$/);
-      expect(after).toMatchObject({ failedLoginAttempts: 0, firstFailedAttemptAt: null, lockoutUntil: null });
+      expect(await prisma.loginAttempt.count({ where: { userId: target.id } })).toBe(0);
       const sessions = await prisma.session.findMany({ where: { userId: target.id } });
       expect(sessions.length).toBeGreaterThanOrEqual(2);
       sessions.forEach((s) => expect(s.revokedAt).not.toBeNull());
 
-      expect((await request(app.getHttpServer()).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(
-        401,
-      );
+      expect((await httpApp(app).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(401);
       expect((await login(target.email, PASSWORD)).status).toBe(401);
       expect([200, 201]).toContain((await login(target.email, NEW_PASSWORD)).status);
     });
@@ -620,9 +653,15 @@ describe('Users (e2e) [F-28]', () => {
 
     it('activate that unlocks emits one line with lockoutCleared: true [F-28]', async () => {
       const target = await createScratchUser('users-e2e-audit-unlock');
-      await prisma.user.update({
-        where: { id: target.id },
-        data: { failedLoginAttempts: 3, lockoutUntil: new Date(Date.now() + 600_000) },
+      await prisma.loginAttempt.create({
+        data: {
+          userId: target.id,
+          ip: '203.0.113.13',
+          failedCount: 3,
+          firstFailedAt: new Date(),
+          lockoutUntil: new Date(Date.now() + 600_000),
+          updatedAt: new Date(),
+        },
       });
       expect((await http(adminToken).post(`/api/v1/users/${target.id}/activate`)).status).toBe(200);
       const out = lines();
@@ -686,7 +725,7 @@ describe('Users (e2e) [F-28]', () => {
     it('resets an INACTIVE user: stays INACTIVE, hash changes, sessions revoked, login 401 until activate [F-28]', async () => {
       const target = await createScratchUser('users-e2e-reset-inactive');
       const first = await login(target.email);
-      const oldCookie = cookiePair(first.headers['set-cookie'] as string[] | undefined, 'refresh_token')!;
+      const oldCookie = cookiePair(first.headers['set-cookie'] as unknown as string[] | undefined, 'refresh_token')!;
       expect((await http(adminToken).post(`/api/v1/users/${target.id}/deactivate`)).status).toBe(200);
       const before = await prisma.user.findUniqueOrThrow({ where: { id: target.id } });
 
@@ -702,9 +741,7 @@ describe('Users (e2e) [F-28]', () => {
       (await prisma.session.findMany({ where: { userId: target.id } })).forEach((s) =>
         expect(s.revokedAt).not.toBeNull(),
       );
-      expect((await request(app.getHttpServer()).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(
-        401,
-      );
+      expect((await httpApp(app).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(401);
 
       const generic = await login(target.email, NEW_PASSWORD);
       expect(generic.status).toBe(401);
@@ -719,7 +756,7 @@ describe('Users (e2e) [F-28]', () => {
       const self = await createScratchUser('users-e2e-self-reset', { superAdmin: true });
       const loginRes = await login(self.email);
       const token = loginRes.body.data.accessToken as string;
-      const oldCookie = cookiePair(loginRes.headers['set-cookie'] as string[] | undefined, 'refresh_token')!;
+      const oldCookie = cookiePair(loginRes.headers['set-cookie'] as unknown as string[] | undefined, 'refresh_token')!;
       const response = await http(token)
         .post(`/api/v1/users/${self.id}/reset-password`)
         .send({ password: NEW_PASSWORD });
@@ -727,9 +764,7 @@ describe('Users (e2e) [F-28]', () => {
       (await prisma.session.findMany({ where: { userId: self.id } })).forEach((s) =>
         expect(s.revokedAt).not.toBeNull(),
       );
-      expect((await request(app.getHttpServer()).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(
-        401,
-      );
+      expect((await httpApp(app).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(401);
       expect((await login(self.email, PASSWORD)).status).toBe(401);
       expect([200, 201]).toContain((await login(self.email, NEW_PASSWORD)).status);
     });
@@ -742,15 +777,13 @@ describe('Users (e2e) [F-28]', () => {
       const first = await login(seedEmail, seedPassword);
       expect([200, 201]).toContain(first.status);
       const token = first.body.data.accessToken as string;
-      const oldCookie = cookiePair(first.headers['set-cookie'] as string[] | undefined, 'refresh_token')!;
+      const oldCookie = cookiePair(first.headers['set-cookie'] as unknown as string[] | undefined, 'refresh_token')!;
       let restored = false;
       try {
         expect(
           (await http(token).post(`/api/v1/users/${seeded.id}/reset-password`).send({ password: NEW_PASSWORD })).status,
         ).toBe(200);
-        expect((await request(app.getHttpServer()).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(
-          401,
-        );
+        expect((await httpApp(app).post('/api/v1/auth/refresh').set('Cookie', oldCookie)).status).toBe(401);
         const second = await login(seedEmail, NEW_PASSWORD);
         expect([200, 201]).toContain(second.status);
         const token2 = second.body.data.accessToken as string;
@@ -865,6 +898,57 @@ describe('Users (e2e) [F-28]', () => {
           expect(await activeSuperAdminCount()).toBe(2);
         }
       });
+    });
+  });
+
+  describe('email case-insensitivity [F-28]', () => {
+    const countInsensitive = (email: string) =>
+      prisma.user.count({ where: { email: { equals: email, mode: 'insensitive' } } });
+
+    it('POST with the same email in other case or padded is 409 and creates no second row [F-28]', async () => {
+      const base = `users-e2e-case-${randomUUID()}@example.com`;
+      const first = await http(adminToken)
+        .post('/api/v1/users')
+        .send({ email: base, name: 'Case Base', password: NEW_PASSWORD });
+      expect(first.status).toBe(201);
+      createdUserIds.push(first.body.data.id);
+
+      for (const typed of [base.toUpperCase(), `  ${base}  `]) {
+        const response = await http(adminToken)
+          .post('/api/v1/users')
+          .send({ email: typed, name: 'Case Dup', password: NEW_PASSWORD });
+        // Track any (regressed) 201 so a leaked duplicate row is still cleaned up.
+        if (response.status === 201) createdUserIds.push(response.body.data.id);
+        expect(response.status).toBe(409);
+        expect(response.body).toMatchObject({ error: { statusCode: 409, message: 'Email already in use' } });
+      }
+      expect(await countInsensitive(base)).toBe(1);
+    });
+
+    it('PATCH to another user email in different case is 409 and leaves the row unchanged [F-28]', async () => {
+      const a = await createScratchUser('users-e2e-case-a');
+      const b = await createScratchUser('users-e2e-case-b');
+
+      const response = await http(adminToken).patch(`/api/v1/users/${b.id}`).send({ email: a.email.toUpperCase() });
+      expect(response.status).toBe(409);
+
+      const row = await prisma.user.findUniqueOrThrow({ where: { id: b.id } });
+      expect(row.email).toBe(b.email);
+    });
+
+    it('user created with a mixed-case email can log in with a differently-cased or padded variant [F-28]', async () => {
+      const email = `Users-E2E-Mixed-${randomUUID()}@Example.com`;
+      const created = await http(adminToken)
+        .post('/api/v1/users')
+        .send({ email, name: 'Mixed Case', password: NEW_PASSWORD });
+      expect(created.status).toBe(201);
+      createdUserIds.push(created.body.data.id);
+
+      for (const typed of [email.toUpperCase(), `  ${email.toLowerCase()}  `]) {
+        const response = await login(typed, NEW_PASSWORD);
+        expect([200, 201]).toContain(response.status);
+        expect(response.body).toMatchObject({ data: { user: { email: email.toLowerCase() } } });
+      }
     });
   });
 });

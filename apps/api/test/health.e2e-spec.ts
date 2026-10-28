@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
-import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
+import { http, startApp } from './support/http';
+import { configureApp } from '../src/app.setup';
 
 // AppModule wires ConfigModule.forRoot({ validate: validateEnv }) at decoration
 // time (see app.module.spec.ts's comment) — required env vars must be set
@@ -24,9 +24,8 @@ describe('GET /api/v1/health (e2e)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    app.useGlobalInterceptors(new TransformInterceptor());
-    app.setGlobalPrefix('api/v1');
-    await app.init();
+    configureApp(app);
+    await startApp(app);
   });
 
   afterAll(async () => {
@@ -34,7 +33,7 @@ describe('GET /api/v1/health (e2e)', () => {
   });
 
   it('returns 200 { data: { status: "ok" } } when the DB is reachable', async () => {
-    const response = await request(app.getHttpServer()).get('/api/v1/health');
+    const response = await http(app).get('/api/v1/health');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ data: { status: 'ok' } });

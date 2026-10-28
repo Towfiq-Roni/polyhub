@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { ROLE_NAMES } from '@hub/shared';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { ROLE_NAMES, normalizeEmail } from '@hub/shared';
 import { hashPassword } from '../src/modules/auth/auth.service';
 
 const logger = new Logger('Seed');
@@ -19,7 +19,7 @@ export interface SuperAdminCredentials {
 export function readSuperAdminCredentials(
   env: NodeJS.ProcessEnv | Record<string, string | undefined> = process.env,
 ): SuperAdminCredentials {
-  const email = env.SUPER_ADMIN_EMAIL;
+  const email = normalizeEmail(env.SUPER_ADMIN_EMAIL ?? '');
   const password = env.SUPER_ADMIN_PASSWORD;
 
   if (!email) {
@@ -73,7 +73,7 @@ export async function seedSuperAdmin(
   // exists to guarantee.
   await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
-      data: { email, passwordHash, name: 'Super Admin' },
+      data: { email, passwordHash, name: 'Super Admin' } satisfies Prisma.UserCreateInput,
     });
     await tx.userRole.create({
       data: { userId: user.id, roleId: role.id },

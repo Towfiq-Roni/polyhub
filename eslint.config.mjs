@@ -41,6 +41,26 @@ export default tseslint.config(
       '@typescript-eslint/no-require-imports': 'off',
     },
   },
+  {
+    // e2e must go through the loopback-bound helper; raw supertest(app) binds the wildcard and can hit
+    // foreign local listeners (DEC-116/#55). Catches `import` and literal `require('supertest')`;
+    // ceiling: dynamic import()/computed require not caught.
+    files: ['apps/api/test/**/*.ts'],
+    ignores: ['apps/api/test/support/http.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "ImportDeclaration[source.value='supertest']",
+          message: 'Do not import supertest directly; use ./support/http (loopback-bound helper, DEC-116/#55).',
+        },
+        {
+          selector: "CallExpression[callee.name='require'][arguments.0.value='supertest']",
+          message: 'Do not require supertest directly; use ./support/http (loopback-bound helper, DEC-116/#55).',
+        },
+      ],
+    },
+  },
   // apps/web: append next/core-web-vitals block here
   eslintConfigPrettier,
 );

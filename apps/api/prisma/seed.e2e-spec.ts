@@ -118,5 +118,39 @@ describe('seedSuperAdmin (e2e)', () => {
       expect(matchingUsers).toHaveLength(1);
       expect(otherUsers).toHaveLength(0);
     });
+
+    it('readSuperAdminCredentials trims and lowercases the email [F-28]', () => {
+      expect(
+        readSuperAdminCredentials({ SUPER_ADMIN_EMAIL: '  Admin@Example.COM ', SUPER_ADMIN_PASSWORD: 'x' }).email,
+      ).toBe('admin@example.com');
+    });
+
+    it('readSuperAdminCredentials rejects a whitespace-only email as required [F-28]', () => {
+      expect(() => readSuperAdminCredentials({ SUPER_ADMIN_EMAIL: '   ', SUPER_ADMIN_PASSWORD: 'x' })).toThrow(
+        /SUPER_ADMIN_EMAIL/,
+      );
+    });
+
+    it('stores a differently-cased SUPER_ADMIN_EMAIL lowercased and a repeat run stays a no-op [F-28]', async () => {
+      const countInsensitive = () =>
+        prisma.user.count({ where: { email: { equals: testEmail, mode: 'insensitive' } } });
+      try {
+        await seedSuperAdmin(prisma, {
+          SUPER_ADMIN_EMAIL: testEmail.toUpperCase(),
+          SUPER_ADMIN_PASSWORD: testPassword,
+        });
+        const created = await prisma.user.findMany({ where: { email: { equals: testEmail, mode: 'insensitive' } } });
+        expect(created.map((u) => u.email)).toEqual([testEmail]);
+
+        await seedSuperAdmin(prisma, { SUPER_ADMIN_EMAIL: testEmail, SUPER_ADMIN_PASSWORD: testPassword });
+        expect(await countInsensitive()).toBe(1);
+      } finally {
+        // Un-normalized rows would be missed by the file's lowercase afterEach.
+        const rows = await prisma.user.findMany({ where: { email: { equals: testEmail, mode: 'insensitive' } } });
+        const ids = rows.map((u) => u.id);
+        await prisma.userRole.deleteMany({ where: { userId: { in: ids } } });
+        await prisma.user.deleteMany({ where: { id: { in: ids } } });
+      }
+    });
   });
 });
