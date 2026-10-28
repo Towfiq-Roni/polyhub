@@ -14,7 +14,8 @@ export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER
 out="$(CLAUDE_PROJECT_DIR="$REPO" bash "$HOOK" 2>&1)"; rc=$?
 check "repo exit 0" '[ $rc -eq 0 ]'
 check "repo <=15 lines" '[ "$(printf "%s\n" "$out" | wc -l)" -le 15 ]'
-check "repo line1 header" 'printf "%s\n" "$out" | head -1 | grep -Eq "^\[hub-harness 0\.1\.0\] branch="'
+ver="$(tr -d '[:space:]' < "$REPO/.claude/VERSION")"
+check "repo line1 header" 'printf "%s\n" "$out" | head -1 | grep -Fq "[hub-harness $ver] branch="'
 check "repo dirty=" 'printf "%s" "$out" | grep -q "dirty="'
 check "repo stashes=" 'printf "%s" "$out" | grep -q "stashes="'
 check "repo Focus:" 'printf "%s" "$out" | grep -q "Focus:"'

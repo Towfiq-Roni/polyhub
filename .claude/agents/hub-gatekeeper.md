@@ -60,6 +60,9 @@ local dir and set `LD_LIBRARY_PATH` (no sudo available). Then:
 - Responsive: 390px — no horizontal overflow; drawer works. 1440px — no congestion.
 - Capture screenshots as evidence; report console/page errors.
 
+### 4b. IMAGE-BUILD gate
+If the diff matches the image-build trigger list in `.claude/agents/hub-tester.md` (single source), run `python3 tools/check-dockerfile-stages.py` and an unmodified `docker build -f apps/api/Dockerfile .` yourself (no `--target`), boot-check health/login/users as that file describes, and clean up images/containers. Failure ⇒ REROUTE; Docker/Postgres unavailable ⇒ UNVERIFIABLE for that gate (never PASS).
+
 ### 5. Verdict
 
 ```

@@ -40,6 +40,8 @@ One or two sentences: what changes, for whom, and what must be true afterwards.
 - **Swagger detail (static gate)**: every route documents typed request/response DTOs via `@ApiResponse({..., type: SomeDto})` — never a bare description string — covering every realistic status code (success, auth/permission failure, validation failure, rate-limit/throttle where applicable). Name the exact DTOs/status codes expected per route in the spec.
 - **API journey test coverage (empirical gate)**: every new/changed route is added to its module's e2e journey file (`apps/api/test/<module>.e2e-spec.ts`, extended not replaced), covered from multiple angles — happy path, auth/permission failure, validation failure, endpoint-specific business-rule edge cases (lockout/rate-limit/idempotency/concurrency where the route touches shared mutable state), and response-envelope/shape correctness (no leaked sensitive fields). List the specific angles expected per route, not just "add tests."
 
+**Any task whose changed paths match the image-build trigger list in `.claude/agents/hub-tester.md` (single source — do not copy the list here) ALSO gets an explicit empirical gate `IMAGE-BUILD`** — name the unmodified `docker build -f apps/api/Dockerfile .` (no `--target`) + boot checks + cleanup, never left to inference. Tasks touching `apps/api/Dockerfile` also get a static gate: `python3 tools/check-dockerfile-stages.py` exit 0.
+
 ### 5. Write + log
 - Persist the spec to `docs/agentic/build-specs/<YYYY-MM-DD>-<slug>.md`.
 - Append: `YYYY-MM-DD | hub-planner | <slug> → spec written (N batches, M gates)`.
