@@ -21,3 +21,19 @@ Stateless JWT authentication: a short-lived access token and a longer-lived refr
 
 ## Related
 FR-ADMIN-02; F-27, F-28; NFR-SEC-01; **conflicts with `docs/adr/0004-jwt-argon2-auth.md`, DEC-012 — reconciliation needed before build**
+
+## Addendum 2026-10-26 (task #52, DEC-115)
+- **Consequence discovered:** per-account lockout let anyone who knew an email lock it for 15 minutes, including the sole SUPER_ADMIN, defeating the intent of CLAUDE.md rule 9.
+- **Owner decision (DEC-113):** "2 and lockout only the attacker", confirmed as R2: per-IP lockout for every account including SUPER_ADMIN (an admin that never locks was rejected).
+- **Rule:** failed attempts and lockout are keyed on (account, client IP) in table `login_attempts` (10 failures / 15 min / IP); client IP = Express `req.ip` behind trust proxy 1; locked, wrong-password, unknown and inactive stay one generic 401; admin unlock via `POST /users/:id/activate` (and reset-password) clears the rows; legacy `users` lockout columns unused, dropped later.
+- **Numbers:** ~40 guesses/hour/IP with the per-IP lock vs ~300 without; edge limits nginx `limit_req` 5 r/min/IP burst 5, app throttle 5/60 s per IP, password min 12, argon2id.
+- **Residual risks accepted:** attacker sharing the victim's egress IP locks them on that IP for 15 min (recovery via activate); IPv6 /64 rotation (ponytail); distributed botnet ~10 guesses per IP per 15 min.
+- Full text: `docs/adr/0004-jwt-argon2-auth.md` addendum.
+
+- **Security invariant (Stage D, task #52):** trusting `req.ip` / `X-Forwarded-For` (trust proxy 1) is safe ONLY because nginx is the sole ingress: in production the api service publishes no host port (`infra/docker-compose.prod.yml` gives it no `ports:`) and nginx overwrites `X-Forwarded-For` with `$remote_addr`. If the API is ever reached directly (dev/test, or a future second ingress) a client can choose its own IP — defeating both the per-IP lockout and the 5/60s throttle. Do not publish the api port in production without revisiting this.
+
+## Addendum 2026-10-28 (task #56, DEC-118)
+- **Prune:** the failure-path prune of `login_attempts` is now global (all users' dead rows); no scheduler. Ceiling: stale rows remain if nobody fails again.
+- **IPv6:** lockout key uses the /64 prefix (`a:b:c:d::/64`); no migration. Accepted: IPv6 clients locked at deploy become unlocked, hosts in one /64 share a lock budget, throttler and nginx `limit_req` stay on the exact address, hex-form `::ffff:7f00:1` is not unwrapped: the existing `^::ffff:` prefix strip leaves the stable junk key `7f00:1` (pre-existing, harmless, not a regression).
+- **Timing:** unknown or inactive email runs one dummy argon2 verify (~27 ms) to remove the enumeration timing oracle; the locked path stays fast (ceiling). Same generic 401.
+- Full text: `docs/adr/0004-jwt-argon2-auth.md` addendum.

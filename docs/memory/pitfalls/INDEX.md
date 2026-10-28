@@ -10,3 +10,4 @@ These are raw .md files, not vault-ingested (no wikilinks, plain relative links 
 - [async-agent-calls-break-sync-hooks](async-agent-calls-break-sync-hooks.md) — Never write a hook that assumes the Agent tool call has finished; Agent calls run async, so PostToolUse fires before the subagent works.
 - [Optional DTO field null → 500](optional-dto-field-null-500.md) — `@IsOptional()` skips null; use `@ValidateIf((_, v) => v !== undefined)` on PATCH DTOs.
 - [Docker build order vs prisma generate](docker-build-order-prisma-generate.md) — image build fails on Prisma.* types; make an unmodified docker build a gate (fix: #48).
+- [e2e supertest wildcard bind](e2e-supertest-wildcard-bind-hits-foreign-listener.md) — supertest(app) binds `::` per request and can hit a foreign 127.0.0.1 listener (IDE server → 404); use startApp/http from apps/api/test/support/http.ts (ESLint-enforced, #55).

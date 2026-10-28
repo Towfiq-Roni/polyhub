@@ -207,7 +207,7 @@ Priority: M · Actors: Super Admin (all), self-service (profile only) · Precond
 | FR-ADMIN-06 | Every sensitive write (per BRD §22's list, extended to cover Journal Entry posting/reversal) emits an `AuditLog` row: userId, action, entityType, entityId, beforeData/afterData (JSON, nullable where not applicable), timestamp. | M |
 | FR-ADMIN-07 | A Settings screen exposes admin-configurable options: chart-of-accounts management (FR-FIN-13), system-wide preferences. | S |
 
-**Auth/session detail (elaborating FR-ADMIN-02, not a new FR):** JWT access token 1 day TTL (DEC-073/ADR-0012, supersedes DEC-012's original 15 min on this point only), refresh token 7 days TTL, argon2id password hashing, lockout after 10 failed attempts within 15 minutes.
+**Auth/session detail (elaborating FR-ADMIN-02, not a new FR):** JWT access token 1 day TTL (DEC-073/ADR-0012, supersedes DEC-012's original 15 min on this point only), refresh token 7 days TTL, argon2id password hashing, lockout after 10 failed attempts within 15 minutes, tracked per account and client IP (task #52) so a third party cannot lock another user out; admin unlock via `POST /users/:id/activate`.
 
 ## 4. Data Requirements
 
